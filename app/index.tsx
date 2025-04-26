@@ -1,10 +1,15 @@
 import { Image, SafeAreaView, Text, View } from "react-native";
 import { AuthBackground } from "@/app/components/theme/AuthBackground";
 import { Button } from "@/app/components/ui/Button";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { ROUTES } from "@/app/utils/routes";
+import { useCallback } from "react";
 
 export default function Index() {
+  const handleContinue = useCallback(() => {
+    router.push(ROUTES.SignUp);
+  }, []);
+
   return (
     <AuthBackground>
       <SafeAreaView className={"flex-1"}>
@@ -31,7 +36,7 @@ export default function Index() {
           <View className={"flex flex-col items-center gap-1"}>
             <Text
               className={
-                "font-apfelGrotezk text-2xl font-normal text-black dark:text-white"
+                "text-secondary font-apfelGrotezk text-2xl font-normal dark:text-white"
               }
             >
               Meet your Ai Companion
@@ -46,16 +51,22 @@ export default function Index() {
           </View>
           {/*Button*/}
           <View className={"flex w-full flex-col items-center gap-5"}>
-            <Button>
-              <Text className={"font-inter text-white"}>Continue</Text>
+            <Button onPress={handleContinue}>
+              <Text className={"font-inter text-white"}>
+                Sign up with Email
+              </Text>
             </Button>
             <View className={"flex flex-row items-center gap-2"}>
-              <Text className={"font-inter text-sm text-white"}>
+              <Text
+                className={
+                  "text-medium font-inter text-sm text-black dark:text-white"
+                }
+              >
                 Already have an account?
               </Text>
               <Link
-                href={ROUTES.Home}
-                className={"font-inter text-sm text-blue-600"}
+                href={ROUTES.SignIn}
+                className={"text-medium font-inter text-sm text-blue-600"}
               >
                 Log in
               </Link>

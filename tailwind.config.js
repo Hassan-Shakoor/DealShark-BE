@@ -7,6 +7,7 @@ module.exports = {
     extend: {
       colors: {
         primary: "#5956FC",
+        secondary: { DEFAULT: "#944479", 500: "#1A1C1E" },
       },
       fontFamily: {
         apfelGrotezk: ["ApfelGrotezk"],
