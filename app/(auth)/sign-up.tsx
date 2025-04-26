@@ -17,7 +17,7 @@ const SignIn: FunctionComponent = () => {
   const [isPasswordVisible, setPasswordVisible] = useState<boolean>(false);
 
   const handleContinue = useCallback(() => {
-    router.push(ROUTES.SignUp);
+    router.push(ROUTES.TermsAndConditions);
   }, []);
 
   return (
