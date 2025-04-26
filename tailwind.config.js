@@ -8,6 +8,11 @@ module.exports = {
       colors: {
         primary: "#5956FC",
       },
+      fontFamily: {
+        apfelGrotezk: ["ApfelGrotezk"],
+        brockmann: ["Brockmann"],
+        inter: ["Inter"],
+      },
     },
   },
   plugins: [],

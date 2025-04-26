@@ -32,7 +32,10 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+      ["expo-font",{
+        "fonts": ["./assets/fonts/ApfelGrotezk.otf","./assets/fonts/Brockmann.ttf","./assets/fonts/Inter.ttf"]
+      }]
     ],
     "experiments": {
       "typedRoutes": true

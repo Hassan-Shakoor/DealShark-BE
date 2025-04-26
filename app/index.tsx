@@ -19,22 +19,26 @@ export default function Index() {
               source={require("@/assets/images/icon.png")}
               style={{ width: 60, height: 60 }}
             />
-            <Text className={"text-3xl font-medium text-black dark:text-white"}>
+            <Text
+              className={
+                "font-brockmann text-3xl font-medium text-black dark:text-white"
+              }
+            >
               Fantasy Ai {"\n"}App
             </Text>
           </View>
           {/*Center Text*/}
-          <View className={"flex flex-col gap-1"}>
+          <View className={"flex flex-col items-center gap-1"}>
             <Text
               className={
-                "text-center text-2xl font-normal text-black dark:text-white"
+                "font-apfelGrotezk text-2xl font-normal text-black dark:text-white"
               }
             >
               Meet your Ai Companion
             </Text>
             <Text
               className={
-                "text-center text-3xl font-medium text-black dark:text-white"
+                "font-brockmann text-3xl font-medium text-black dark:text-white"
               }
             >
               Intimate. Unfiltered. Yours
@@ -43,13 +47,16 @@ export default function Index() {
           {/*Button*/}
           <View className={"flex w-full flex-col items-center gap-5"}>
             <Button>
-              <Text className={"text-white"}>Continue</Text>
+              <Text className={"font-inter text-white"}>Continue</Text>
             </Button>
             <View className={"flex flex-row items-center gap-2"}>
-              <Text className={"text-sm text-white"}>
+              <Text className={"font-inter text-sm text-white"}>
                 Already have an account?
               </Text>
-              <Link href={ROUTES.Home} className={"text-sm text-blue-600"}>
+              <Link
+                href={ROUTES.Home}
+                className={"font-inter text-sm text-blue-600"}
+              >
                 Log in
               </Link>
             </View>
