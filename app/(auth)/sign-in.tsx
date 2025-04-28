@@ -1,17 +1,11 @@
 import { FunctionComponent, useCallback, useState } from "react";
-import {
-  Image,
-  Pressable,
-  SafeAreaView,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { Image, Pressable, Text, TextInput, View } from "react-native";
 import { AuthBackground } from "../components/theme/AuthBackground";
 import { Feather } from "@expo/vector-icons";
 import { Button } from "@/app/components/ui/Button";
 import { Link, router } from "expo-router";
 import { ROUTES } from "@/app/utils/routes";
+import { CustomSafeArea } from "@/app/components/ui/CustomSafeArea";
 
 const SignIn: FunctionComponent = () => {
   const [isPasswordVisible, setPasswordVisible] = useState<boolean>(false);
@@ -22,7 +16,7 @@ const SignIn: FunctionComponent = () => {
 
   return (
     <AuthBackground>
-      <SafeAreaView className={"flex-1"}>
+      <CustomSafeArea>
         <View className={"flex flex-col px-5 pt-24"}>
           {/*Header*/}
           <View className={"flex flex-row gap-2.5 self-center"}>
@@ -92,7 +86,7 @@ const SignIn: FunctionComponent = () => {
             </View>
           </View>
         </View>
-      </SafeAreaView>
+      </CustomSafeArea>
     </AuthBackground>
   );
 };

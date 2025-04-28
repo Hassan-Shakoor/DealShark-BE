@@ -35,6 +35,7 @@ export default function RootLayout() {
           name={"terms-and-condition"}
           options={{ headerShown: false }}
         />
+        <Stack.Screen name={"chat"} options={{ headerShown: false }} />
       </Stack>
     </ThemeProvider>
   );

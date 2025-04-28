@@ -1,9 +1,10 @@
-import { Image, SafeAreaView, Text, View } from "react-native";
+import { Image, Text, View } from "react-native";
 import { AuthBackground } from "@/app/components/theme/AuthBackground";
 import { Button } from "@/app/components/ui/Button";
 import { Link, router } from "expo-router";
 import { ROUTES } from "@/app/utils/routes";
 import { useCallback } from "react";
+import { CustomSafeArea } from "@/app/components/ui/CustomSafeArea";
 
 export default function Index() {
   const handleContinue = useCallback(() => {
@@ -12,7 +13,7 @@ export default function Index() {
 
   return (
     <AuthBackground>
-      <SafeAreaView className={"flex-1"}>
+      <CustomSafeArea>
         <View
           className={
             "flex-1 items-center justify-between gap-2 px-5 pb-11 pt-24"
@@ -36,7 +37,7 @@ export default function Index() {
           <View className={"flex flex-col items-center gap-1"}>
             <Text
               className={
-                "text-secondary font-apfelGrotezk text-2xl font-normal dark:text-white"
+                "font-apfelGrotezk text-2xl font-normal text-secondary dark:text-white"
               }
             >
               Meet your Ai Companion
@@ -73,7 +74,7 @@ export default function Index() {
             </View>
           </View>
         </View>
-      </SafeAreaView>
+      </CustomSafeArea>
     </AuthBackground>
   );
 }

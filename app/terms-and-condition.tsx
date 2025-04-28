@@ -1,8 +1,11 @@
 import { ChatBackground } from "@/app/components/theme/ChatBackground";
-import { SafeAreaView, ScrollView, Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import { Button } from "@/app/components/ui/Button";
 import { useCallback, useState } from "react";
 import { Checkbox } from "react-native-paper";
+import { router } from "expo-router";
+import { ROUTES } from "@/app/utils/routes";
+import { CustomSafeArea } from "@/app/components/ui/CustomSafeArea";
 
 const TermsAndCondition = () => {
   const [isChecked, setChecked] = useState<boolean>(false);
@@ -11,20 +14,28 @@ const TermsAndCondition = () => {
     setChecked((prev) => !prev);
   }, []);
 
+  const handleContinue = useCallback(() => {
+    router.push(ROUTES.Chat);
+  }, []);
+
   return (
     <ChatBackground>
-      <SafeAreaView className={"flex-1"}>
+      <CustomSafeArea>
         <View className={"flex flex-1 flex-col justify-between p-10"}>
           <View className={"flex flex-col gap-3"}>
             <Text
               className={
-                "pt-28 font-apfelGrotezk text-3xl font-medium text-black dark:text-white"
+                "pt-12 font-apfelGrotezk text-3xl font-medium text-black dark:text-white"
               }
             >
               Terms and Conditions
             </Text>
             <ScrollView>
-              <Text className={"text-lg text-black dark:text-white"}>
+              <Text
+                className={
+                  "font-apfelGrotezk text-lg text-black dark:text-white"
+                }
+              >
                 This Site and all its Contents are intended solely for personal,
                 non-commercial use. Except as expressly provided, nothing within
                 the Site shall be construed as conferring any license under our
@@ -50,12 +61,12 @@ const TermsAndCondition = () => {
                 I accept the <Text>Terms and Agreement</Text>
               </Text>
             </View>
-            <Button disabled={!isChecked}>
+            <Button disabled={!isChecked} onPress={handleContinue}>
               <Text className={"font-inter text-white"}>Continue</Text>
             </Button>
           </View>
         </View>
-      </SafeAreaView>
+      </CustomSafeArea>
     </ChatBackground>
   );
 };
