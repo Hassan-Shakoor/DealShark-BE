@@ -9,6 +9,7 @@ import { Theme } from "@/app/utils/constant";
 import { useThemeContext } from "@/app/contexts/useThemeContext";
 import { ThemeAction } from "@/app/contexts/action";
 import { useCallback } from "react";
+import { Button } from "@/app/components/ui/Button";
 
 const Setting = () => {
   const { dispatch } = useThemeContext();
@@ -23,7 +24,7 @@ const Setting = () => {
 
   return (
     <AuthBackground>
-      <CustomSafeArea>
+      <CustomSafeArea classNames={"flex flex-col"}>
         <SettingHeader />
         <View className={"flex flex-1 flex-col gap-6.5 px-6"}>
           <PurchaseBanner />
@@ -31,7 +32,7 @@ const Setting = () => {
             <TouchableOpacity
               activeOpacity={0.7}
               className={
-                "px-4.5 py-5.5 dark:bg-dark-septenary/50 flex flex-row items-center justify-between rounded-xl bg-white/50"
+                "flex flex-row items-center justify-between rounded-xl bg-white/50 px-4.5 py-5.5 dark:bg-dark-septenary/50"
               }
             >
               <Text
@@ -49,7 +50,7 @@ const Setting = () => {
             </TouchableOpacity>
             <View
               className={
-                "px-4.5 py-5.5 dark:bg-dark-septenary/50 flex flex-row items-center justify-between rounded-xl bg-white/50"
+                "flex flex-row items-center justify-between rounded-xl bg-white/50 px-4.5 py-5.5 dark:bg-dark-septenary/50"
               }
             >
               <Text
@@ -69,7 +70,7 @@ const Setting = () => {
             </View>
             <View
               className={
-                "px-4.5 py-5.5 dark:bg-dark-septenary/50 flex flex-row items-center justify-between rounded-xl bg-white/50"
+                "flex flex-row items-center justify-between rounded-xl bg-white/50 px-4.5 py-5.5 dark:bg-dark-septenary/50"
               }
             >
               <Text
@@ -91,7 +92,7 @@ const Setting = () => {
               onPress={handleToggleTheme}
               activeOpacity={0.7}
               className={
-                "px-4.5 py-5.5 dark:bg-dark-septenary/50 flex flex-row items-center justify-between rounded-xl bg-white/50"
+                "flex flex-row items-center justify-between rounded-xl bg-white/50 px-4.5 py-5.5 dark:bg-dark-septenary/50"
               }
             >
               <Text
@@ -110,6 +111,11 @@ const Setting = () => {
               </Text>
             </TouchableOpacity>
           </View>
+        </View>
+        <View className={"mb-12 px-6"}>
+          <Button variant={"danger"}>
+            <Text className={"text-white"}>Log out</Text>
+          </Button>
         </View>
       </CustomSafeArea>
     </AuthBackground>

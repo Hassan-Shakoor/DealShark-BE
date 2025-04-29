@@ -39,6 +39,10 @@ export default function RootLayout() {
         <Stack.Screen name={"(chat)"} options={{ headerShown: false }} />
         <Stack.Screen name={"purchase"} options={{ headerShown: false }} />
         <Stack.Screen name={"setting"} options={{ headerShown: false }} />
+        <Stack.Screen
+          name={"companion-setting"}
+          options={{ headerShown: false }}
+        />
       </Stack>
     </ThemeProvider>
   );

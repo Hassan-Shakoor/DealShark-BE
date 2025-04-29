@@ -7,4 +7,5 @@ export const ROUTES = {
   ChatView: (id: string) => `/(chat)/${id}` as const,
   Purchase: "/purchase",
   Setting: "/setting",
+  CompanionSetting: "/companion-setting",
 } as const;

@@ -9,6 +9,9 @@ module.exports = {
         primary: "#5956FC",
         foreground: "#231D4F",
         tertiary: "#3D2C69",
+        quaternary: "#514279",
+        quinary: "#9889C2",
+        subtle: "#A9A9A9",
         secondary: { DEFAULT: "#944479", 500: "#1A1C1E" },
         dark: {
           DEFAULT: "#585858",
@@ -29,6 +32,7 @@ module.exports = {
         },
         appleGrey: "#909093",
         blue: { DEFAULT: "#3478F6", secondary: "#0A78B8" },
+        danger: "#D44545",
       },
       fontFamily: {
         apfelGrotezk: ["ApfelGrotezk"],
