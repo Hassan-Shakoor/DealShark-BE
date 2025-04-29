@@ -13,6 +13,7 @@ export default function RootLayout() {
     ApfelGrotezk: require("@/assets/fonts/ApfelGrotezk.otf"),
     Brockmann: require("@/assets/fonts/Brockmann.ttf"),
     Inter: require("@/assets/fonts/Inter.ttf"),
+    Poppins: require("@/assets/fonts/Poppins.ttf"),
   });
 
   useEffect(() => {
@@ -36,6 +37,7 @@ export default function RootLayout() {
           options={{ headerShown: false }}
         />
         <Stack.Screen name={"(chat)"} options={{ headerShown: false }} />
+        <Stack.Screen name={"purchase"} options={{ headerShown: false }} />
       </Stack>
     </ThemeProvider>
   );

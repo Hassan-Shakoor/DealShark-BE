@@ -5,4 +5,5 @@ export const ROUTES = {
   TermsAndConditions: "/terms-and-condition",
   Chat: "/(chat)/chat",
   ChatView: (id: string) => `/(chat)/${id}` as const,
+  Purchase: "/purchase",
 } as const;

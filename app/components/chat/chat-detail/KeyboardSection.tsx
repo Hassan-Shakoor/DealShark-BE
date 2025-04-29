@@ -8,19 +8,25 @@ import {
   View,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
+import { ROUTES } from "@/app/utils/routes";
 
 export const KeyboardSection: FunctionComponent = () => {
   const [messageText, setMessageText] = useState<string>("");
 
   const handleSendMessage = useCallback(() => {
-    // Handle sending the message
     console.log("Message sent:", messageText);
     setMessageText("");
   }, [messageText]);
 
+  const handleTextPress = useCallback(() => {
+    router.push(ROUTES.Purchase);
+  }, []);
+
   return (
     <View className={"flex flex-col gap-3.5"}>
       <Text
+        onPress={handleTextPress}
         className={
           "text-center font-brockmann text-xs font-medium text-appleGrey"
         }

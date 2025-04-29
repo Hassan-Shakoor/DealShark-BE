@@ -7,6 +7,8 @@ module.exports = {
     extend: {
       colors: {
         primary: "#5956FC",
+        foreground: "#231D4F",
+        tertiary: "#3D2C69",
         secondary: { DEFAULT: "#944479", 500: "#1A1C1E" },
         dark: {
           DEFAULT: "#585858",
@@ -31,6 +33,7 @@ module.exports = {
         apfelGrotezk: ["ApfelGrotezk"],
         brockmann: ["Brockmann"],
         inter: ["Inter"],
+        poppins: ["Poppins"],
       },
       fontSize: {
         xxxs: ["8px", { lineHeight: "12px" }],
