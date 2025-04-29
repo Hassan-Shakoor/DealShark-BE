@@ -6,4 +6,5 @@ export const ROUTES = {
   Chat: "/(chat)/chat",
   ChatView: (id: string) => `/(chat)/${id}` as const,
   Purchase: "/purchase",
+  Setting: "/setting",
 } as const;

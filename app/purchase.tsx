@@ -3,6 +3,7 @@ import { PuchaseBackground } from "@/app/components/theme/PurchaseBackground";
 import { PurchaseHeader } from "@/app/components/purchase/PurchaseHeader";
 import { Image, View, Text } from "react-native";
 import { Button } from "@/app/components/ui/Button";
+import { LinearGradient } from "expo-linear-gradient";
 
 const Purchase = () => {
   return (
@@ -27,24 +28,30 @@ const Purchase = () => {
                 "mt-2.5 flex flex-col gap-6.5 rounded-3xl bg-foreground p-2 pb-5"
               }
             >
-              <View
-                className={
-                  "flex flex-row items-center justify-between rounded-2xl border-[3px] border-blue bg-tertiary p-5"
-                }
-              >
-                <Image
-                  source={require("@/assets/images/endless-intimacy-icon.png")}
-                  className={"h-12 w-28"}
+              <View className="relative rounded-3xl">
+                {/* Gradient border layer */}
+                <LinearGradient
+                  colors={["#CD85C7", "#B6DAFE"]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  className="absolute inset-0"
+                  style={{ borderRadius: 24 }}
                 />
-                <View className={"flex flex-col items-center"}>
-                  <Text
-                    className={"font-poppins text-4xl font-bold text-white"}
-                  >
-                    $15.99
-                  </Text>
-                  <Text className={"font-brockmann text-xs text-white"}>
-                    Lifetime
-                  </Text>
+
+                {/* Content layer */}
+                <View className="m-[3px] flex flex-row items-center justify-between rounded-3xl bg-tertiary p-5">
+                  <Image
+                    source={require("@/assets/images/endless-intimacy-icon.png")}
+                    className="h-12 w-28"
+                  />
+                  <View className="flex flex-col items-center">
+                    <Text className="font-poppins text-4xl font-bold text-white">
+                      $15.99
+                    </Text>
+                    <Text className="font-brockmann text-xs text-white">
+                      Lifetime
+                    </Text>
+                  </View>
                 </View>
               </View>
               <View className={"flex flex-col gap-4 px-7"}>

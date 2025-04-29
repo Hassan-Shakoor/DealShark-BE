@@ -18,6 +18,7 @@ module.exports = {
           quaternary: "#3C3C43",
           quinary: "#15191B",
           senary: "#171717",
+          septenary: "#1D0528",
         },
         light: {
           DEFAULT: "#F1F1F2",
@@ -40,6 +41,8 @@ module.exports = {
       },
       spacing: {
         3.5: "14px",
+        4.5: "18px",
+        5.5: "22px",
         6.5: "26px",
         7.5: "30px",
         12.5: "50px",

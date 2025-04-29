@@ -1,7 +1,13 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, useCallback } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
+import { router } from "expo-router";
+import { ROUTES } from "@/app/utils/routes";
 
 export const ChatHeader: FunctionComponent = () => {
+  const handlePress = useCallback(() => {
+    router.push(ROUTES.Setting);
+  }, []);
+
   return (
     <View className={"relative flex w-full flex-row items-center px-5 py-6"}>
       <Text
@@ -12,8 +18,9 @@ export const ChatHeader: FunctionComponent = () => {
         My Chats
       </Text>
       <TouchableOpacity
+        onPress={handlePress}
         className={
-          "bg-light-foreground right-6 rounded-lg p-1.5 dark:bg-dark-secondary"
+          "right-6 rounded-lg bg-light-foreground p-1.5 dark:bg-dark-secondary"
         }
       >
         <Image

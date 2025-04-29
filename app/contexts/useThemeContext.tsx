@@ -83,7 +83,7 @@ export const ThemeProvider: FunctionComponent<PropsWithChildren> = ({
   // Load theme from AsyncStorage on mount
   useEffect(() => {
     loadTheme();
-  }, [loadTheme]);
+  }, []);
 
   // Save theme to AsyncStorage whenever it changes
   useEffect(() => {
