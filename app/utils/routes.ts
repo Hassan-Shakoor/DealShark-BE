@@ -3,5 +3,6 @@ export const ROUTES = {
   SignIn: "/(auth)/sign-in",
   SignUp: "/(auth)/sign-up",
   TermsAndConditions: "/terms-and-condition",
-  Chat: "/chat",
+  Chat: "/(chat)/chat",
+  ChatView: (id: string) => `/(chat)/${id}` as const,
 } as const;

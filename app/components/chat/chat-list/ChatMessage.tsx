@@ -1,14 +1,21 @@
-import { FunctionComponent } from "react";
-import { Image, Text, View } from "react-native";
+import { FunctionComponent, useCallback } from "react";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import { Chat } from "@/app/data/chat-list";
+import { router } from "expo-router";
+import { ROUTES } from "@/app/utils/routes";
 
 type Props = {
   item: Chat;
 };
 
 export const ChatMessage: FunctionComponent<Props> = ({ item }) => {
+  const handlePress = useCallback(() => {
+    router.push(ROUTES.ChatView(item.id));
+  }, [item.id]);
+
   return (
-    <View
+    <TouchableOpacity
+      onPress={handlePress}
       className={
         "flex flex-row items-center gap-2 rounded-lg border border-dark-foreground/10 bg-white py-2.5 pl-6.5 pr-5 dark:bg-dark-foreground/60"
       }
@@ -35,6 +42,6 @@ export const ChatMessage: FunctionComponent<Props> = ({ item }) => {
           {item.lastMessage}
         </Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };

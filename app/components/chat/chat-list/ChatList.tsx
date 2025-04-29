@@ -1,5 +1,5 @@
 import { FlatList } from "react-native";
-import { ChatMessage } from "@/app/components/chat/ChatMessage";
+import { ChatMessage } from "@/app/components/chat/chat-list/ChatMessage";
 import { FavoriteChatList } from "@/app/data/chat-list";
 
 export const ChatList = () => {

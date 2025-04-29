@@ -1,6 +1,6 @@
 import { FunctionComponent } from "react";
 import { FlatList, View } from "react-native";
-import { FavoriteChatIcon } from "@/app/components/chat/FavoriteChatIcon";
+import { FavoriteChatIcon } from "@/app/components/chat/chat-list/FavoriteChatIcon";
 import { FavoriteChatList } from "@/app/data/favorite-chat-list";
 
 export const ChatFavoriteList: FunctionComponent = () => {
