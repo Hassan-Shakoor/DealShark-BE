@@ -25,17 +25,13 @@ const TermsAndCondition = () => {
           <View className={"flex flex-col gap-3"}>
             <Text
               className={
-                "pt-12 font-apfelGrotezk text-3xl font-medium text-black dark:text-white"
+                "font-sfPro pt-12 text-3xl font-medium text-black dark:text-white"
               }
             >
               Terms and Conditions
             </Text>
             <ScrollView>
-              <Text
-                className={
-                  "font-apfelGrotezk text-lg text-black dark:text-white"
-                }
-              >
+              <Text className={"font-sfPro text-lg text-black dark:text-white"}>
                 This Site and all its Contents are intended solely for personal,
                 non-commercial use. Except as expressly provided, nothing within
                 the Site shall be construed as conferring any license under our
@@ -57,12 +53,12 @@ const TermsAndCondition = () => {
                 status={isChecked ? "checked" : "unchecked"} // Checkbox status based on state
                 onPress={handleCheck} // Toggle checkbox state on press
               />
-              <Text className={"text-lg text-black dark:text-white"}>
+              <Text className={"font-sfPro text-lg text-black dark:text-white"}>
                 I accept the <Text>Terms and Agreement</Text>
               </Text>
             </View>
             <Button disabled={!isChecked} onPress={handleContinue}>
-              <Text className={"font-inter text-white"}>Continue</Text>
+              <Text className={"font-sfPro text-white"}>Continue</Text>
             </Button>
           </View>
         </View>

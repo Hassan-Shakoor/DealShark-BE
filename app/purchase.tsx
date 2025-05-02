@@ -18,7 +18,7 @@ const Purchase = () => {
             />
             <Text
               className={
-                "text-center font-brockmann text-2xl font-medium text-black dark:text-white"
+                "font-sfPro text-center text-2xl font-semibold text-black dark:text-white"
               }
             >
               Want to keep chatting?{"\n"}Unlock her
@@ -45,17 +45,17 @@ const Purchase = () => {
                     className="h-12 w-28"
                   />
                   <View className="flex flex-col items-center">
-                    <Text className="font-poppins text-4xl font-bold text-white">
+                    <Text className="font-sfPro text-4xl font-bold text-white">
                       $15.99
                     </Text>
-                    <Text className="font-brockmann text-xs text-white">
+                    <Text className="font-sfPro text-xs text-white">
                       Lifetime
                     </Text>
                   </View>
                 </View>
               </View>
               <View className={"flex flex-col gap-4 px-7"}>
-                <Text className={"font-inter font-medium text-white"}>
+                <Text className={"font-sfPro font-medium text-white"}>
                   Everything in Endless Intimacy plus:
                 </Text>
                 <View className={"flex flex-col gap-2.5"}>
@@ -64,7 +64,7 @@ const Purchase = () => {
                       source={require("@/assets/images/check-circle.png")}
                       className={"size-5"}
                     />
-                    <Text className={"font-inter font-medium text-white"}>
+                    <Text className={"font-sfPro font-medium text-white"}>
                       Personalized Memory
                     </Text>
                   </View>
@@ -73,7 +73,7 @@ const Purchase = () => {
                       source={require("@/assets/images/check-circle.png")}
                       className={"size-5"}
                     />
-                    <Text className={"font-inter font-medium text-white"}>
+                    <Text className={"font-sfPro font-medium text-white"}>
                       Unlimited Chats
                     </Text>
                   </View>
@@ -82,7 +82,7 @@ const Purchase = () => {
                       source={require("@/assets/images/check-circle.png")}
                       className={"size-5"}
                     />
-                    <Text className={"font-inter font-medium text-white"}>
+                    <Text className={"font-sfPro font-medium text-white"}>
                       Persona Selection
                     </Text>
                   </View>
@@ -92,14 +92,14 @@ const Purchase = () => {
                     source={require("@/assets/images/check-circle.png")}
                     className={"size-5"}
                   />
-                  <Text className={"font-inter font-medium text-white"}>
+                  <Text className={"font-sfPro font-medium text-white"}>
                     enhanced emotional intelligence
                   </Text>
                 </View>
               </View>
               <View className={"px-7"}>
                 <Button classNames={"w-full bg-red"}>
-                  <Text className={"text-white"}>Purchase</Text>
+                  <Text className={"font-sfPro text-white"}>Purchase</Text>
                 </Button>
               </View>
             </View>

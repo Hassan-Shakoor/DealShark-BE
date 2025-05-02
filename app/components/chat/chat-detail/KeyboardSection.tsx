@@ -27,9 +27,7 @@ export const KeyboardSection: FunctionComponent = () => {
     <View className={"flex flex-col gap-3.5"}>
       <Text
         onPress={handleTextPress}
-        className={
-          "text-center font-brockmann text-xs font-medium text-appleGrey"
-        }
+        className={"font-sfPro text-center text-xs font-medium text-appleGrey"}
       >
         Free trial: 2 Messages left
       </Text>

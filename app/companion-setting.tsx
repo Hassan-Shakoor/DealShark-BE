@@ -1,7 +1,7 @@
 import { CompanionBackground } from "@/app/components/theme/CompanionBackground";
 import { CustomSafeArea } from "@/app/components/ui/CustomSafeArea";
 import { CompanionSettingHeader } from "@/app/components/companion-setting/CompanionSettingHeader";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Text, View } from "react-native";
 import { ImageSection } from "@/app/components/companion-setting/ImageSection";
 import { ChipSelector } from "@/app/components/companion-setting/ChipSelector";
 import { FlirtingStyles, Personalities } from "@/app/data/companion-setting";
@@ -22,12 +22,12 @@ const CompanionSetting = () => {
         <View className={"mb-6 flex flex-row gap-2 px-6"}>
           <View className={"flex-1"}>
             <Button>
-              <Text className={"text-white"}>Save</Text>
+              <Text className={"font-sfPro text-white"}>Save</Text>
             </Button>
           </View>
           <View className={"flex-1"}>
             <Button variant={"secondary"}>
-              <Text className={"text-white"}>Cancel</Text>
+              <Text className={"font-sfPro text-white"}>Cancel</Text>
             </Button>
           </View>
         </View>

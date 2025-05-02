@@ -14,6 +14,7 @@ export default function RootLayout() {
     Brockmann: require("@/assets/fonts/Brockmann.ttf"),
     Inter: require("@/assets/fonts/Inter.ttf"),
     Poppins: require("@/assets/fonts/Poppins.ttf"),
+    SFPro: require("@/assets/fonts/SFPro.ttf"),
   });
 
   useEffect(() => {

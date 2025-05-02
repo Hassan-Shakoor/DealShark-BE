@@ -17,10 +17,10 @@ export const ChipSelector: FunctionComponent<Props> = ({ title, data }) => {
 
   return (
     <View className={"flex flex-col gap-3"}>
-      <Text className={"font-brockmann font-medium text-black dark:text-white"}>
+      <Text className={"font-sfPro font-medium text-black dark:text-white"}>
         {title}
       </Text>
-      <View className={"flex flex-row flex-wrap gap-1"}>
+      <View className={"flex flex-row flex-wrap gap-1.5"}>
         {data.map((item, index) =>
           isSelected === item ? (
             <SelectedChip

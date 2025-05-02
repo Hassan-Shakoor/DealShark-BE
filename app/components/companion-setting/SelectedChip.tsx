@@ -10,7 +10,7 @@ type Props = {
 export const SelectedChip: FunctionComponent<Props> = ({ title, onPress }) => {
   return (
     <TouchableOpacity
-      className="relative rounded-3xl"
+      className="relative flex flex-col items-center justify-center"
       activeOpacity={0.7}
       onPress={onPress}
     >
@@ -20,16 +20,12 @@ export const SelectedChip: FunctionComponent<Props> = ({ title, onPress }) => {
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
         className="absolute inset-0"
-        style={{ borderRadius: 12 }}
+        style={{ borderRadius: 14 }}
       />
 
       {/* Content layer */}
-      <View className="m-1 rounded-xl bg-tertiary p-3">
-        <Text
-          className={"font-apfelGrotezk text-lg text-white dark:text-subtle"}
-        >
-          {title}
-        </Text>
+      <View className="mx-1 rounded-xl bg-tertiary p-3">
+        <Text className={"font-sfPro text-lg text-white"}>{title}</Text>
       </View>
     </TouchableOpacity>
   );

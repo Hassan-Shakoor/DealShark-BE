@@ -37,14 +37,14 @@ export default function Index() {
           <View className={"flex flex-col items-center gap-1"}>
             <Text
               className={
-                "font-apfelGrotezk text-2xl font-normal text-secondary dark:text-white"
+                "font-sfPro text-2xl font-normal text-secondary dark:text-white"
               }
             >
               Meet your Ai Companion
             </Text>
             <Text
               className={
-                "font-brockmann text-3xl font-medium text-black dark:text-white"
+                "font-sfPro text-3xl font-medium text-black dark:text-white"
               }
             >
               Intimate. Unfiltered. Yours
@@ -60,14 +60,14 @@ export default function Index() {
             <View className={"flex flex-row items-center gap-2"}>
               <Text
                 className={
-                  "text-medium font-inter text-sm text-black dark:text-white"
+                  "text-medium font-sfPro text-sm text-black dark:text-white"
                 }
               >
                 Already have an account?
               </Text>
               <Link
                 href={ROUTES.SignIn}
-                className={"text-medium font-inter text-sm text-blue-600"}
+                className={"text-medium font-sfPro text-sm text-blue-600"}
               >
                 Log in
               </Link>

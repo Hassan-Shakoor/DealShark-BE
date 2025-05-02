@@ -12,7 +12,7 @@ export const ChatHeader: FunctionComponent = () => {
     <View className={"relative flex w-full flex-row items-center px-5 py-6"}>
       <Text
         className={
-          "w-full text-center font-brockmann text-2xl font-medium text-black dark:text-white"
+          "font-sfPro w-full text-center text-2xl font-medium text-black dark:text-white"
         }
       >
         My Chats

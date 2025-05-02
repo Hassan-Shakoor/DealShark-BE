@@ -26,7 +26,7 @@ export const UserMessage: FunctionComponent<Props> = ({
         <View>
           <Text
             className={className(
-              "font-brockmann text-base font-medium",
+              "font-sfPro text-base font-medium",
               isUserMessage ? "text-white" : "text-black dark:text-white",
             )}
           >
@@ -34,7 +34,7 @@ export const UserMessage: FunctionComponent<Props> = ({
           </Text>
           <Text
             className={className(
-              "text- self-end font-brockmann text-xxxs font-medium",
+              "font-sfPro self-end text-xxxs font-medium",
               isUserMessage ? "text-white" : "text-black dark:text-white",
             )}
           >

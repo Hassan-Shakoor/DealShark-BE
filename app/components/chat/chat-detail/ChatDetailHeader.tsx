@@ -34,7 +34,7 @@ export const ChatDetailHeader: FunctionComponent = () => {
         />
         <Text
           className={
-            "text-center font-apfelGrotezk text-sm text-black dark:text-white"
+            "font-sfPro text-center text-sm text-black dark:text-white"
           }
         >
           Partner Name

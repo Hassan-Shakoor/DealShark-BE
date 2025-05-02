@@ -35,11 +35,7 @@ const Setting = () => {
                 "flex flex-row items-center justify-between rounded-xl bg-white/50 px-4.5 py-5.5 dark:bg-dark-septenary/50"
               }
             >
-              <Text
-                className={
-                  "font-apfelGrotezk text-lg text-black dark:text-white"
-                }
-              >
+              <Text className={"font-sfPro text-lg text-black dark:text-white"}>
                 Account
               </Text>
               <AntDesign
@@ -53,18 +49,10 @@ const Setting = () => {
                 "flex flex-row items-center justify-between rounded-xl bg-white/50 px-4.5 py-5.5 dark:bg-dark-septenary/50"
               }
             >
-              <Text
-                className={
-                  "font-apfelGrotezk text-lg text-black dark:text-white"
-                }
-              >
+              <Text className={"font-sfPro text-lg text-black dark:text-white"}>
                 App Version
               </Text>
-              <Text
-                className={
-                  "font-apfelGrotezk text-sm text-black dark:text-white"
-                }
-              >
+              <Text className={"font-sfPro text-sm text-black dark:text-white"}>
                 v2.4
               </Text>
             </View>
@@ -73,18 +61,10 @@ const Setting = () => {
                 "flex flex-row items-center justify-between rounded-xl bg-white/50 px-4.5 py-5.5 dark:bg-dark-septenary/50"
               }
             >
-              <Text
-                className={
-                  "font-apfelGrotezk text-lg text-black dark:text-white"
-                }
-              >
+              <Text className={"font-sfPro text-lg text-black dark:text-white"}>
                 App Language
               </Text>
-              <Text
-                className={
-                  "font-apfelGrotezk text-sm text-black dark:text-white"
-                }
-              >
+              <Text className={"font-sfPro text-sm text-black dark:text-white"}>
                 English
               </Text>
             </View>
@@ -95,16 +75,12 @@ const Setting = () => {
                 "flex flex-row items-center justify-between rounded-xl bg-white/50 px-4.5 py-5.5 dark:bg-dark-septenary/50"
               }
             >
-              <Text
-                className={
-                  "font-apfelGrotezk text-lg text-black dark:text-white"
-                }
-              >
+              <Text className={"font-sfPro text-lg text-black dark:text-white"}>
                 Theme
               </Text>
               <Text
                 className={
-                  "font-apfelGrotezk text-sm capitalize text-black dark:text-white"
+                  "font-sfPro text-sm capitalize text-black dark:text-white"
                 }
               >
                 {`${colorScheme}` + " mode"}
@@ -114,7 +90,7 @@ const Setting = () => {
         </View>
         <View className={"mb-12 px-6"}>
           <Button variant={"danger"}>
-            <Text className={"text-white"}>Log out</Text>
+            <Text className={"font-sfPro text-white"}>Log out</Text>
           </Button>
         </View>
       </CustomSafeArea>

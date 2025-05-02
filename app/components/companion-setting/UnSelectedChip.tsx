@@ -18,7 +18,7 @@ export const UnSelectedChip: FunctionComponent<Props> = ({
         "rounded-xl border-[4px] border-transparent bg-quinary p-3 dark:bg-quaternary"
       }
     >
-      <Text className={"font-apfelGrotezk text-lg text-white dark:text-subtle"}>
+      <Text className={"font-sfPro text-lg text-white dark:text-subtle"}>
         {title}
       </Text>
     </TouchableOpacity>

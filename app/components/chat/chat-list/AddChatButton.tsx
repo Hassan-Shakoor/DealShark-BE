@@ -5,10 +5,8 @@ import { View } from "react-native";
 
 export const AddChatButton: FunctionComponent = () => {
   return (
-    <View className={"self-end"}>
-      <Button
-        classNames={"mb-12 mt-4 !p-3 !rounded-full items-center justify-center"}
-      >
+    <View className={"absolute bottom-4 right-4.5 z-10"}>
+      <Button classNames={"!p-3 !rounded-full items-center justify-center"}>
         <Entypo name="plus" size={45} color={"white"} />
       </Button>
     </View>

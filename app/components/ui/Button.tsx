@@ -20,8 +20,9 @@ export const Button: FunctionComponent<PropsWithChildren<Props>> = ({
     <TouchableOpacity
       disabled={disabled}
       onPress={onPress}
+      activeOpacity={0.7}
       className={className(
-        "text-medium w-full items-center rounded-lg p-4 text-sm disabled:bg-primary/30",
+        "text-medium font-sfPro w-full items-center rounded-lg p-4 text-sm disabled:bg-primary/30",
         {
           "bg-primary": variant === "primary",
           "bg-danger": variant === "danger",

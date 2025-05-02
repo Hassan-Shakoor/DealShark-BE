@@ -39,6 +39,7 @@ module.exports = {
         brockmann: ["Brockmann"],
         inter: ["Inter"],
         poppins: ["Poppins"],
+        sfPro: ["SFPro"],
       },
       fontSize: {
         xxxs: ["8px", { lineHeight: "12px" }],
@@ -50,6 +51,7 @@ module.exports = {
         6.5: "26px",
         7.5: "30px",
         12.5: "50px",
+        18.5: "74px",
       },
     },
   },

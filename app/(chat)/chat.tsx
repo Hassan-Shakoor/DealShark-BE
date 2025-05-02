@@ -9,7 +9,7 @@ import { AddChatButton } from "@/app/components/chat/chat-list/AddChatButton";
 const Chat = () => {
   return (
     <ChatBackground>
-      <CustomSafeArea classNames={"px-5"}>
+      <CustomSafeArea classNames={"px-5 relative flex-1 mb-4"}>
         <ChatHeader />
         <SearchChat />
         <ChatFavoriteList />

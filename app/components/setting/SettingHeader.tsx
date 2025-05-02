@@ -13,7 +13,7 @@ export const SettingHeader: FunctionComponent = () => {
       <View className={"flex-1 flex-col gap-1"}>
         <Text
           className={
-            "w-full text-center font-brockmann text-2xl font-medium text-black dark:text-white"
+            "font-sfPro w-full text-center text-2xl font-medium text-black dark:text-white"
           }
         >
           Settings

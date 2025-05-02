@@ -29,16 +29,16 @@ export const ChatMessage: FunctionComponent<Props> = ({ item }) => {
         <View className={"flex flex-row items-center justify-between"}>
           <Text
             className={
-              "font-inter text-lg font-bold text-black dark:text-white"
+              "font-sfPro text-lg font-bold text-black dark:text-white"
             }
           >
             {item.title}
           </Text>
-          <Text className={"font-inter text-sm text-appleGrey"}>
+          <Text className={"font-sfPro text-sm text-appleGrey"}>
             {item.date}
           </Text>
         </View>
-        <Text className={"font-inter text-sm text-appleGrey"} numberOfLines={2}>
+        <Text className={"font-sfPro text-sm text-appleGrey"} numberOfLines={2}>
           {item.lastMessage}
         </Text>
       </View>

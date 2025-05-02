@@ -34,7 +34,7 @@ const SignIn: FunctionComponent = () => {
           </View>
           {/*Form*/}
           <View className={"flex flex-col gap-5 pt-14"}>
-            <Text className={"font-brockmann text-3xl font-medium text-white"}>
+            <Text className={"font-sfPro text-3xl font-medium text-white"}>
               Sign In
             </Text>
             <View className={"flex flex-col gap-2"}>
@@ -67,19 +67,19 @@ const SignIn: FunctionComponent = () => {
           {/*Button*/}
           <View className={"mt-9 flex w-full flex-col items-center gap-5"}>
             <Button onPress={handleContinue}>
-              <Text className={"font-inter text-white"}>Continue</Text>
+              <Text className={"font-sfPro text-white"}>Continue</Text>
             </Button>
             <View className={"flex flex-row items-center gap-2"}>
               <Text
                 className={
-                  "text-medium font-inter text-sm text-black dark:text-white"
+                  "text-medium font-sfPro text-sm text-black dark:text-white"
                 }
               >
                 Don't have an account?
               </Text>
               <Link
                 href={ROUTES.SignUp}
-                className={"text-medium font-inter text-sm text-blue-600"}
+                className={"text-medium font-sfPro text-sm text-blue-600"}
               >
                 Create new one
               </Link>
