@@ -4,7 +4,7 @@ export const ROUTES = {
   SignUp: "/sign-up",
   TermsAndConditions: "/terms-and-condition",
   Chat: "/(chat)",
-  ChatView: (id: string) => `/(chat)/${id}` as const,
+  ChatView: (id: string | number) => `/(chat)/${id}` as const,
   Purchase: "/purchase",
   Setting: "/setting",
   CompanionSetting: "/companion-setting",
@@ -14,4 +14,8 @@ export const APIS = {
   signIn: "/auth/signin",
   signUp: "/auth/signup/",
   acceptTerm: "/auth/accept-terms",
+  fetchAllChats: "/chats/",
+  fetchAllPinnedChats: "/chats/pinned/",
+  createNewChat: "/chats/new",
+  fetchUserSetting: "/settings",
 };

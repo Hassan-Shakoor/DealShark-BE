@@ -7,11 +7,12 @@ import { router } from "expo-router";
 import { APIS, ROUTES } from "@/app/utils/routes";
 import { CustomSafeArea } from "@/app/components/ui/CustomSafeArea";
 import { api } from "@/app/utils/api";
-import { HttpStatusCode, isAxiosError } from "axios";
+import { HttpStatusCode } from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AsyncStorageKey } from "@/app/utils/constant";
 import { AuthAction } from "@/app/contexts/action";
 import { useAuthContext } from "@/app/contexts/useAuthContext";
+import { handleError } from "@/app/utils/error-handling";
 
 const SignUp: FunctionComponent = () => {
   const [username, setUsername] = useState<string>("");
@@ -42,7 +43,7 @@ const SignUp: FunctionComponent = () => {
       });
       router.replace(ROUTES.TermsAndConditions);
     } catch (error) {
-      console.error(isAxiosError(error) ? error?.response?.data.detail : error);
+      handleError(error);
     }
   }, [dispatch, password, username]);
 

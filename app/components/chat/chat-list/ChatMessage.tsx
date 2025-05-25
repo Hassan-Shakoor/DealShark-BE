@@ -1,8 +1,8 @@
 import { FunctionComponent, useCallback } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
-import { Chat } from "@/app/data/chat-list";
 import { router } from "expo-router";
 import { ROUTES } from "@/app/utils/routes";
+import { Chat } from "@/app/types/Chat";
 
 type Props = {
   item: Chat;
@@ -10,8 +10,8 @@ type Props = {
 
 export const ChatMessage: FunctionComponent<Props> = ({ item }) => {
   const handlePress = useCallback(() => {
-    router.push(ROUTES.ChatView(item.id));
-  }, [item.id]);
+    router.push(ROUTES.ChatView(item.chat_id));
+  }, [item.chat_id]);
 
   return (
     <TouchableOpacity
@@ -21,7 +21,7 @@ export const ChatMessage: FunctionComponent<Props> = ({ item }) => {
       }
     >
       <Image
-        source={item.image}
+        source={require("@/assets/images/chat-list-placeholder.png")}
         className={"size-11 rounded-full"}
         resizeMode="contain"
       />
@@ -32,15 +32,22 @@ export const ChatMessage: FunctionComponent<Props> = ({ item }) => {
               "font-sfPro text-lg font-bold text-black dark:text-white"
             }
           >
-            {item.title}
+            {item.companion_name}
           </Text>
-          <Text className={"font-sfPro text-sm text-appleGrey"}>
-            {item.date}
-          </Text>
+          {!!item.messages.length && (
+            <Text className={"font-sfPro text-sm text-appleGrey"}>
+              {`${new Date(item.messages[item.messages.length - 1].timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true })}`}
+            </Text>
+          )}
         </View>
-        <Text className={"font-sfPro text-sm text-appleGrey"} numberOfLines={2}>
-          {item.lastMessage}
-        </Text>
+        {!!item.messages.length && (
+          <Text
+            className={"font-sfPro text-sm text-appleGrey"}
+            numberOfLines={2}
+          >
+            {item.messages[item.messages.length - 1].content}
+          </Text>
+        )}
       </View>
     </TouchableOpacity>
   );

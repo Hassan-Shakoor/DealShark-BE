@@ -12,6 +12,7 @@ import { AsyncStorageKey } from "@/app/utils/constant";
 import { useAuthContext } from "@/app/contexts/useAuthContext";
 import { AuthAction } from "@/app/contexts/action";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { handleError } from "@/app/utils/error-handling";
 
 const SignIn: FunctionComponent = () => {
   const [username, setUsername] = useState<string>("");
@@ -42,7 +43,7 @@ const SignIn: FunctionComponent = () => {
       });
       router.replace(ROUTES.Chat);
     } catch (error) {
-      console.error(isAxiosError(error) ? error?.response?.data.detail : error);
+      handleError(error);
     }
   }, [dispatch, password, username]);
 

@@ -7,7 +7,8 @@ import { router } from "expo-router";
 import { APIS, ROUTES } from "@/app/utils/routes";
 import { CustomSafeArea } from "@/app/components/ui/CustomSafeArea";
 import { api } from "@/app/utils/api";
-import { HttpStatusCode, isAxiosError } from "axios";
+import { HttpStatusCode } from "axios";
+import { handleError } from "@/app/utils/error-handling";
 
 const TermsAndCondition = () => {
   const [isChecked, setChecked] = useState<boolean>(false);
@@ -25,9 +26,9 @@ const TermsAndCondition = () => {
       }
 
       console.info(response.data);
-      router.push(ROUTES.Chat);
+      router.replace(ROUTES.Chat);
     } catch (error) {
-      console.error(isAxiosError(error) ? error?.response?.data.detail : error);
+      handleError(error);
     }
   }, [isChecked]);
 
