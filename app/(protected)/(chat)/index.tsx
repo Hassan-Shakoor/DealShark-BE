@@ -6,7 +6,7 @@ import { ChatFavoriteList } from "@/app/components/chat/chat-list/ChatFavoriteLi
 import { ChatList } from "@/app/components/chat/chat-list/ChatList";
 import { AddChatButton } from "@/app/components/chat/chat-list/AddChatButton";
 
-const Chat = () => {
+const Index = () => {
   return (
     <ChatBackground>
       <CustomSafeArea classNames={"px-5 relative flex-1 mb-4"}>
@@ -20,4 +20,4 @@ const Chat = () => {
   );
 };
 
-export default Chat;
+export default Index;

@@ -1,17 +1,53 @@
 import { FunctionComponent, useCallback, useState } from "react";
 import { Image, Pressable, Text, TextInput, View } from "react-native";
-import { AuthBackground } from "../components/theme/AuthBackground";
+import { AuthBackground } from "@/app/components/theme/AuthBackground";
 import { Feather } from "@expo/vector-icons";
 import { Button } from "@/app/components/ui/Button";
-import { Link, router } from "expo-router";
-import { ROUTES } from "@/app/utils/routes";
+import { router } from "expo-router";
+import { APIS, ROUTES } from "@/app/utils/routes";
 import { CustomSafeArea } from "@/app/components/ui/CustomSafeArea";
+import { api } from "@/app/utils/api";
+import { HttpStatusCode, isAxiosError } from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AsyncStorageKey } from "@/app/utils/constant";
+import { AuthAction } from "@/app/contexts/action";
+import { useAuthContext } from "@/app/contexts/useAuthContext";
 
-const SignIn: FunctionComponent = () => {
+const SignUp: FunctionComponent = () => {
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const [isPasswordVisible, setPasswordVisible] = useState<boolean>(false);
 
-  const handleContinue = useCallback(() => {
-    router.push(ROUTES.TermsAndConditions);
+  const { dispatch } = useAuthContext();
+
+  const handleContinue = useCallback(async () => {
+    try {
+      const response = await api.post(APIS.signUp, {
+        user_email: username,
+        password,
+      });
+
+      if (response.status !== HttpStatusCode.Ok) {
+        throw new Error("Failed to sign Up");
+      }
+
+      console.info(response.data);
+      await AsyncStorage.setItem(
+        AsyncStorageKey.Token,
+        response.data.access_token,
+      );
+      dispatch({
+        type: AuthAction.SetLoggedIn,
+        payload: response.data.access_token,
+      });
+      router.replace(ROUTES.TermsAndConditions);
+    } catch (error) {
+      console.error(isAxiosError(error) ? error?.response?.data.detail : error);
+    }
+  }, [dispatch, password, username]);
+
+  const handleSignIn = useCallback(() => {
+    router.replace(ROUTES.SignIn);
   }, []);
 
   return (
@@ -43,6 +79,8 @@ const SignIn: FunctionComponent = () => {
                 placeholder={"username@example.com"}
                 placeholderTextColor={"#1A1C1E"}
                 keyboardType={"email-address"}
+                value={username}
+                onChangeText={setUsername}
               />
               {/* Password Input */}
               <View className="relative w-full">
@@ -50,6 +88,8 @@ const SignIn: FunctionComponent = () => {
                   className={"w-full rounded-lg bg-white/60 p-3"}
                   placeholder="Password"
                   placeholderTextColor={"#1A1C1E"}
+                  value={password}
+                  onChangeText={setPassword}
                   secureTextEntry={!isPasswordVisible}
                 />
                 <Pressable
@@ -95,12 +135,12 @@ const SignIn: FunctionComponent = () => {
               >
                 Already have an account?
               </Text>
-              <Link
-                href={ROUTES.SignIn}
+              <Text
+                onPress={handleSignIn}
                 className={"text-medium font-sfPro text-sm text-blue-600"}
               >
                 Log in
-              </Link>
+              </Text>
             </View>
           </View>
         </View>
@@ -109,4 +149,4 @@ const SignIn: FunctionComponent = () => {
   );
 };
 
-export default SignIn;
+export default SignUp;

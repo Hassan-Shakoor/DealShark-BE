@@ -1,14 +1,18 @@
 import { Image, Text, View } from "react-native";
 import { AuthBackground } from "@/app/components/theme/AuthBackground";
 import { Button } from "@/app/components/ui/Button";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import { ROUTES } from "@/app/utils/routes";
 import { useCallback } from "react";
 import { CustomSafeArea } from "@/app/components/ui/CustomSafeArea";
 
-export default function Index() {
+export default function AuthHome() {
   const handleContinue = useCallback(() => {
-    router.push(ROUTES.SignUp);
+    router.replace(ROUTES.SignUp);
+  }, []);
+
+  const handleLogin = useCallback(() => {
+    router.replace(ROUTES.SignIn);
   }, []);
 
   return (
@@ -65,12 +69,12 @@ export default function Index() {
               >
                 Already have an account?
               </Text>
-              <Link
-                href={ROUTES.SignIn}
+              <Text
+                onPress={handleLogin}
                 className={"text-medium font-sfPro text-sm text-blue-600"}
               >
                 Log in
-              </Link>
+              </Text>
             </View>
           </View>
         </View>

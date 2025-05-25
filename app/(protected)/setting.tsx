@@ -5,15 +5,18 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { PurchaseBanner } from "@/app/components/setting/PurchaseBanner";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useColorScheme } from "nativewind";
-import { Theme } from "@/app/utils/constant";
+import { AsyncStorageKey, Theme } from "@/app/utils/constant";
 import { useThemeContext } from "@/app/contexts/useThemeContext";
-import { ThemeAction } from "@/app/contexts/action";
+import { AuthAction, ThemeAction } from "@/app/contexts/action";
 import { useCallback } from "react";
 import { Button } from "@/app/components/ui/Button";
+import { useAuthContext } from "@/app/contexts/useAuthContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Setting = () => {
   const { dispatch } = useThemeContext();
   const { colorScheme } = useColorScheme();
+  const { dispatch: authDispatch } = useAuthContext();
 
   const handleToggleTheme = useCallback(() => {
     dispatch({
@@ -21,6 +24,11 @@ const Setting = () => {
       payload: colorScheme === Theme.Dark ? Theme.Light : Theme.Dark,
     });
   }, [colorScheme, dispatch]);
+
+  const handleLogOut = useCallback(() => {
+    authDispatch({ type: AuthAction.SetLoggedIn, payload: null });
+    AsyncStorage.removeItem(AsyncStorageKey.Token);
+  }, [authDispatch]);
 
   return (
     <AuthBackground>
@@ -89,7 +97,7 @@ const Setting = () => {
           </View>
         </View>
         <View className={"mb-12 px-6"}>
-          <Button variant={"danger"}>
+          <Button onPress={handleLogOut} variant={"danger"}>
             <Text className={"font-sfPro text-white"}>Log out</Text>
           </Button>
         </View>

@@ -4,8 +4,10 @@ import { Button } from "@/app/components/ui/Button";
 import { useCallback, useState } from "react";
 import { Checkbox } from "react-native-paper";
 import { router } from "expo-router";
-import { ROUTES } from "@/app/utils/routes";
+import { APIS, ROUTES } from "@/app/utils/routes";
 import { CustomSafeArea } from "@/app/components/ui/CustomSafeArea";
+import { api } from "@/app/utils/api";
+import { HttpStatusCode, isAxiosError } from "axios";
 
 const TermsAndCondition = () => {
   const [isChecked, setChecked] = useState<boolean>(false);
@@ -14,9 +16,20 @@ const TermsAndCondition = () => {
     setChecked((prev) => !prev);
   }, []);
 
-  const handleContinue = useCallback(() => {
-    router.push(ROUTES.Chat);
-  }, []);
+  const handleContinue = useCallback(async () => {
+    try {
+      const response = await api.post(APIS.acceptTerm, { accept: isChecked });
+
+      if (response.status !== HttpStatusCode.Ok) {
+        throw new Error("Failed to accept terms");
+      }
+
+      console.info(response.data);
+      router.push(ROUTES.Chat);
+    } catch (error) {
+      console.error(isAxiosError(error) ? error?.response?.data.detail : error);
+    }
+  }, [isChecked]);
 
   return (
     <ChatBackground>
@@ -25,7 +38,7 @@ const TermsAndCondition = () => {
           <View className={"flex flex-col gap-3"}>
             <Text
               className={
-                "font-sfPro pt-12 text-3xl font-medium text-black dark:text-white"
+                "pt-12 font-sfPro text-3xl font-medium text-black dark:text-white"
               }
             >
               Terms and Conditions

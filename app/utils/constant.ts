@@ -6,4 +6,5 @@ export enum Theme {
 
 export const AsyncStorageKey = {
   AppTheme: "@appTheme",
+  Token: "@token",
 };
