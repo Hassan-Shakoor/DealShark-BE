@@ -1,4 +1,4 @@
-import { FunctionComponent, useCallback, useState } from "react";
+import { FunctionComponent, useCallback, useMemo, useState } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -14,20 +14,28 @@ import { useChatContext } from "@/app/contexts/useChatContext";
 import { handleError } from "@/app/utils/error-handling";
 import { api } from "@/app/utils/api";
 import { HttpStatusCode } from "axios";
-import { Message } from "@/app/types/Chat";
+import { Chat, Message, MessageRole } from "@/app/types/Chat";
 import { ChatAction } from "@/app/contexts/action";
+import { FreeAllowedMessageCount } from "@/app/utils/constant";
 
 export const KeyboardSection: FunctionComponent = () => {
   const param = useLocalSearchParams();
   const id: string = Array.isArray(param.id) ? param.id[0] : param.id;
   const [messageText, setMessageText] = useState<string>("");
-  const { dispatch } = useChatContext();
+  const { state, dispatch } = useChatContext();
+
+  const individualMessageCount = useMemo(() => {
+    const individualMessage =
+      state.individualMessage?.messages.filter(
+        (message) => message.role === MessageRole.User,
+      ) ?? [];
+
+    return individualMessage.length;
+  }, [state.individualMessage?.messages]);
 
   const fetchIndividualChatList = useCallback(async () => {
     try {
-      const response = await api.get<{ chat_id: number; messages: Message[] }>(
-        APIS.fetchIndividualChat(id),
-      );
+      const response = await api.get<Chat>(APIS.fetchIndividualChat(id));
 
       if (response.status !== HttpStatusCode.Ok) {
         throw new Error(`Failed to fetch chat`);
@@ -40,7 +48,7 @@ export const KeyboardSection: FunctionComponent = () => {
       });
       dispatch({
         type: ChatAction.SetIndividualMessage,
-        payload: response.data.messages as Message[],
+        payload: response.data,
       });
     } catch (error) {
       handleError(error);
@@ -48,10 +56,31 @@ export const KeyboardSection: FunctionComponent = () => {
   }, [dispatch, id]);
 
   const handleSendMessage = useCallback(async () => {
+    console.log(individualMessageCount);
+    if (individualMessageCount >= FreeAllowedMessageCount) {
+      setMessageText("");
+      router.push(ROUTES.Purchase);
+      return;
+    }
     try {
       dispatch({
         type: ChatAction.SetWaitingForResponse,
         payload: true,
+      });
+      setMessageText("");
+      dispatch({
+        type: ChatAction.SetIndividualMessage,
+        payload: {
+          ...state.individualMessage,
+          messages: [
+            ...(state.individualMessage?.messages as Message[]),
+            {
+              content: messageText,
+              role: MessageRole.User,
+              timestamp: new Date().toISOString(),
+            },
+          ],
+        } as Chat,
       });
 
       const response = await api.post(APIS.sendIndividualMessage(id), {
@@ -63,17 +92,22 @@ export const KeyboardSection: FunctionComponent = () => {
       }
 
       console.info(response.data);
-      await fetchIndividualChatList();
     } catch (error) {
       handleError(error);
     } finally {
-      setMessageText("");
+      await fetchIndividualChatList();
       dispatch({
         type: ChatAction.SetWaitingForResponse,
         payload: false,
       });
     }
-  }, [dispatch, fetchIndividualChatList, id, messageText]);
+  }, [
+    dispatch,
+    fetchIndividualChatList,
+    id,
+    messageText,
+    state.individualMessage,
+  ]);
 
   const handleTextPress = useCallback(() => {
     router.push(ROUTES.Purchase);
@@ -85,7 +119,7 @@ export const KeyboardSection: FunctionComponent = () => {
         onPress={handleTextPress}
         className={"text-center font-sfPro text-xs font-medium text-appleGrey"}
       >
-        Free trial: 2 Messages left
+        {`Free trial: ${FreeAllowedMessageCount - individualMessageCount} Messages left`}
       </Text>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}

@@ -1,3 +1,5 @@
+export const FreeAllowedMessageCount = 4;
+
 export enum Theme {
   Light = "light",
   Dark = "dark",
