@@ -4,17 +4,18 @@ import { UnSelectedChip } from "@/app/components/companion-setting/UnSelectedChi
 import { SelectedChip } from "@/app/components/companion-setting/SelectedChip";
 
 type Props = {
+  isSelected: string;
   title: string;
   data: string[];
+  handlePress: (item: string) => void;
 };
 
-export const ChipSelector: FunctionComponent<Props> = ({ title, data }) => {
-  const [isSelected, setSelected] = useState<string>("");
-
-  const handlePress = useCallback((item: string) => {
-    setSelected(item);
-  }, []);
-
+export const ChipSelector: FunctionComponent<Props> = ({
+  title,
+  data,
+  isSelected,
+  handlePress,
+}) => {
   return (
     <View className={"flex flex-col gap-3"}>
       <Text className={"font-sfPro font-medium text-black dark:text-white"}>
@@ -22,7 +23,7 @@ export const ChipSelector: FunctionComponent<Props> = ({ title, data }) => {
       </Text>
       <View className={"flex flex-row flex-wrap gap-1.5"}>
         {data.map((item, index) =>
-          isSelected === item ? (
+          isSelected.toUpperCase() === item.toUpperCase() ? (
             <SelectedChip
               key={`${item}-${index}`}
               title={item}

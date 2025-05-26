@@ -14,3 +14,16 @@ export type Message = {
   content: string;
   timestamp: string;
 };
+
+export type PinnedMessage = {
+  chat_id: number;
+  companion_name: string;
+  messages: Message[];
+};
+
+export type CompanionSetting = {
+  name: string;
+  gender: string;
+  personality: string[];
+  flirting_style: string[];
+};

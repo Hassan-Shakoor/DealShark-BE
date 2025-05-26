@@ -52,7 +52,7 @@ export const TypingIndicator: FunctionComponent = () => {
   return (
     <View
       className={className(
-        "flex w-fit max-w-[80%] flex-row gap-1 self-start rounded-3xl rounded-bl-none bg-light-quaternary px-5 py-3 dark:bg-dark-secondary",
+        "flex w-fit max-w-[80%] flex-row gap-1 self-start rounded-3xl rounded-bl-none bg-light-quaternary px-3 py-2 dark:bg-dark-secondary",
       )}
     >
       <AnimatedDot opacity={dot1Opacity} />

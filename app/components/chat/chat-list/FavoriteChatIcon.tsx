@@ -1,21 +1,21 @@
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Image, Text, TouchableOpacity } from "react-native";
 import { FunctionComponent } from "react";
-import { FavoriteChat } from "@/app/data/favorite-chat-list";
+import { PinnedMessage } from "@/app/types/Chat";
 
 type Props = {
-  item: FavoriteChat;
+  item: PinnedMessage;
 };
 
 export const FavoriteChatIcon: FunctionComponent<Props> = ({ item }) => {
   return (
     <TouchableOpacity className="items-center" activeOpacity={0.7}>
       <Image
-        source={require("@/assets/images/react-logo.png")}
+        source={require("@/assets/images/johnathan-favorite.png")}
         className={"size-24 rounded-full"}
         resizeMode="contain"
       />
       <Text className="mt-0.5 text-center font-apfelGrotezk text-sm font-normal text-appleGrey">
-        {item.name}
+        {item.companion_name}
       </Text>
     </TouchableOpacity>
   );

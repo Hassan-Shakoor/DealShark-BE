@@ -1,16 +1,44 @@
-import { FunctionComponent, useMemo, useRef, useEffect } from "react";
+import { FunctionComponent, useCallback, useEffect, useRef } from "react";
 import { UserMessage } from "@/app/components/chat/chat-detail/UserMessage";
 import { FlatList, View } from "react-native";
-import { Message, Messages } from "@/app/data/message-list";
+import { useLocalSearchParams } from "expo-router";
+import { api } from "@/app/utils/api";
+import { APIS } from "@/app/utils/routes";
+import { HttpStatusCode } from "axios";
+import { handleError } from "@/app/utils/error-handling";
+import { useChatContext } from "@/app/contexts/useChatContext";
+import { ChatAction } from "@/app/contexts/action";
+import { Chat, Message } from "@/app/types/Chat";
+import { TypingIndicator } from "@/app/components/chat/chat-detail/TypingIndicator";
 
 export const MessageList: FunctionComponent = () => {
   // Create a ref for the FlatList component
+  const param = useLocalSearchParams();
+  const id: string = Array.isArray(param.id) ? param.id[0] : param.id;
   const flatListRef = useRef<FlatList<Message>>(null);
+  const { state, dispatch } = useChatContext();
 
-  const messageWithLoader: Message[] = useMemo(
-    () => [...Messages, { id: 999, loading: true }],
-    [],
-  );
+  const fetchIndividualChatList = useCallback(async () => {
+    try {
+      const response = await api.get<Chat>(APIS.fetchIndividualChat(id));
+
+      if (response.status !== HttpStatusCode.Ok) {
+        throw new Error(`Failed to fetch chat`);
+      }
+
+      console.info(response.data);
+      dispatch({
+        type: ChatAction.SetIndividualMessage,
+        payload: response.data,
+      });
+    } catch (error) {
+      handleError(error);
+    }
+  }, [dispatch, id]);
+
+  useEffect(() => {
+    fetchIndividualChatList();
+  }, [fetchIndividualChatList]);
 
   // Scroll to the end whenever messages change
   useEffect(() => {
@@ -22,7 +50,7 @@ export const MessageList: FunctionComponent = () => {
     }, 100);
 
     return () => clearTimeout(timer);
-  }, [messageWithLoader]);
+  }, []);
 
   return (
     <View className={"flex-1 px-3.5"}>
@@ -30,7 +58,7 @@ export const MessageList: FunctionComponent = () => {
         ref={flatListRef}
         scrollEnabled
         showsVerticalScrollIndicator={false}
-        data={messageWithLoader}
+        data={state.individualMessage?.messages ?? []}
         renderItem={({ item }) => <UserMessage message={item} />}
         contentContainerClassName={"gap-3 pb-4"}
         // Simple event handlers that directly call scrollToEnd on the ref
@@ -45,6 +73,7 @@ export const MessageList: FunctionComponent = () => {
           }
         }}
       />
+      {state.waitingForResponse && <TypingIndicator />}
     </View>
   );
 };

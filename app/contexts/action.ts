@@ -11,4 +11,8 @@ export enum ChatAction {
   SetChatSearchQuery = "SetChatSearchQuery",
   SetChatList = "SetChatList",
   AddChat = "AddChat",
+  SetIndividualMessage = "SetIndividualMessage",
+  SetWaitingForResponse = "SetWaitingForResponse",
+  SetPinnedChats = "SetPinnedChats",
+  SetCompanionSetting = "SetCompanionSetting",
 }

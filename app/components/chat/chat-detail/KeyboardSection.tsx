@@ -8,16 +8,72 @@ import {
   View,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
-import { ROUTES } from "@/app/utils/routes";
+import { router, useLocalSearchParams } from "expo-router";
+import { APIS, ROUTES } from "@/app/utils/routes";
+import { useChatContext } from "@/app/contexts/useChatContext";
+import { handleError } from "@/app/utils/error-handling";
+import { api } from "@/app/utils/api";
+import { HttpStatusCode } from "axios";
+import { Message } from "@/app/types/Chat";
+import { ChatAction } from "@/app/contexts/action";
 
 export const KeyboardSection: FunctionComponent = () => {
+  const param = useLocalSearchParams();
+  const id: string = Array.isArray(param.id) ? param.id[0] : param.id;
   const [messageText, setMessageText] = useState<string>("");
+  const { dispatch } = useChatContext();
 
-  const handleSendMessage = useCallback(() => {
-    console.log("Message sent:", messageText);
-    setMessageText("");
-  }, [messageText]);
+  const fetchIndividualChatList = useCallback(async () => {
+    try {
+      const response = await api.get<{ chat_id: number; messages: Message[] }>(
+        APIS.fetchIndividualChat(id),
+      );
+
+      if (response.status !== HttpStatusCode.Ok) {
+        throw new Error(`Failed to fetch chat`);
+      }
+
+      console.info(response.data);
+      dispatch({
+        type: ChatAction.SetWaitingForResponse,
+        payload: false,
+      });
+      dispatch({
+        type: ChatAction.SetIndividualMessage,
+        payload: response.data.messages as Message[],
+      });
+    } catch (error) {
+      handleError(error);
+    }
+  }, [dispatch, id]);
+
+  const handleSendMessage = useCallback(async () => {
+    try {
+      dispatch({
+        type: ChatAction.SetWaitingForResponse,
+        payload: true,
+      });
+
+      const response = await api.post(APIS.sendIndividualMessage(id), {
+        message: messageText,
+      });
+
+      if (response.status !== HttpStatusCode.Ok) {
+        throw new Error("Failed to send message");
+      }
+
+      console.info(response.data);
+      await fetchIndividualChatList();
+    } catch (error) {
+      handleError(error);
+    } finally {
+      setMessageText("");
+      dispatch({
+        type: ChatAction.SetWaitingForResponse,
+        payload: false,
+      });
+    }
+  }, [dispatch, fetchIndividualChatList, id, messageText]);
 
   const handleTextPress = useCallback(() => {
     router.push(ROUTES.Purchase);
@@ -27,7 +83,7 @@ export const KeyboardSection: FunctionComponent = () => {
     <View className={"flex flex-col gap-3.5"}>
       <Text
         onPress={handleTextPress}
-        className={"font-sfPro text-center text-xs font-medium text-appleGrey"}
+        className={"text-center font-sfPro text-xs font-medium text-appleGrey"}
       >
         Free trial: 2 Messages left
       </Text>

@@ -42,7 +42,7 @@ export const ChatList = () => {
     return () => {
       controller.abort();
     };
-  }, [fetchChatList, state.chatSearchQuery]);
+  }, [fetchChatList, state]);
 
   return (
     <FlatList
