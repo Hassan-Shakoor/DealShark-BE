@@ -9,9 +9,11 @@ import { CustomSafeArea } from "@/app/components/ui/CustomSafeArea";
 import { api } from "@/app/utils/api";
 import { HttpStatusCode } from "axios";
 import { handleError } from "@/app/utils/error-handling";
+import Loader from "@/app/components/ui/Loader";
 
 const TermsAndCondition = () => {
   const [isChecked, setChecked] = useState<boolean>(false);
+  const [isLoading, setLoading] = useState<boolean>(false);
 
   const handleCheck = useCallback(() => {
     setChecked((prev) => !prev);
@@ -19,6 +21,7 @@ const TermsAndCondition = () => {
 
   const handleContinue = useCallback(async () => {
     try {
+      setLoading(true);
       const response = await api.post(APIS.acceptTerm, { accept: isChecked });
 
       if (response.status !== HttpStatusCode.Ok) {
@@ -29,6 +32,8 @@ const TermsAndCondition = () => {
       router.replace(ROUTES.Chat);
     } catch (error) {
       handleError(error);
+    } finally {
+      setLoading(false);
     }
   }, [isChecked]);
 
@@ -67,12 +72,17 @@ const TermsAndCondition = () => {
                 status={isChecked ? "checked" : "unchecked"} // Checkbox status based on state
                 onPress={handleCheck} // Toggle checkbox state on press
               />
-              <Text className={"font-sfPro text-lg text-black dark:text-white"}>
+              <Text
+                className={"font-sfPro text-lg text-black dark:text-white"}
+                onPress={handleCheck}
+              >
                 I accept the <Text>Terms and Agreement</Text>
               </Text>
             </View>
             <Button disabled={!isChecked} onPress={handleContinue}>
-              <Text className={"font-sfPro text-white"}>Continue</Text>
+              <Text className={"font-sfPro text-white"}>
+                {isLoading ? <Loader size={"small"} /> : "Continue"}
+              </Text>
             </Button>
           </View>
         </View>

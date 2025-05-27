@@ -18,7 +18,7 @@ const LayoutContent = () => {
   const { state } = useAuthContext();
 
   useEffect(() => {
-    if (loaded || error || state.isReady) {
+    if ((loaded || error) && state.isReady) {
       SplashScreen.hideAsync();
     }
   }, [loaded, error, state.isReady]);
