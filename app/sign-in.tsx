@@ -7,7 +7,7 @@ import { router } from "expo-router";
 import { APIS, ROUTES } from "@/app/utils/routes";
 import { CustomSafeArea } from "@/app/components/ui/CustomSafeArea";
 import { api } from "@/app/utils/api";
-import { HttpStatusCode, isAxiosError } from "axios";
+import { HttpStatusCode } from "axios";
 import { AsyncStorageKey } from "@/app/utils/constant";
 import { useAuthContext } from "@/app/contexts/useAuthContext";
 import { AuthAction } from "@/app/contexts/action";
@@ -26,13 +26,12 @@ const SignIn: FunctionComponent = () => {
   const handleContinue = useCallback(async () => {
     try {
       setLoading(true);
-      console.log("Calling API");
+
       const response = await api.post(APIS.signIn, {
         user_email: username,
         password,
       });
 
-      console.log("Determining Status");
       if (response.status !== HttpStatusCode.Ok) {
         throw new Error("Failed to sign in");
       }

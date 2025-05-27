@@ -13,16 +13,19 @@ import { AsyncStorageKey } from "@/app/utils/constant";
 import { AuthAction } from "@/app/contexts/action";
 import { useAuthContext } from "@/app/contexts/useAuthContext";
 import { handleError } from "@/app/utils/error-handling";
+import Loader from "@/app/components/ui/Loader";
 
 const SignUp: FunctionComponent = () => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isPasswordVisible, setPasswordVisible] = useState<boolean>(false);
+  const [isLoading, setLoading] = useState<boolean>(false);
 
   const { dispatch } = useAuthContext();
 
   const handleContinue = useCallback(async () => {
     try {
+      setLoading(true);
       const response = await api.post(APIS.signUp, {
         user_email: username,
         password,
@@ -44,6 +47,8 @@ const SignUp: FunctionComponent = () => {
       router.replace(ROUTES.TermsAndConditions);
     } catch (error) {
       handleError(error);
+    } finally {
+      setLoading(false);
     }
   }, [dispatch, password, username]);
 
@@ -126,7 +131,9 @@ const SignUp: FunctionComponent = () => {
           {/*Button*/}
           <View className={"mt-9 flex w-full flex-col items-center gap-5"}>
             <Button onPress={handleContinue}>
-              <Text className={"font-sfPro text-white"}>Continue</Text>
+              <Text className={"font-sfPro text-white"}>
+                {isLoading ? <Loader size={"small"} /> : "Continue"}
+              </Text>
             </Button>
             <View className={"flex flex-row items-center gap-2"}>
               <Text
