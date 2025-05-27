@@ -13,16 +13,19 @@ import { useAuthContext } from "@/app/contexts/useAuthContext";
 import { AuthAction } from "@/app/contexts/action";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { handleError } from "@/app/utils/error-handling";
+import Loader from "@/app/components/ui/Loader";
 
 const SignIn: FunctionComponent = () => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isPasswordVisible, setPasswordVisible] = useState<boolean>(false);
+  const [isLoading, setLoading] = useState<boolean>(false);
 
   const { dispatch } = useAuthContext();
 
   const handleContinue = useCallback(async () => {
     try {
+      setLoading(true);
       const response = await api.post(APIS.signIn, {
         user_email: username,
         password,
@@ -44,6 +47,8 @@ const SignIn: FunctionComponent = () => {
       router.replace(ROUTES.Chat);
     } catch (error) {
       handleError(error);
+    } finally {
+      setLoading(false);
     }
   }, [dispatch, password, username]);
 
@@ -108,7 +113,9 @@ const SignIn: FunctionComponent = () => {
           {/*Button*/}
           <View className={"mt-9 flex w-full flex-col items-center gap-5"}>
             <Button onPress={handleContinue}>
-              <Text className={"font-sfPro text-white"}>Continue</Text>
+              <Text className={"font-sfPro text-white"}>
+                {isLoading ? <Loader size={"small"} /> : "Continue"}
+              </Text>
             </Button>
             <View className={"flex flex-row items-center gap-2"}>
               <Text
