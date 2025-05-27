@@ -8,6 +8,10 @@ import { ROUTES } from "@/app/utils/routes";
 export const api = axios.create({
   baseURL: "https://fantasy-app-bwf0.onrender.com",
   timeout: 100000,
+  headers: {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  },
 });
 
 // Request interceptor: add auth token

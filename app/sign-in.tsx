@@ -26,11 +26,13 @@ const SignIn: FunctionComponent = () => {
   const handleContinue = useCallback(async () => {
     try {
       setLoading(true);
+      console.log("Calling API");
       const response = await api.post(APIS.signIn, {
         user_email: username,
         password,
       });
 
+      console.log("Determining Status");
       if (response.status !== HttpStatusCode.Ok) {
         throw new Error("Failed to sign in");
       }
