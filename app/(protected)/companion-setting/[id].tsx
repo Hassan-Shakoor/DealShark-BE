@@ -27,6 +27,8 @@ const CompanionSetting = () => {
 
   const fetchCompanionSetting = useCallback(async () => {
     try {
+      if (!id) return;
+
       const response = await api.get<CompanionSettingType>(
         APIS.fetchCompanionSetting(id),
       );

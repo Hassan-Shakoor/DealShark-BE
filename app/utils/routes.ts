@@ -12,20 +12,21 @@ export const ROUTES = {
 } as const;
 
 export const APIS = {
-  signIn: "/auth/signin",
+  signIn: "/auth/signin/",
   signUp: "/auth/signup/",
   acceptTerm: "/auth/accept-terms",
   fetchAllChats: "/chats/",
   fetchAllPinnedChats: "/chats/pinned/",
-  createNewChat: "/chats/new",
-  fetchUserSetting: "/settings",
+  createNewChat: "/chats/new/",
+  fetchUserSetting: "/settings/",
   fetchCompanionSetting: (id: string | number) =>
-    `/settings/companion?chat_id=${id}` as const,
+    `/settings/companion/?chat_id=${id}` as const,
   fetchIndividualChat: (id: string | number) =>
     `/chats/${id}/messages` as const,
-  sendIndividualMessage: (id: string | number) => `/chats/?chat_id=${id}`,
-  pinChat: (id: string | number) => `/chats/${id}/pin` as const,
-  unPinChat: (id: string | number) => `/chats/${id}/unpin` as const,
+  sendIndividualMessage: (id: string | number) =>
+    `/chats/?chat_id=${id}` as const,
+  pinChat: (id: string | number) => `/chats/${id}/pin/` as const,
+  unPinChat: (id: string | number) => `/chats/${id}/unpin/` as const,
   updateCompanionSetting: (id: string | number) =>
     `/settings/companion/?chat_id=${id}` as const,
 };
