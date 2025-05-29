@@ -27,10 +27,10 @@ export const PurchaseBanner: FunctionComponent = () => {
       {/* Content layer */}
       <View className="m-1 flex flex-row items-center justify-between gap-1.5 rounded-3xl bg-tertiary p-4">
         <View className="flex flex-col">
-          <Text className="font-brockmann text-lg font-medium text-white">
+          <Text className="font-inter text-lg font-medium text-white">
             Unlock All Features
           </Text>
-          <Text className="font-brockmann text-xs text-white">
+          <Text className="font-inter text-xs text-white">
             Get access to unlimited chat,{"\n"}advanced ai model, custom persona
             {"\n"}selection
           </Text>

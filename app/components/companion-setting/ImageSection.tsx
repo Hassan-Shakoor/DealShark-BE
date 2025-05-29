@@ -35,14 +35,14 @@ export const ImageSection: FunctionComponent = () => {
             onChangeText={handleNameChange}
             autoFocus
             className={
-              "border-b border-gray-400 font-brockmann text-2xl font-medium text-black dark:text-white"
+              "border-b border-gray-400 font-inter text-2xl font-medium text-black dark:text-white"
             }
             style={{ minWidth: 100 }} // to give some width
           />
         ) : (
           <Text
             className={
-              "font-brockmann text-2xl font-medium text-black dark:text-white"
+              "font-inter text-2xl font-medium text-black dark:text-white"
             }
           >
             {state.companionSetting?.name}

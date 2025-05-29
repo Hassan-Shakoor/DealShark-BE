@@ -36,7 +36,6 @@ module.exports = {
       },
       fontFamily: {
         apfelGrotezk: ["ApfelGrotezk"],
-        brockmann: ["Brockmann"],
         inter: ["Inter"],
         poppins: ["Poppins"],
         sfPro: ["SFPro"],

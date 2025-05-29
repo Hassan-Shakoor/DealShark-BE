@@ -68,7 +68,7 @@ const SignUp: FunctionComponent = () => {
             />
             <Text
               className={
-                "font-brockmann text-3xl font-medium text-black dark:text-white"
+                "font-inter text-3xl font-medium text-black dark:text-white"
               }
             >
               Fantasy Ai {"\n"}App

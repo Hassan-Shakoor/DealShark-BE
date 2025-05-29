@@ -9,7 +9,6 @@ import { useAuthContext } from "@/app/contexts/useAuthContext";
 const LayoutContent = () => {
   const [loaded, error] = useFonts({
     ApfelGrotezk: require("@/assets/fonts/ApfelGrotezk.otf"),
-    Brockmann: require("@/assets/fonts/Brockmann.ttf"),
     Inter: require("@/assets/fonts/Inter.ttf"),
     Poppins: require("@/assets/fonts/Poppins.ttf"),
     SFPro: require("@/assets/fonts/SFPro.ttf"),
@@ -18,7 +17,7 @@ const LayoutContent = () => {
   const { state } = useAuthContext();
 
   useEffect(() => {
-    if ((loaded || error) && state.isReady) {
+    if (loaded && !error && state.isReady) {
       SplashScreen.hideAsync();
     }
   }, [loaded, error, state.isReady]);
