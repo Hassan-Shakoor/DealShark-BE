@@ -9,24 +9,17 @@ type Props = {
 
 export const SelectedChip: FunctionComponent<Props> = ({ title, onPress }) => {
   return (
-    <TouchableOpacity
-      className="relative flex flex-col items-center justify-center"
-      activeOpacity={0.7}
-      onPress={onPress}
-    >
-      {/* Gradient border layer */}
+    <TouchableOpacity activeOpacity={0.7} onPress={onPress}>
       <LinearGradient
         colors={["#CD85C7", "#B6DAFE"]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
-        className="absolute inset-0"
-        style={{ borderRadius: 14 }}
-      />
-
-      {/* Content layer */}
-      <View className="mx-1 rounded-xl bg-tertiary p-3">
-        <Text className={"font-sfPro text-lg text-white"}>{title}</Text>
-      </View>
+        style={{ borderRadius: 14, padding: 4 }}
+      >
+        <View className="rounded-xl bg-tertiary p-3">
+          <Text className={"font-sfPro text-lg text-white"}>{title}</Text>
+        </View>
+      </LinearGradient>
     </TouchableOpacity>
   );
 };

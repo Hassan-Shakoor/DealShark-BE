@@ -18,7 +18,7 @@ const Purchase = () => {
             />
             <Text
               className={
-                "font-sfPro text-center text-2xl font-semibold text-black dark:text-white"
+                "text-center font-sfPro text-2xl font-semibold text-black dark:text-white"
               }
             >
               Want to keep chatting?{"\n"}Unlock her
@@ -34,25 +34,24 @@ const Purchase = () => {
                   colors={["#CD85C7", "#B6DAFE"]}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 0 }}
-                  className="absolute inset-0"
-                  style={{ borderRadius: 24 }}
-                />
-
-                {/* Content layer */}
-                <View className="m-[3px] flex flex-row items-center justify-between rounded-3xl bg-tertiary p-5">
-                  <Image
-                    source={require("@/assets/images/endless-intimacy-icon.png")}
-                    className="h-12 w-28"
-                  />
-                  <View className="flex flex-col items-center">
-                    <Text className="font-sfPro text-4xl font-bold text-white">
-                      $15.99
-                    </Text>
-                    <Text className="font-sfPro text-xs text-white">
-                      Lifetime
-                    </Text>
+                  style={{ borderRadius: 24, padding: 1 }}
+                >
+                  {/* Content layer */}
+                  <View className="m-[3px] flex flex-row items-center justify-between rounded-3xl bg-tertiary p-5">
+                    <Image
+                      source={require("@/assets/images/endless-intimacy-icon.png")}
+                      className="h-12 w-28"
+                    />
+                    <View className="flex flex-col items-center">
+                      <Text className="font-sfPro text-4xl font-bold text-white">
+                        $15.99
+                      </Text>
+                      <Text className="font-sfPro text-xs text-white">
+                        Lifetime
+                      </Text>
+                    </View>
                   </View>
-                </View>
+                </LinearGradient>
               </View>
               <View className={"flex flex-col gap-4 px-7"}>
                 <Text className={"font-sfPro font-medium text-white"}>
