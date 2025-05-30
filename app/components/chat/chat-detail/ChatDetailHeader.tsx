@@ -75,7 +75,7 @@ export const ChatDetailHeader: FunctionComponent = () => {
   return (
     <View
       className={
-        "flex w-full flex-row items-center bg-light-tertiary p-2 pt-4 dark:bg-dark-quinary"
+        "flex w-full flex-row items-center justify-between bg-light-tertiary p-2 pt-4 dark:bg-dark-quinary"
       }
     >
       <View>
@@ -85,7 +85,7 @@ export const ChatDetailHeader: FunctionComponent = () => {
       </View>
       <TouchableOpacity
         onPress={handleProfilePress}
-        className={"flex-1 flex-col gap-1"}
+        className={"flex-col gap-1"}
       >
         <Image
           source={require("@/assets/images/chat-header-icon.png")}
