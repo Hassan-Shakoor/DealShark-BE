@@ -4,6 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { AsyncStorageKey } from "@/app/utils/constant";
 import { ROUTES } from "@/app/utils/routes";
+import Toast from "react-native-toast-message";
 
 export const api = axios.create({
   baseURL: "https://fantasy-app-bwf0.onrender.com",
@@ -35,6 +36,11 @@ api.interceptors.response.use(
       router.replace(ROUTES.SignIn);
 
       // 🔁 Optional: Show message
+      Toast.show({
+        type: "error",
+        text1: "Session expired.",
+        text2: "Please log in again.",
+      });
       console.warn("Session expired. Redirecting to login.");
     }
 
