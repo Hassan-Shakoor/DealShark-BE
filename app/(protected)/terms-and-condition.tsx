@@ -2,7 +2,6 @@ import { ChatBackground } from "@/app/components/theme/ChatBackground";
 import { ScrollView, Text, View } from "react-native";
 import { Button } from "@/app/components/ui/Button";
 import { useCallback, useState } from "react";
-import { Checkbox } from "react-native-paper";
 import { router } from "expo-router";
 import { APIS, ROUTES } from "@/app/utils/routes";
 import { CustomSafeArea } from "@/app/components/ui/CustomSafeArea";
@@ -10,6 +9,7 @@ import { api } from "@/app/utils/api";
 import { HttpStatusCode } from "axios";
 import { handleError } from "@/app/utils/error-handling";
 import Loader from "@/app/components/ui/Loader";
+import { CustomCheckbox } from "@/app/components/ui/CustomChecbox";
 
 const TermsAndCondition = () => {
   const [isChecked, setChecked] = useState<boolean>(false);
@@ -68,9 +68,12 @@ const TermsAndCondition = () => {
           </View>
           <View className={"flex flex-col gap-5"}>
             <View className={"flex flex-row items-center gap-2"}>
-              <Checkbox
-                status={isChecked ? "checked" : "unchecked"} // Checkbox status based on state
-                onPress={handleCheck} // Toggle checkbox state on press
+              <CustomCheckbox
+                checked={isChecked}
+                onPress={handleCheck}
+                size={24}
+                checkedColor="#5956FC"
+                borderColor="#5956FC"
               />
               <Text
                 className={"font-sfPro text-lg text-black dark:text-white"}
