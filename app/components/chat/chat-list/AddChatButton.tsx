@@ -4,11 +4,12 @@ import Entypo from "@expo/vector-icons/Entypo";
 import { View } from "react-native";
 import { handleError } from "@/app/utils/error-handling";
 import { api } from "@/app/utils/api";
-import { APIS } from "@/app/utils/routes";
+import { APIS, ROUTES } from "@/app/utils/routes";
 import { HttpStatusCode } from "axios";
 import { useChatContext } from "@/app/contexts/useChatContext";
 import { Chat } from "@/app/types/Chat";
 import { ChatAction } from "@/app/contexts/action";
+import { router } from "expo-router";
 
 export const AddChatButton: FunctionComponent = () => {
   const [isLoading, setLoading] = useState<boolean>(false);
@@ -42,6 +43,7 @@ export const AddChatButton: FunctionComponent = () => {
       }
 
       console.info(response.data);
+      router.push(ROUTES.CompanionSetting(response.data.chat_id));
       await fetchChatList();
     } catch (error) {
       handleError(error);
