@@ -49,11 +49,29 @@ const CompanionSetting = () => {
 
   const handlePersonalityPress = useCallback(
     (item: string) => {
+      const currentPersonalities = state.companionSetting?.personality || [];
+      let updatedPersonalities: string[];
+
+      // Check if item is already selected
+      const isSelected = currentPersonalities.some(
+        (p) => p.toUpperCase() === item.toUpperCase(),
+      );
+
+      if (isSelected) {
+        // Remove item if already selected
+        updatedPersonalities = currentPersonalities.filter(
+          (p) => p.toUpperCase() !== item.toUpperCase(),
+        );
+      } else {
+        // Add item if not selected
+        updatedPersonalities = [...currentPersonalities, item];
+      }
+
       dispatch({
         type: ChatAction.SetCompanionSetting,
         payload: {
           ...state.companionSetting,
-          personality: [item],
+          personality: updatedPersonalities,
         } as CompanionSettingType,
       });
     },
@@ -62,11 +80,29 @@ const CompanionSetting = () => {
 
   const handleFlirtStylePress = useCallback(
     (item: string) => {
+      const currentStyles = state.companionSetting?.flirting_style || [];
+      let updatedStyles: string[];
+
+      // Check if item is already selected
+      const isSelected = currentStyles.some(
+        (s) => s.toUpperCase() === item.toUpperCase(),
+      );
+
+      if (isSelected) {
+        // Remove item if already selected
+        updatedStyles = currentStyles.filter(
+          (s) => s.toUpperCase() !== item.toUpperCase(),
+        );
+      } else {
+        // Add item if not selected
+        updatedStyles = [...currentStyles, item];
+      }
+
       dispatch({
         type: ChatAction.SetCompanionSetting,
         payload: {
           ...state.companionSetting,
-          flirting_style: [item],
+          flirting_style: updatedStyles,
         } as CompanionSettingType,
       });
     },
@@ -80,9 +116,11 @@ const CompanionSetting = () => {
   const handleSave = useCallback(async () => {
     try {
       setLoading(true);
+
       const response = await api.put<CompanionSettingType>(
-        APIS.updateCompanionSetting(id),
+        APIS.updateCompanionSetting,
         {
+          chat_id: id,
           ...state.companionSetting,
         },
       );
@@ -118,13 +156,13 @@ const CompanionSetting = () => {
             <ChipSelector
               title={"Personality"}
               data={Personalities}
-              isSelected={state.companionSetting?.personality[0] ?? ""}
+              selectedItems={state.companionSetting?.personality ?? []} // Changed prop name
               handlePress={handlePersonalityPress}
             />
             <ChipSelector
               title={"Flirting Style"}
               data={FlirtingStyles}
-              isSelected={state.companionSetting?.flirting_style[0] ?? ""}
+              selectedItems={state.companionSetting?.flirting_style ?? []} // Changed prop name
               handlePress={handleFlirtStylePress}
             />
           </ScrollView>

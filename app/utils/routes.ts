@@ -27,6 +27,5 @@ export const APIS = {
     `/chats/?chat_id=${id}` as const,
   pinChat: (id: string | number) => `/chats/${id}/pin/` as const,
   unPinChat: (id: string | number) => `/chats/${id}/unpin/` as const,
-  updateCompanionSetting: (id: string | number) =>
-    `/settings/companion/?chat_id=${id}` as const,
+  updateCompanionSetting: `/settings/companion/` as const,
 };

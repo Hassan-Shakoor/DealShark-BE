@@ -1,10 +1,10 @@
-import { FunctionComponent, useCallback, useState } from "react";
+import { FunctionComponent, useCallback } from "react";
 import { Text, View } from "react-native";
 import { UnSelectedChip } from "@/app/components/companion-setting/UnSelectedChip";
 import { SelectedChip } from "@/app/components/companion-setting/SelectedChip";
 
 type Props = {
-  isSelected: string;
+  selectedItems: string[];
   title: string;
   data: string[];
   handlePress: (item: string) => void;
@@ -13,9 +13,18 @@ type Props = {
 export const ChipSelector: FunctionComponent<Props> = ({
   title,
   data,
-  isSelected,
+  selectedItems,
   handlePress,
 }) => {
+  const isItemSelected = useCallback(
+    (item: string) => {
+      return selectedItems.some(
+        (selectedItem) => selectedItem.toUpperCase() === item.toUpperCase(),
+      );
+    },
+    [selectedItems],
+  );
+
   return (
     <View className={"flex flex-col gap-3"}>
       <Text className={"font-sfPro font-medium text-black dark:text-white"}>
@@ -23,7 +32,7 @@ export const ChipSelector: FunctionComponent<Props> = ({
       </Text>
       <View className={"flex flex-row flex-wrap gap-1.5"}>
         {data.map((item, index) =>
-          isSelected.toUpperCase() === item.toUpperCase() ? (
+          isItemSelected(item) ? (
             <SelectedChip
               key={`${item}-${index}`}
               title={item}
