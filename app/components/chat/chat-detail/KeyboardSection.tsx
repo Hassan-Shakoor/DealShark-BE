@@ -56,12 +56,12 @@ export const KeyboardSection: FunctionComponent = () => {
   }, [dispatch, id]);
 
   const handleSendMessage = useCallback(async () => {
-    console.log(individualMessageCount);
-    if (individualMessageCount >= FreeAllowedMessageCount) {
-      setMessageText("");
-      router.push(ROUTES.Purchase);
-      return;
-    }
+    // console.log(individualMessageCount);
+    // if (individualMessageCount >= FreeAllowedMessageCount) {
+    //   setMessageText("");
+    //   router.push(ROUTES.Purchase);
+    //   return;
+    // }
     try {
       dispatch({
         type: ChatAction.SetWaitingForResponse,
@@ -109,18 +109,18 @@ export const KeyboardSection: FunctionComponent = () => {
     state.individualMessage,
   ]);
 
-  const handleTextPress = useCallback(() => {
-    router.push(ROUTES.Purchase);
-  }, []);
+  // const handleTextPress = useCallback(() => {
+  //   router.push(ROUTES.Purchase);
+  // }, []);
 
   return (
     <View className={"flex flex-col gap-3.5"}>
-      <Text
-        onPress={handleTextPress}
-        className={"text-center font-sfPro text-xs font-medium text-appleGrey"}
-      >
-        {`Free trial: ${FreeAllowedMessageCount - individualMessageCount} Messages left`}
-      </Text>
+      {/*<Text*/}
+      {/*  onPress={handleTextPress}*/}
+      {/*  className={"text-center font-sfPro text-xs font-medium text-appleGrey"}*/}
+      {/*>*/}
+      {/*  {`Free trial: ${FreeAllowedMessageCount - individualMessageCount} Messages left`}*/}
+      {/*</Text>*/}
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={100}
