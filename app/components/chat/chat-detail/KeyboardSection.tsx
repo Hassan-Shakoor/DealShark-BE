@@ -126,7 +126,7 @@ export const KeyboardSection: FunctionComponent = () => {
         keyboardVerticalOffset={100}
         className="mb-4 px-4"
       >
-        <View className="flex-row items-center rounded-full border border-blue-secondary bg-white p-1 dark:bg-dark-senary">
+        <View className="mb-4 flex-row items-center rounded-full border border-blue-secondary bg-white p-1 dark:bg-dark-senary">
           <TextInput
             className="min-h-12 flex-1 px-3 py-4 font-inter text-base text-black dark:text-white"
             placeholder="Message"
