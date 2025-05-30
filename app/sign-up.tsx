@@ -30,7 +30,7 @@ const SignUp: FunctionComponent = () => {
     try {
       setLoading(true);
       const response = await api.post(APIS.signUp, {
-        user_email: username,
+        user_email: username.toLowerCase(),
         password,
       });
 

@@ -28,7 +28,7 @@ const SignIn: FunctionComponent = () => {
       setLoading(true);
 
       const response = await api.post(APIS.signIn, {
-        user_email: username,
+        user_email: username.toLowerCase(),
         password,
       });
 

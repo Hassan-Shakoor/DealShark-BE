@@ -1,14 +1,24 @@
 import { Image, Text, TouchableOpacity } from "react-native";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useCallback } from "react";
 import { PinnedMessage } from "@/app/types/Chat";
+import { router } from "expo-router";
+import { ROUTES } from "@/app/utils/routes";
 
 type Props = {
   item: PinnedMessage;
 };
 
 export const FavoriteChatIcon: FunctionComponent<Props> = ({ item }) => {
+  const handleFavoriteChatPress = useCallback(() => {
+    router.push(ROUTES.ChatView(item.chat_id));
+  }, [item.chat_id]);
+
   return (
-    <TouchableOpacity className="items-center" activeOpacity={0.7}>
+    <TouchableOpacity
+      className="items-center"
+      activeOpacity={0.7}
+      onPress={handleFavoriteChatPress}
+    >
       <Image
         source={require("@/assets/images/johnathan-favorite.png")}
         className={"size-24 rounded-full"}
