@@ -25,7 +25,11 @@ export const ImageSection: FunctionComponent = () => {
   return (
     <View className={"flex flex-col items-center gap-2"}>
       <Image
-        source={require("@/assets/images/chat-header-icon.png")}
+        source={
+          state.companionSetting?.gender === "female"
+            ? require("@/assets/images/female-avatar.png")
+            : require("@/assets/images/male-avatar.png")
+        }
         className={"size-20 self-center rounded-full"}
       />
       <View className={"flex flex-row items-center gap-3"}>
