@@ -32,7 +32,7 @@ api.interceptors.response.use(
       await AsyncStorage.removeItem(AsyncStorageKey.Token);
 
       // 🔁 Redirect to login
-      router.replace(ROUTES.AuthHome);
+      router.replace(ROUTES.SignIn);
 
       // 🔁 Optional: Show message
       console.warn("Session expired. Redirecting to login.");

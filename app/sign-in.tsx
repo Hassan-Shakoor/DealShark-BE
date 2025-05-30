@@ -113,7 +113,10 @@ const SignIn: FunctionComponent = () => {
           </View>
           {/*Button*/}
           <View className={"mt-9 flex w-full flex-col items-center gap-5"}>
-            <Button onPress={handleContinue}>
+            <Button
+              onPress={handleContinue}
+              disabled={!username.length || !password.length}
+            >
               <Text className={"font-sfPro text-white"}>
                 {isLoading ? <Loader size={"small"} /> : "Continue"}
               </Text>

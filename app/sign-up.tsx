@@ -18,7 +18,10 @@ import Loader from "@/app/components/ui/Loader";
 const SignUp: FunctionComponent = () => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [isPasswordVisible, setPasswordVisible] = useState<boolean>(false);
+  const [isConfirmPasswordVisible, setConfirmPasswordVisible] =
+    useState<boolean>(false);
   const [isLoading, setLoading] = useState<boolean>(false);
 
   const { dispatch } = useAuthContext();
@@ -99,7 +102,7 @@ const SignUp: FunctionComponent = () => {
                   secureTextEntry={!isPasswordVisible}
                 />
                 <Pressable
-                  onPress={() => setPasswordVisible(!isPasswordVisible)}
+                  onPress={() => setPasswordVisible((prev) => !prev)}
                   className="absolute right-3 top-3"
                 >
                   <Feather
@@ -113,15 +116,17 @@ const SignUp: FunctionComponent = () => {
                 <TextInput
                   className={"w-full rounded-lg bg-white/60 p-3"}
                   placeholder="Confirm Password"
+                  value={confirmPassword}
+                  onChangeText={setConfirmPassword}
                   placeholderTextColor={"#1A1C1E"}
-                  secureTextEntry={!isPasswordVisible}
+                  secureTextEntry={!isConfirmPasswordVisible}
                 />
                 <Pressable
-                  onPress={() => setPasswordVisible(!isPasswordVisible)}
+                  onPress={() => setConfirmPasswordVisible((prev) => !prev)}
                   className="absolute right-3 top-3"
                 >
                   <Feather
-                    name={isPasswordVisible ? "eye-off" : "eye"}
+                    name={isConfirmPasswordVisible ? "eye-off" : "eye"}
                     size={20}
                   />
                 </Pressable>
@@ -130,7 +135,12 @@ const SignUp: FunctionComponent = () => {
           </View>
           {/*Button*/}
           <View className={"mt-9 flex w-full flex-col items-center gap-5"}>
-            <Button onPress={handleContinue}>
+            <Button
+              onPress={handleContinue}
+              disabled={
+                !username.length || !password.length || !confirmPassword.length
+              }
+            >
               <Text className={"font-sfPro text-white"}>
                 {isLoading ? <Loader size={"small"} /> : "Continue"}
               </Text>
