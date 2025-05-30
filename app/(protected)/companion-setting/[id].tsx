@@ -164,6 +164,7 @@ const CompanionSetting = () => {
               data={FlirtingStyles}
               selectedItems={state.companionSetting?.flirting_style ?? []} // Changed prop name
               handlePress={handleFlirtStylePress}
+              className={"pt-3"}
             />
           </ScrollView>
         </View>

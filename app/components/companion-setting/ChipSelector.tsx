@@ -8,6 +8,7 @@ type Props = {
   title: string;
   data: string[];
   handlePress: (item: string) => void;
+  className?: string;
 };
 
 export const ChipSelector: FunctionComponent<Props> = ({
@@ -15,6 +16,7 @@ export const ChipSelector: FunctionComponent<Props> = ({
   data,
   selectedItems,
   handlePress,
+  className,
 }) => {
   const isItemSelected = useCallback(
     (item: string) => {
@@ -26,7 +28,7 @@ export const ChipSelector: FunctionComponent<Props> = ({
   );
 
   return (
-    <View className={"flex flex-col gap-3"}>
+    <View className={`flex flex-col gap-3 ${className}`}>
       <Text className={"font-sfPro font-medium text-black dark:text-white"}>
         {title}
       </Text>
