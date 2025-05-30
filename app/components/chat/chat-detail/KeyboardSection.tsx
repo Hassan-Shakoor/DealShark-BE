@@ -121,11 +121,7 @@ export const KeyboardSection: FunctionComponent = () => {
       {/*>*/}
       {/*  {`Free trial: ${FreeAllowedMessageCount - individualMessageCount} Messages left`}*/}
       {/*</Text>*/}
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={100}
-        className="mb-4 px-4"
-      >
+      <View className={"mb-4 px-4"}>
         <View className="mb-4 flex-row items-center rounded-full border border-blue-secondary bg-white p-1 dark:bg-dark-senary">
           <TextInput
             className="min-h-12 flex-1 px-3 py-4 font-inter text-base text-black dark:text-white"
@@ -145,7 +141,7 @@ export const KeyboardSection: FunctionComponent = () => {
             <Ionicons name="send" size={20} color="white" />
           </TouchableOpacity>
         </View>
-      </KeyboardAvoidingView>
+      </View>
     </View>
   );
 };
