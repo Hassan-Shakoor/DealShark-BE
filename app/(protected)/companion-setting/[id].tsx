@@ -1,7 +1,15 @@
 import { CompanionBackground } from "@/app/components/theme/CompanionBackground";
 import { CustomSafeArea } from "@/app/components/ui/CustomSafeArea";
 import { CompanionSettingHeader } from "@/app/components/companion-setting/CompanionSettingHeader";
-import { ScrollView, Text, View } from "react-native";
+import {
+  ScrollView,
+  Text,
+  View,
+  TouchableWithoutFeedback,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { ImageSection } from "@/app/components/companion-setting/ImageSection";
 import { ChipSelector } from "@/app/components/companion-setting/ChipSelector";
 import { FlirtingStyles, Personalities } from "@/app/data/companion-setting";
@@ -141,6 +149,10 @@ const CompanionSetting = () => {
     }
   }, [dispatch, id, state.companionSetting]);
 
+  const dismissKeyboard = useCallback(() => {
+    Keyboard.dismiss();
+  }, []);
+
   useEffect(() => {
     fetchCompanionSetting();
   }, [fetchCompanionSetting]);
@@ -148,40 +160,50 @@ const CompanionSetting = () => {
   return (
     <CompanionBackground>
       <CustomSafeArea classNames={"flex flex-col gap-2"}>
-        <CompanionSettingHeader />
-        <View className={"mt-5 flex flex-1 gap-5 px-6"}>
-          <ImageSection />
-          <CompanionInfo />
-          <ScrollView>
-            <ChipSelector
-              title={"Personality"}
-              data={Personalities}
-              selectedItems={state.companionSetting?.personality ?? []} // Changed prop name
-              handlePress={handlePersonalityPress}
-            />
-            <ChipSelector
-              title={"Flirting Style"}
-              data={FlirtingStyles}
-              selectedItems={state.companionSetting?.flirting_style ?? []} // Changed prop name
-              handlePress={handleFlirtStylePress}
-              className={"pt-3"}
-            />
-          </ScrollView>
-        </View>
-        <View className={"mb-6 flex flex-row gap-2 px-6"}>
-          <View className={"flex-1"}>
-            <Button onPress={handleSave} disabled={isLoading}>
-              <Text className={"font-sfPro text-white"}>
-                {isLoading ? <Loader size={"small"} /> : "Save"}
-              </Text>
-            </Button>
-          </View>
-          <View className={"flex-1"}>
-            <Button onPress={handleCancel} variant={"secondary"}>
-              <Text className={"font-sfPro text-white"}>Cancel</Text>
-            </Button>
-          </View>
-        </View>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ flex: 1 }}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
+        >
+          <TouchableWithoutFeedback onPress={dismissKeyboard}>
+            <View style={{ flex: 1 }}>
+              <CompanionSettingHeader />
+              <View className={"mt-5 flex flex-1 gap-5 px-6"}>
+                <ImageSection />
+                <CompanionInfo />
+                <ScrollView showsVerticalScrollIndicator={false}>
+                  <ChipSelector
+                    title={"Personality"}
+                    data={Personalities}
+                    selectedItems={state.companionSetting?.personality ?? []}
+                    handlePress={handlePersonalityPress}
+                  />
+                  <ChipSelector
+                    title={"Flirting Style"}
+                    data={FlirtingStyles}
+                    selectedItems={state.companionSetting?.flirting_style ?? []}
+                    handlePress={handleFlirtStylePress}
+                    className={"pt-3"}
+                  />
+                </ScrollView>
+              </View>
+              <View className={"mb-6 flex flex-row gap-2 px-6"}>
+                <View className={"flex-1"}>
+                  <Button onPress={handleSave} disabled={isLoading}>
+                    <Text className={"font-sfPro text-white"}>
+                      {isLoading ? <Loader size={"small"} /> : "Save"}
+                    </Text>
+                  </Button>
+                </View>
+                <View className={"flex-1"}>
+                  <Button onPress={handleCancel} variant={"secondary"}>
+                    <Text className={"font-sfPro text-white"}>Cancel</Text>
+                  </Button>
+                </View>
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
       </CustomSafeArea>
     </CompanionBackground>
   );

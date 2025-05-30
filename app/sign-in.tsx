@@ -1,5 +1,16 @@
 import { FunctionComponent, useCallback, useState } from "react";
-import { Image, Pressable, Text, TextInput, View } from "react-native";
+import {
+  Image,
+  Pressable,
+  Text,
+  TextInput,
+  View,
+  TouchableWithoutFeedback,
+  Keyboard,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { AuthBackground } from "@/app/components/theme/AuthBackground";
 import { Feather } from "@expo/vector-icons";
 import { Button } from "@/app/components/ui/Button";
@@ -57,87 +68,112 @@ const SignIn: FunctionComponent = () => {
     router.replace(ROUTES.SignUp);
   }, []);
 
+  const dismissKeyboard = useCallback(() => {
+    Keyboard.dismiss();
+  }, []);
+
   return (
     <AuthBackground>
       <CustomSafeArea>
-        <View className={"flex flex-col px-5 pt-24"}>
-          {/*Header*/}
-          <View className={"flex flex-row gap-2.5 self-center"}>
-            <Image
-              source={require("@/assets/images/icon.png")}
-              style={{ width: 60, height: 60 }}
-            />
-            <Text
-              className={
-                "font-inter text-3xl font-medium text-black dark:text-white"
-              }
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ flex: 1 }}
+        >
+          <TouchableWithoutFeedback onPress={dismissKeyboard}>
+            <ScrollView
+              contentContainerStyle={{ flexGrow: 1 }}
+              keyboardShouldPersistTaps="handled"
+              showsVerticalScrollIndicator={false}
             >
-              Fantasy Ai {"\n"}App
-            </Text>
-          </View>
-          {/*Form*/}
-          <View className={"flex flex-col gap-5 pt-14"}>
-            <Text className={"font-sfPro text-3xl font-medium text-white"}>
-              Sign In
-            </Text>
-            <View className={"flex flex-col gap-2"}>
-              <TextInput
-                className={"w-full rounded-lg bg-white/60 p-3"}
-                placeholder={"username@example.com"}
-                placeholderTextColor={"#1A1C1E"}
-                keyboardType={"email-address"}
-                value={username}
-                onChangeText={setUsername}
-              />
-              {/* Password Input */}
-              <View className="relative w-full">
-                <TextInput
-                  className={"w-full rounded-lg bg-white/60 p-3"}
-                  placeholder="Password"
-                  placeholderTextColor={"#1A1C1E"}
-                  secureTextEntry={!isPasswordVisible}
-                  value={password}
-                  onChangeText={setPassword}
-                />
-                <Pressable
-                  onPress={() => setPasswordVisible(!isPasswordVisible)}
-                  className="absolute right-3 top-3"
-                >
-                  <Feather
-                    name={isPasswordVisible ? "eye-off" : "eye"}
-                    size={20}
+              <View className={"flex flex-col px-5 pt-24"}>
+                {/*Header*/}
+                <View className={"flex flex-row gap-2.5 self-center"}>
+                  <Image
+                    source={require("@/assets/images/icon.png")}
+                    style={{ width: 60, height: 60 }}
                   />
-                </Pressable>
+                  <Text
+                    className={
+                      "font-inter text-3xl font-medium text-black dark:text-white"
+                    }
+                  >
+                    Fantasy Ai {"\n"}App
+                  </Text>
+                </View>
+                {/*Form*/}
+                <View className={"flex flex-col gap-5 pt-14"}>
+                  <Text
+                    className={"font-sfPro text-3xl font-medium text-white"}
+                  >
+                    Sign In
+                  </Text>
+                  <View className={"flex flex-col gap-2"}>
+                    <TextInput
+                      className={"w-full rounded-lg bg-white/60 p-3"}
+                      placeholder={"username@example.com"}
+                      placeholderTextColor={"#1A1C1E"}
+                      keyboardType={"email-address"}
+                      value={username}
+                      onChangeText={setUsername}
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                    />
+                    {/* Password Input */}
+                    <View className="relative w-full">
+                      <TextInput
+                        className={"w-full rounded-lg bg-white/60 p-3"}
+                        placeholder="Password"
+                        placeholderTextColor={"#1A1C1E"}
+                        secureTextEntry={!isPasswordVisible}
+                        value={password}
+                        onChangeText={setPassword}
+                        autoCapitalize="none"
+                        autoCorrect={false}
+                      />
+                      <Pressable
+                        onPress={() => setPasswordVisible(!isPasswordVisible)}
+                        className="absolute right-3 top-3"
+                      >
+                        <Feather
+                          name={isPasswordVisible ? "eye-off" : "eye"}
+                          size={20}
+                        />
+                      </Pressable>
+                    </View>
+                  </View>
+                </View>
+                {/*Button*/}
+                <View
+                  className={"mt-9 flex w-full flex-col items-center gap-5"}
+                >
+                  <Button
+                    onPress={handleContinue}
+                    disabled={!username.length || !password.length}
+                  >
+                    <Text className={"font-sfPro text-white"}>
+                      {isLoading ? <Loader size={"small"} /> : "Continue"}
+                    </Text>
+                  </Button>
+                  <View className={"flex flex-row items-center gap-2"}>
+                    <Text
+                      className={
+                        "text-medium font-sfPro text-sm text-black dark:text-white"
+                      }
+                    >
+                      Don't have an account?
+                    </Text>
+                    <Text
+                      onPress={handleSignUp}
+                      className={"text-medium font-sfPro text-sm text-blue-600"}
+                    >
+                      Create new one
+                    </Text>
+                  </View>
+                </View>
               </View>
-            </View>
-          </View>
-          {/*Button*/}
-          <View className={"mt-9 flex w-full flex-col items-center gap-5"}>
-            <Button
-              onPress={handleContinue}
-              disabled={!username.length || !password.length}
-            >
-              <Text className={"font-sfPro text-white"}>
-                {isLoading ? <Loader size={"small"} /> : "Continue"}
-              </Text>
-            </Button>
-            <View className={"flex flex-row items-center gap-2"}>
-              <Text
-                className={
-                  "text-medium font-sfPro text-sm text-black dark:text-white"
-                }
-              >
-                Don't have an account?
-              </Text>
-              <Text
-                onPress={handleSignUp}
-                className={"text-medium font-sfPro text-sm text-blue-600"}
-              >
-                Create new one
-              </Text>
-            </View>
-          </View>
-        </View>
+            </ScrollView>
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
       </CustomSafeArea>
     </AuthBackground>
   );
