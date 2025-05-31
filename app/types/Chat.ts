@@ -1,6 +1,7 @@
 export type Chat = {
   chat_id: number;
   companion_name: string;
+  companion_gender: "female" | "male";
   messages: Message[];
 };
 
@@ -18,6 +19,7 @@ export type Message = {
 export type PinnedMessage = {
   chat_id: number;
   companion_name: string;
+  companion_gender: "female" | "male";
   messages: Message[];
 };
 

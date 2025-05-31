@@ -20,7 +20,11 @@ export const FavoriteChatIcon: FunctionComponent<Props> = ({ item }) => {
       onPress={handleFavoriteChatPress}
     >
       <Image
-        source={require("@/assets/images/johnathan-favorite.png")}
+        source={
+          item.companion_gender === "male"
+            ? require("@/assets/images/male-avatar.png")
+            : require("@/assets/images/female-avatar.png")
+        }
         className={"size-24 rounded-full"}
         resizeMode="contain"
       />

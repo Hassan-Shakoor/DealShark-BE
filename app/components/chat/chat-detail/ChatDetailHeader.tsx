@@ -88,7 +88,11 @@ export const ChatDetailHeader: FunctionComponent = () => {
         className={"flex-col gap-1"}
       >
         <Image
-          source={require("@/assets/images/chat-header-icon.png")}
+          source={
+            state.individualMessage?.companion_gender === "male"
+              ? require("@/assets/images/male-avatar.png")
+              : require("@/assets/images/female-avatar.png")
+          }
           className={"size-12.5 self-center rounded-full"}
         />
         <Text

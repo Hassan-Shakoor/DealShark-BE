@@ -21,7 +21,11 @@ export const ChatMessage: FunctionComponent<Props> = ({ item }) => {
       }
     >
       <Image
-        source={require("@/assets/images/chat-list-placeholder.png")}
+        source={
+          item.companion_gender === "male"
+            ? require("@/assets/images/male-avatar.png")
+            : require("@/assets/images/female-avatar.png")
+        }
         className={"size-11 rounded-full"}
         resizeMode="contain"
       />
