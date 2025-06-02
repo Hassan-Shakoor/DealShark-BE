@@ -36,11 +36,6 @@ api.interceptors.response.use(
       router.replace(ROUTES.SignIn);
 
       // 🔁 Optional: Show message
-      Toast.show({
-        type: "error",
-        text1: "Session expired.",
-        text2: "Please log in again.",
-      });
       console.warn("Session expired. Redirecting to login.");
     }
 

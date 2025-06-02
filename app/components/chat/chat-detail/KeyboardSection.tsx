@@ -1,37 +1,21 @@
 import { FunctionComponent, useCallback, useMemo, useState } from "react";
-import {
-  KeyboardAvoidingView,
-  Platform,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { TextInput, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { router, useLocalSearchParams } from "expo-router";
-import { APIS, ROUTES } from "@/app/utils/routes";
+import { useLocalSearchParams } from "expo-router";
+import { APIS } from "@/app/utils/routes";
 import { useChatContext } from "@/app/contexts/useChatContext";
 import { handleError } from "@/app/utils/error-handling";
 import { api } from "@/app/utils/api";
 import { HttpStatusCode } from "axios";
 import { Chat, Message, MessageRole } from "@/app/types/Chat";
 import { ChatAction } from "@/app/contexts/action";
-import { FreeAllowedMessageCount } from "@/app/utils/constant";
+import { retryApiCall } from "@/app/utils/retry-mechanism";
 
 export const KeyboardSection: FunctionComponent = () => {
   const param = useLocalSearchParams();
   const id: string = Array.isArray(param.id) ? param.id[0] : param.id;
   const [messageText, setMessageText] = useState<string>("");
   const { state, dispatch } = useChatContext();
-
-  const individualMessageCount = useMemo(() => {
-    const individualMessage =
-      state.individualMessage?.messages.filter(
-        (message) => message.role === MessageRole.User,
-      ) ?? [];
-
-    return individualMessage.length;
-  }, [state.individualMessage?.messages]);
 
   const fetchIndividualChatList = useCallback(async () => {
     try {
@@ -56,12 +40,6 @@ export const KeyboardSection: FunctionComponent = () => {
   }, [dispatch, id]);
 
   const handleSendMessage = useCallback(async () => {
-    // console.log(individualMessageCount);
-    // if (individualMessageCount >= FreeAllowedMessageCount) {
-    //   setMessageText("");
-    //   router.push(ROUTES.Purchase);
-    //   return;
-    // }
     try {
       dispatch({
         type: ChatAction.SetWaitingForResponse,
@@ -83,9 +61,14 @@ export const KeyboardSection: FunctionComponent = () => {
         } as Chat,
       });
 
-      const response = await api.post(APIS.sendIndividualMessage(id), {
-        message: messageText,
-      });
+      const response = await retryApiCall(
+        () =>
+          api.post(APIS.sendIndividualMessage(id), {
+            message: messageText,
+          }),
+        3, // maxRetries
+        1000, // baseDelay in ms
+      );
 
       if (response.status !== HttpStatusCode.Ok) {
         throw new Error("Failed to send message");
@@ -109,18 +92,8 @@ export const KeyboardSection: FunctionComponent = () => {
     state.individualMessage,
   ]);
 
-  // const handleTextPress = useCallback(() => {
-  //   router.push(ROUTES.Purchase);
-  // }, []);
-
   return (
     <View className={"flex flex-col gap-3.5"}>
-      {/*<Text*/}
-      {/*  onPress={handleTextPress}*/}
-      {/*  className={"text-center font-sfPro text-xs font-medium text-appleGrey"}*/}
-      {/*>*/}
-      {/*  {`Free trial: ${FreeAllowedMessageCount - individualMessageCount} Messages left`}*/}
-      {/*</Text>*/}
       <View className={"mb-4 px-4"}>
         <View className="mb-4 flex-row items-center rounded-full border border-blue-secondary bg-white p-1 dark:bg-dark-senary">
           <TextInput
