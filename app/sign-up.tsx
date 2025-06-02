@@ -24,6 +24,7 @@ import { AuthAction } from "@/app/contexts/action";
 import { useAuthContext } from "@/app/contexts/useAuthContext";
 import { handleError } from "@/app/utils/error-handling";
 import Loader from "@/app/components/ui/Loader";
+import Toast from "react-native-toast-message";
 
 const SignUp: FunctionComponent = () => {
   const [username, setUsername] = useState<string>("");
@@ -38,6 +39,11 @@ const SignUp: FunctionComponent = () => {
 
   const handleContinue = useCallback(async () => {
     try {
+      if (password !== confirmPassword) {
+        Toast.show({ type: "error", text1: "Passwords do not match" });
+        return;
+      }
+
       setLoading(true);
       const response = await api.post(APIS.signUp, {
         user_email: username.toLowerCase(),
