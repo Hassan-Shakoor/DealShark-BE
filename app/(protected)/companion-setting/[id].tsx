@@ -16,7 +16,7 @@ import { FlirtingStyles, Personalities } from "@/app/data/companion-setting";
 import { Button } from "@/app/components/ui/Button";
 import { CompanionInfo } from "@/app/components/companion-setting/CompanionInfo";
 import { api } from "@/app/utils/api";
-import { APIS } from "@/app/utils/routes";
+import { APIS, ROUTES } from "@/app/utils/routes";
 import { HttpStatusCode } from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
@@ -142,7 +142,7 @@ const CompanionSetting = () => {
         type: ChatAction.SetCompanionSetting,
         payload: response.data,
       });
-      router.back();
+      router.replace(ROUTES.ChatView(id));
     } catch (error) {
       handleError(error);
     } finally {

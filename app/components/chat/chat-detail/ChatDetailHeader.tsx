@@ -31,7 +31,7 @@ export const ChatDetailHeader: FunctionComponent<Props> = ({ loading }) => {
   }, [id, state.pinnedChats]);
 
   const handleBackPress = useCallback(() => {
-    router.back();
+    router.replace(ROUTES.Chat);
   }, []);
 
   const handleProfilePress = useCallback(() => {
