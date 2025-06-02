@@ -142,6 +142,7 @@ const CompanionSetting = () => {
         type: ChatAction.SetCompanionSetting,
         payload: response.data,
       });
+      router.back();
     } catch (error) {
       handleError(error);
     } finally {
