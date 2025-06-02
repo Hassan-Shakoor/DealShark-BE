@@ -10,7 +10,11 @@ import { HttpStatusCode } from "axios";
 import { ChatAction } from "@/app/contexts/action";
 import Loader from "@/app/components/ui/Loader";
 
-export const ChatDetailHeader: FunctionComponent = () => {
+type Props = {
+  loading: boolean;
+};
+
+export const ChatDetailHeader: FunctionComponent<Props> = ({ loading }) => {
   const [isLoading, setLoading] = useState<boolean>(false);
 
   const param = useLocalSearchParams();
@@ -84,24 +88,31 @@ export const ChatDetailHeader: FunctionComponent = () => {
         </TouchableOpacity>
       </View>
       <TouchableOpacity
+        disabled={loading}
         onPress={handleProfilePress}
         className={"flex-col gap-1"}
       >
-        <Image
-          source={
-            state.individualMessage?.companion_gender === "male"
-              ? require("@/assets/images/male-avatar.png")
-              : require("@/assets/images/female-avatar.png")
-          }
-          className={"size-12.5 self-center rounded-full"}
-        />
-        <Text
-          className={
-            "text-center font-sfPro text-sm text-black dark:text-white"
-          }
-        >
-          {state.individualMessage?.companion_name}
-        </Text>
+        {loading ? (
+          <Loader size={"small"} />
+        ) : (
+          <View className={"flex-col gap-1"}>
+            <Image
+              source={
+                state.individualMessage?.companion_gender === "male"
+                  ? require("@/assets/images/male-avatar.png")
+                  : require("@/assets/images/female-avatar.png")
+              }
+              className={"size-12.5 self-center rounded-full"}
+            />
+            <Text
+              className={
+                "text-center font-sfPro text-sm text-black dark:text-white"
+              }
+            >
+              {state.individualMessage?.companion_name}
+            </Text>
+          </View>
+        )}
       </TouchableOpacity>
       <View>
         {isLoading ? (
