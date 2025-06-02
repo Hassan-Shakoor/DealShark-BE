@@ -8,7 +8,7 @@ import Toast from "react-native-toast-message";
 
 export const api = axios.create({
   baseURL: "https://fantasy-app-bwf0.onrender.com",
-  timeout: 100000,
+  timeout: 1000000,
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",

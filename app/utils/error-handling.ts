@@ -6,9 +6,19 @@ export const handleError = (error: unknown) => {
     // Request was cancelled, do nothing
     return;
   }
-  Toast.show({
-    type: "error",
-    text1: isAxiosError(error) ? error?.response?.data.detail : error,
-  });
-  console.error(isAxiosError(error) ? error?.response?.data.detail : error);
+  const detail = isAxiosError(error)
+    ? error?.response?.data?.detail
+    : undefined;
+
+  if (detail === "Invalid token") {
+    return;
+  }
+
+  if (detail || error) {
+    Toast.show({
+      type: "error",
+      text1: detail ?? error,
+    });
+  }
+  console.error(detail ?? error);
 };
