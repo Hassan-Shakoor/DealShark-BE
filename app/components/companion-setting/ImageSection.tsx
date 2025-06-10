@@ -3,6 +3,7 @@ import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useChatContext } from "@/app/contexts/useChatContext";
 import { ChatAction } from "@/app/contexts/action";
 import { CompanionSetting } from "@/app/types/Chat";
+import { getAvatarImage } from "@/app/utils/avatar";
 
 export const ImageSection: FunctionComponent = () => {
   const { state, dispatch } = useChatContext();
@@ -25,11 +26,7 @@ export const ImageSection: FunctionComponent = () => {
   return (
     <View className={"flex flex-col items-center gap-2"}>
       <Image
-        source={
-          state.companionSetting?.gender === "female"
-            ? require("@/assets/images/female-avatar.png")
-            : require("@/assets/images/male-avatar.png")
-        }
+        source={getAvatarImage(state.companionSetting?.gender ?? "")}
         className={"size-20 self-center rounded-full"}
       />
       <View className={"flex flex-row items-center gap-3"}>

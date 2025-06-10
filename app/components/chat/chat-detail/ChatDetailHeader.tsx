@@ -9,6 +9,7 @@ import { handleError } from "@/app/utils/error-handling";
 import { HttpStatusCode } from "axios";
 import { ChatAction } from "@/app/contexts/action";
 import Loader from "@/app/components/ui/Loader";
+import { getAvatarImage } from "@/app/utils/avatar";
 
 type Props = {
   loading: boolean;
@@ -97,11 +98,9 @@ export const ChatDetailHeader: FunctionComponent<Props> = ({ loading }) => {
         ) : (
           <View className={"flex-col gap-1"}>
             <Image
-              source={
-                state.individualMessage?.companion_gender === "male"
-                  ? require("@/assets/images/male-avatar.png")
-                  : require("@/assets/images/female-avatar.png")
-              }
+              source={getAvatarImage(
+                state.individualMessage?.companion_gender ?? "",
+              )}
               className={"size-12.5 self-center rounded-full"}
             />
             <Text

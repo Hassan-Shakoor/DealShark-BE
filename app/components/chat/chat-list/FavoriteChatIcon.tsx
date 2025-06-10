@@ -3,6 +3,7 @@ import { FunctionComponent, useCallback } from "react";
 import { PinnedMessage } from "@/app/types/Chat";
 import { router } from "expo-router";
 import { ROUTES } from "@/app/utils/routes";
+import { getAvatarImage } from "@/app/utils/avatar";
 
 type Props = {
   item: PinnedMessage;
@@ -20,11 +21,7 @@ export const FavoriteChatIcon: FunctionComponent<Props> = ({ item }) => {
       onPress={handleFavoriteChatPress}
     >
       <Image
-        source={
-          item.companion_gender === "male"
-            ? require("@/assets/images/male-avatar.png")
-            : require("@/assets/images/female-avatar.png")
-        }
+        source={getAvatarImage(item.companion_gender ?? "")}
         className={"size-24 rounded-full"}
         resizeMode="contain"
       />

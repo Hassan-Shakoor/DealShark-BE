@@ -3,6 +3,7 @@ import { Image, Text, TouchableOpacity, View } from "react-native";
 import { router } from "expo-router";
 import { ROUTES } from "@/app/utils/routes";
 import { Chat } from "@/app/types/Chat";
+import { getAvatarImage } from "@/app/utils/avatar";
 
 type Props = {
   item: Chat;
@@ -21,11 +22,7 @@ export const ChatMessage: FunctionComponent<Props> = ({ item }) => {
       }
     >
       <Image
-        source={
-          item.companion_gender === "male"
-            ? require("@/assets/images/male-avatar.png")
-            : require("@/assets/images/female-avatar.png")
-        }
+        source={getAvatarImage(item.companion_gender ?? "")}
         className={"size-11 rounded-full"}
         resizeMode="contain"
       />
