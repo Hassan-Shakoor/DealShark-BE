@@ -16,11 +16,14 @@ import { HttpStatusCode } from "axios";
 import { useLocalSearchParams } from "expo-router";
 import { handleError } from "@/app/utils/error-handling";
 import Toast from "react-native-toast-message";
+import { BlurView } from "expo-blur";
+import { useColorScheme } from "nativewind";
 
 export const CompanionInfo: FunctionComponent = () => {
   const [isLoading, setLoading] = useState<boolean>(false);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const { state, dispatch } = useChatContext();
+  const { colorScheme } = useColorScheme();
 
   const param = useLocalSearchParams();
   const id: string = Array.isArray(param.id) ? param.id[0] : param.id;
@@ -99,14 +102,14 @@ export const CompanionInfo: FunctionComponent = () => {
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
       >
-        <View
-          className={
-            "flex flex-1 flex-col items-center justify-center bg-white/70 dark:bg-black/40"
-          }
+        <BlurView
+          intensity={50}
+          tint={colorScheme === "dark" ? "dark" : "light"}
+          className={"flex flex-1 flex-col items-center justify-center"}
         >
           <View
             className={
-              "bg-light-quinary dark:bg-senary flex w-3/4 flex-col gap-10 rounded-2xl px-5 py-5"
+              "flex w-3/4 flex-col gap-10 rounded-2xl bg-light-quinary px-5 py-5 dark:bg-senary"
             }
           >
             <Text
@@ -179,7 +182,7 @@ export const CompanionInfo: FunctionComponent = () => {
               </View>
             </View>
           </View>
-        </View>
+        </BlurView>
       </Modal>
     </View>
   );
