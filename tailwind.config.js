@@ -11,6 +11,7 @@ module.exports = {
         tertiary: "#3D2C69",
         quaternary: "#514279",
         quinary: "#9889C2",
+        senary: "#23043E",
         subtle: "#A9A9A9",
         secondary: { DEFAULT: "#944479", 500: "#1A1C1E" },
         dark: {
@@ -29,6 +30,7 @@ module.exports = {
           secondary: "#EFEFF0",
           tertiary: "#F1F1F2",
           quaternary: "#EAE8E9",
+          quinary: "#F4F0FA",
         },
         appleGrey: "#909093",
         blue: { DEFAULT: "#3478F6", secondary: "#0A78B8" },

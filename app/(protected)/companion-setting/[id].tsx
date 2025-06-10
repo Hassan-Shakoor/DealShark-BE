@@ -25,6 +25,7 @@ import { useChatContext } from "@/app/contexts/useChatContext";
 import { ChatAction } from "@/app/contexts/action";
 import { handleError } from "@/app/utils/error-handling";
 import Loader from "@/app/components/ui/Loader";
+import Toast from "react-native-toast-message";
 
 const CompanionSetting = () => {
   const [isLoading, setLoading] = useState<boolean>(false);
@@ -141,6 +142,10 @@ const CompanionSetting = () => {
       dispatch({
         type: ChatAction.SetCompanionSetting,
         payload: response.data,
+      });
+      Toast.show({
+        type: "success",
+        text1: "Companion setting updated successfully!",
       });
       router.replace(ROUTES.ChatView(id));
     } catch (error) {

@@ -69,7 +69,7 @@ const SignUp: FunctionComponent = () => {
     } finally {
       setLoading(false);
     }
-  }, [dispatch, password, username]);
+  }, [confirmPassword, dispatch, password, username]);
 
   const handleSignIn = useCallback(() => {
     router.replace(ROUTES.SignIn);
