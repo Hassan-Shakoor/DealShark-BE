@@ -55,7 +55,7 @@ export const AddChatButton: FunctionComponent = () => {
       <Button
         disabled={isLoading}
         onPress={handleAddButton}
-        classNames={"!p-3 !rounded-full items-center justify-center"}
+        classNames={"!p-3 !py-3 !rounded-full items-center justify-center"}
       >
         <Entypo name="plus" size={45} color={"white"} />
       </Button>

@@ -110,7 +110,7 @@ const SignUp: FunctionComponent = () => {
                 </Text>
                 <View className={"flex flex-col gap-2"}>
                   <TextInput
-                    className={"w-full rounded-lg bg-white/60 p-3"}
+                    className={"w-full rounded-lg bg-white/60 p-3 py-5"}
                     placeholder={"username@example.com"}
                     placeholderTextColor={"#1A1C1E"}
                     keyboardType={"email-address"}
@@ -122,7 +122,7 @@ const SignUp: FunctionComponent = () => {
                   {/* Password Input */}
                   <View className="relative w-full">
                     <TextInput
-                      className={"w-full rounded-lg bg-white/60 p-3"}
+                      className={"w-full rounded-lg bg-white/60 p-3 py-5"}
                       placeholder="Password"
                       placeholderTextColor={"#1A1C1E"}
                       value={password}
@@ -133,7 +133,7 @@ const SignUp: FunctionComponent = () => {
                     />
                     <Pressable
                       onPress={() => setPasswordVisible((prev) => !prev)}
-                      className="absolute right-3 top-3"
+                      className="absolute right-3 top-5"
                     >
                       <Feather
                         name={isPasswordVisible ? "eye-off" : "eye"}
@@ -144,7 +144,7 @@ const SignUp: FunctionComponent = () => {
                   {/* Confirm Password Input */}
                   <View className="relative w-full">
                     <TextInput
-                      className={"w-full rounded-lg bg-white/60 p-3"}
+                      className={"w-full rounded-lg bg-white/60 p-3 py-5"}
                       placeholder="Confirm Password"
                       value={confirmPassword}
                       onChangeText={setConfirmPassword}
@@ -155,7 +155,7 @@ const SignUp: FunctionComponent = () => {
                     />
                     <Pressable
                       onPress={() => setConfirmPasswordVisible((prev) => !prev)}
-                      className="absolute right-3 top-3"
+                      className="absolute right-3 top-5"
                     >
                       <Feather
                         name={isConfirmPasswordVisible ? "eye-off" : "eye"}

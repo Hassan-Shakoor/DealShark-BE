@@ -15,7 +15,7 @@ export const SearchChat: FunctionComponent = () => {
   );
 
   return (
-    <View className="flex-row items-center rounded-lg bg-light-secondary px-3 py-2 dark:bg-dark-tertiary/20">
+    <View className="flex-row items-center rounded-lg bg-light-secondary px-3 py-3 dark:bg-dark-tertiary/20">
       <Feather name="search" size={18} color="#3C3C4399" />
       <TextInput
         placeholder="Search"

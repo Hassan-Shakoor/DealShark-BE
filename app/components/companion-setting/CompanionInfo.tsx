@@ -1,4 +1,12 @@
-import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { FunctionComponent, useCallback, useState } from "react";
 import { useChatContext } from "@/app/contexts/useChatContext";
 import { ChatAction } from "@/app/contexts/action";
@@ -102,87 +110,93 @@ export const CompanionInfo: FunctionComponent = () => {
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
       >
-        <BlurView
-          intensity={50}
-          tint={colorScheme === "dark" ? "dark" : "light"}
-          className={"flex flex-1 flex-col items-center justify-center"}
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ flex: 1 }}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
         >
-          <View
-            className={
-              "flex w-3/4 flex-col gap-10 rounded-2xl bg-light-quinary px-5 py-5 dark:bg-senary"
-            }
+          <BlurView
+            intensity={Platform.OS === "ios" ? 20 : 50}
+            tint={colorScheme === "dark" ? "dark" : "light"}
+            className={"flex flex-1 flex-col items-center justify-center"}
           >
-            <Text
+            <View
               className={
-                "text-center font-sfPro text-xl font-medium text-black dark:text-white"
+                "flex w-11/12 flex-col gap-10 rounded-2xl bg-light-quinary px-5 py-5 dark:bg-senary"
               }
             >
-              Select Gender
-            </Text>
-            <View className={"flex flex-col gap-1.5"}>
-              {state.companionSetting?.gender === "male" ? (
-                <SelectedChip
-                  title={"Male"}
-                  onPress={() => handleGender("male")}
-                />
-              ) : (
-                <UnSelectedChip
-                  title={"Male"}
-                  onPress={() => handleGender("male")}
-                />
-              )}
-              {state.companionSetting?.gender === "female" ? (
-                <SelectedChip
-                  title={"Female"}
-                  onPress={() => handleGender("female")}
-                />
-              ) : (
-                <UnSelectedChip
-                  title={"Female"}
-                  onPress={() => handleGender("female")}
-                />
-              )}
               <Text
                 className={
-                  "text-center font-sfPro text-sm text-black dark:text-white"
+                  "text-center font-sfPro text-xl font-medium text-black dark:text-white"
                 }
               >
-                Other (kindly specify below)
+                Select Gender
               </Text>
-              <TextInput
-                value={
-                  state.companionSetting?.gender === "male" ||
-                  state.companionSetting?.gender === "female"
-                    ? ""
-                    : state.companionSetting?.gender
-                }
-                onChangeText={handleGender}
-                autoFocus
-                placeholder={"Custom Gender"}
-                className={
-                  "rounded-xl border-[4px] border-transparent bg-quinary p-3 font-inter text-2xl font-medium text-black placeholder:text-lg placeholder:text-subtle dark:bg-quaternary dark:text-white"
-                }
-              />
-            </View>
-            <View className={"flex flex-row gap-2"}>
-              <View className={"flex-1"}>
-                <Button onPress={handleSave} disabled={isLoading}>
-                  <Text className={"font-sfPro text-white"}>
-                    {isLoading ? <Loader size={"small"} /> : "Save"}
-                  </Text>
-                </Button>
-              </View>
-              <View className={"flex-1"}>
-                <Button
-                  onPress={() => setModalVisible(false)}
-                  variant={"secondary"}
+              <View className={"flex flex-col gap-2"}>
+                {state.companionSetting?.gender === "male" ? (
+                  <SelectedChip
+                    title={"Male"}
+                    onPress={() => handleGender("male")}
+                  />
+                ) : (
+                  <UnSelectedChip
+                    title={"Male"}
+                    onPress={() => handleGender("male")}
+                  />
+                )}
+                {state.companionSetting?.gender === "female" ? (
+                  <SelectedChip
+                    title={"Female"}
+                    onPress={() => handleGender("female")}
+                  />
+                ) : (
+                  <UnSelectedChip
+                    title={"Female"}
+                    onPress={() => handleGender("female")}
+                  />
+                )}
+                <Text
+                  className={
+                    "text-center font-sfPro text-sm text-black dark:text-white"
+                  }
                 >
-                  <Text className={"font-sfPro text-white"}>Cancel</Text>
-                </Button>
+                  Other (kindly specify below)
+                </Text>
+                <TextInput
+                  value={
+                    state.companionSetting?.gender === "male" ||
+                    state.companionSetting?.gender === "female"
+                      ? ""
+                      : state.companionSetting?.gender
+                  }
+                  onChangeText={handleGender}
+                  autoFocus
+                  placeholder={"Custom Gender"}
+                  className={
+                    "rounded-xl border-[4px] border-transparent bg-quinary p-3 font-inter text-2xl font-medium text-black placeholder:text-lg placeholder:text-subtle dark:bg-quaternary dark:text-white"
+                  }
+                />
+              </View>
+              <View className={"flex flex-row gap-2"}>
+                <View className={"flex-1"}>
+                  <Button onPress={handleSave} disabled={isLoading}>
+                    <Text className={"font-sfPro text-white"}>
+                      {isLoading ? <Loader size={"small"} /> : "Save"}
+                    </Text>
+                  </Button>
+                </View>
+                <View className={"flex-1"}>
+                  <Button
+                    onPress={() => setModalVisible(false)}
+                    variant={"secondary"}
+                  >
+                    <Text className={"font-sfPro text-white"}>Cancel</Text>
+                  </Button>
+                </View>
               </View>
             </View>
-          </View>
-        </BlurView>
+          </BlurView>
+        </KeyboardAvoidingView>
       </Modal>
     </View>
   );

@@ -109,7 +109,7 @@ const SignIn: FunctionComponent = () => {
                   </Text>
                   <View className={"flex flex-col gap-2"}>
                     <TextInput
-                      className={"w-full rounded-lg bg-white/60 p-3"}
+                      className={"w-full rounded-lg bg-white/60 p-3 py-5"}
                       placeholder={"username@example.com"}
                       placeholderTextColor={"#1A1C1E"}
                       keyboardType={"email-address"}
@@ -121,7 +121,7 @@ const SignIn: FunctionComponent = () => {
                     {/* Password Input */}
                     <View className="relative w-full">
                       <TextInput
-                        className={"w-full rounded-lg bg-white/60 p-3"}
+                        className={"w-full rounded-lg bg-white/60 p-3 py-5"}
                         placeholder="Password"
                         placeholderTextColor={"#1A1C1E"}
                         secureTextEntry={!isPasswordVisible}
@@ -132,7 +132,7 @@ const SignIn: FunctionComponent = () => {
                       />
                       <Pressable
                         onPress={() => setPasswordVisible(!isPasswordVisible)}
-                        className="absolute right-3 top-3"
+                        className="absolute right-3 top-5"
                       >
                         <Feather
                           name={isPasswordVisible ? "eye-off" : "eye"}
