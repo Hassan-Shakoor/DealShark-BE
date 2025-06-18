@@ -72,8 +72,13 @@ const CompanionSetting = () => {
           (p) => p.toUpperCase() !== item.toUpperCase(),
         );
       } else {
-        // Add item if not selected
-        updatedPersonalities = [...currentPersonalities, item];
+        // Add item if not selected, but ensure max 2 items
+        if (currentPersonalities.length < 2) {
+          updatedPersonalities = [...currentPersonalities, item];
+        } else {
+          // Remove oldest item (first in array) and add new one
+          updatedPersonalities = [...currentPersonalities.slice(1), item];
+        }
       }
 
       dispatch({
@@ -90,22 +95,15 @@ const CompanionSetting = () => {
   const handleFlirtStylePress = useCallback(
     (item: string) => {
       const currentStyles = state.companionSetting?.flirting_style || [];
-      let updatedStyles: string[];
 
       // Check if item is already selected
       const isSelected = currentStyles.some(
         (s) => s.toUpperCase() === item.toUpperCase(),
       );
 
-      if (isSelected) {
-        // Remove item if already selected
-        updatedStyles = currentStyles.filter(
-          (s) => s.toUpperCase() !== item.toUpperCase(),
-        );
-      } else {
-        // Add item if not selected
-        updatedStyles = [...currentStyles, item];
-      }
+      // If already selected, deselect it (empty array)
+      // If not selected, make it the only selected item
+      const updatedStyles = isSelected ? [] : [item];
 
       dispatch({
         type: ChatAction.SetCompanionSetting,
