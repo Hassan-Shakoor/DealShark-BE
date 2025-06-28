@@ -20,6 +20,7 @@ export const retryApiCall = async <T>(
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
+      console.log("Attempting API call");
       const response = await apiCall();
       return response;
     } catch (error) {

@@ -3,7 +3,7 @@ export const Personalities: string[] = [
   "Spicy",
   "Dominant",
   "Submissive",
-  "Mysterious",
+  "Intense",
 ];
 
 export const FlirtingStyles: string[] = [
