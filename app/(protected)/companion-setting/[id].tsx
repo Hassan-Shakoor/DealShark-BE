@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { ImageSection } from "@/app/components/companion-setting/ImageSection";
 import { ChipSelector } from "@/app/components/companion-setting/ChipSelector";
-import { FlirtingStyles, Personalities } from "@/app/data/companion-setting";
+import { Personalities } from "@/app/data/companion-setting";
 import { Button } from "@/app/components/ui/Button";
 import { CompanionInfo } from "@/app/components/companion-setting/CompanionInfo";
 import { api } from "@/app/utils/api";
@@ -92,30 +92,6 @@ const CompanionSetting = () => {
     [dispatch, state.companionSetting],
   );
 
-  const handleFlirtStylePress = useCallback(
-    (item: string) => {
-      const currentStyles = state.companionSetting?.flirting_style || [];
-
-      // Check if item is already selected
-      const isSelected = currentStyles.some(
-        (s) => s.toUpperCase() === item.toUpperCase(),
-      );
-
-      // If already selected, deselect it (empty array)
-      // If not selected, make it the only selected item
-      const updatedStyles = isSelected ? [] : [item];
-
-      dispatch({
-        type: ChatAction.SetCompanionSetting,
-        payload: {
-          ...state.companionSetting,
-          flirting_style: updatedStyles,
-        } as CompanionSettingType,
-      });
-    },
-    [dispatch, state.companionSetting],
-  );
-
   const handleCancel = useCallback(() => {
     router.back();
   }, []);
@@ -181,13 +157,6 @@ const CompanionSetting = () => {
                     data={Personalities}
                     selectedItems={state.companionSetting?.personality ?? []}
                     handlePress={handlePersonalityPress}
-                  />
-                  <ChipSelector
-                    title={"Flirting Style"}
-                    data={FlirtingStyles}
-                    selectedItems={state.companionSetting?.flirting_style ?? []}
-                    handlePress={handleFlirtStylePress}
-                    className={"pt-3"}
                   />
                 </ScrollView>
               </View>

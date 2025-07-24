@@ -5,10 +5,3 @@ export const Personalities: string[] = [
   "Submissive",
   "Intense",
 ];
-
-export const FlirtingStyles: string[] = [
-  "Witty",
-  "Romantic",
-  "Kinky",
-  "Teasing",
-];

@@ -32,7 +32,7 @@ export const ChipSelector: FunctionComponent<Props> = ({
       <Text className={"font-sfPro font-medium text-black dark:text-white"}>
         {title}
       </Text>
-      <View className={"flex flex-row flex-wrap gap-1.5"}>
+      <View className={"flex flex-col gap-2"}>
         {data.map((item, index) =>
           isItemSelected(item) ? (
             <SelectedChip
