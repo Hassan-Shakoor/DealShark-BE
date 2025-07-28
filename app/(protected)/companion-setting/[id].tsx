@@ -81,7 +81,9 @@ const CompanionSetting = () => {
         APIS.updateCompanionSetting,
         {
           chat_id: id,
-          ...state.companionSetting,
+          name: state.companionSetting?.name,
+          gender: state.companionSetting?.gender,
+          personality: state.companionSetting?.personality,
         },
       );
 
