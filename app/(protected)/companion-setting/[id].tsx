@@ -58,34 +58,11 @@ const CompanionSetting = () => {
 
   const handlePersonalityPress = useCallback(
     (item: string) => {
-      const currentPersonalities = state.companionSetting?.personality || [];
-      let updatedPersonalities: string[];
-
-      // Check if item is already selected
-      const isSelected = currentPersonalities.some(
-        (p) => p.toUpperCase() === item.toUpperCase(),
-      );
-
-      if (isSelected) {
-        // Remove item if already selected
-        updatedPersonalities = currentPersonalities.filter(
-          (p) => p.toUpperCase() !== item.toUpperCase(),
-        );
-      } else {
-        // Add item if not selected, but ensure max 2 items
-        if (currentPersonalities.length < 2) {
-          updatedPersonalities = [...currentPersonalities, item];
-        } else {
-          // Remove oldest item (first in array) and add new one
-          updatedPersonalities = [...currentPersonalities.slice(1), item];
-        }
-      }
-
       dispatch({
         type: ChatAction.SetCompanionSetting,
         payload: {
           ...state.companionSetting,
-          personality: updatedPersonalities,
+          personality: [item],
         } as CompanionSettingType,
       });
     },
