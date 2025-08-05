@@ -15,10 +15,6 @@ export default function AuthHome() {
     router.replace(ROUTES.SignIn);
   }, []);
 
-  const handleHome = useCallback(() => {
-    router.replace(ROUTES.Home);
-  }, []);
-
   return (
     <AuthBackground>
       <CustomSafeArea>
@@ -78,12 +74,6 @@ export default function AuthHome() {
                 className={"text-medium font-sfPro text-sm text-blue-600"}
               >
                 Log in
-              </Text>
-              <Text
-                onPress={handleHome}
-                className={"text-medium font-sfPro text-sm text-blue-600"}
-              >
-                Home
               </Text>
             </View>
           </View>

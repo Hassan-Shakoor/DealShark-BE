@@ -1,11 +1,14 @@
 /* eslint-disable no-undef */
-const CACHE_NAME = "fantasy-app-v2";
+const CACHE_NAME = "fantasy-app-v4";
 const urlsToCache = [
   "/",
   "/index.html",
   "/offline.html",
   "/manifest.json",
   "/icon.png",
+  "/auth-home",
+  "/sign-in",
+  "/sign-up",
   "/static/js/bundle.js",
   "/static/css/main.css",
   "/_expo/static/css/web-1dfd5bec3eaed31b84c7e093e64ee60b.css",
@@ -30,7 +33,7 @@ self.addEventListener("fetch", (event) => {
   if (event.request.mode === "navigate") {
     event.respondWith(
       caches
-        .match("/index.html")
+        .match("/")
         .then((response) => {
           // If index.html is in cache, serve it
           if (response) {
@@ -40,7 +43,6 @@ self.addEventListener("fetch", (event) => {
           return fetch(event.request);
         })
         .catch(() => {
-          // If network fails (i.e., we are offline), serve the custom offline page
           return caches.match("/offline.html");
         }),
     );

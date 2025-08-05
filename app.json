@@ -34,6 +34,7 @@
       "orientation": "portrait",
       "themeColor": "#ffffff",
       "backgroundColor": "#ffffff",
+      "manifest": "./public/manifest.json",
       "icons": [
         {
           "src": "./assets/images/icon.png",
