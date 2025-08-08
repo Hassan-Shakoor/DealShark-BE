@@ -103,6 +103,15 @@ export const KeyboardSection: FunctionComponent = () => {
             value={messageText}
             onChangeText={setMessageText}
             multiline
+            autoCorrect={false}
+            autoCapitalize="sentences"
+            textContentType="none"
+            returnKeyType="default"
+            blurOnSubmit={false}
+            enablesReturnKeyAutomatically={true}
+            style={{
+              userSelect: "text",
+            }}
           />
           <TouchableOpacity
             onPress={handleSendMessage}

@@ -118,6 +118,9 @@ const SignUp: FunctionComponent = () => {
                     onChangeText={setUsername}
                     autoCapitalize="none"
                     autoCorrect={false}
+                    style={{
+                      userSelect: "text",
+                    }}
                   />
                   {/* Password Input */}
                   <View className="relative w-full">
@@ -130,6 +133,9 @@ const SignUp: FunctionComponent = () => {
                       secureTextEntry={!isPasswordVisible}
                       autoCapitalize="none"
                       autoCorrect={false}
+                      style={{
+                        userSelect: "text",
+                      }}
                     />
                     <Pressable
                       onPress={() => setPasswordVisible((prev) => !prev)}

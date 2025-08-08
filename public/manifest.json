@@ -9,6 +9,11 @@
     "background_color": "#ffffff",
     "lang": "en",
     "scope": "/",
+    "categories": [
+        "social",
+        "lifestyle"
+    ],
+    "prefer_related_applications": false,
     "icons": [
         {
             "src": "icon.png",

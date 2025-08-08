@@ -8,7 +8,6 @@ import { Helmet } from "react-helmet";
 
 export default function RootLayout() {
   useEffect(() => {
-    console.log("Index component mounted");
     if (Platform.OS === "web") {
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
@@ -39,6 +38,18 @@ export default function RootLayout() {
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Fantasy App" />
         <meta name="mobile-web-app-capable" content="yes" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+        />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <meta name="apple-touch-fullscreen" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta
+          name="apple-mobile-web-app-status-bar-style"
+          content="black-translucent"
+        />
         <link rel="manifest" href="manifest.json" />
       </Helmet>
       <LayoutContent />
