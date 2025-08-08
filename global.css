@@ -60,3 +60,44 @@ input:focus, textarea:focus {
   user-select: text !important;
   touch-action: manipulation;
 }
+
+/* iOS PWA Keyboard Fixes */
+@media screen and (max-width: 768px) {
+  input, textarea {
+    -webkit-appearance: none;
+    border-radius: 0;
+    font-size: 16px !important;
+  }
+  
+  /* Force keyboard on iOS PWA */
+  input:focus, textarea:focus {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+  
+  /* Prevent zoom on focus for iOS */
+  input[type="text"], input[type="email"], input[type="password"], textarea {
+    font-size: 16px !important;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+  }
+}
+
+/* Specific fixes for React Native Web inputs in PWA */
+[data-testid*="text-input"], [data-testid*="input"] {
+  -webkit-user-select: text !important;
+  user-select: text !important;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Force keyboard appearance on iOS PWA */
+.force-keyboard {
+  -webkit-user-select: text !important;
+  user-select: text !important;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+  font-size: 16px !important;
+}

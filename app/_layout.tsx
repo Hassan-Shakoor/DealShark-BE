@@ -5,6 +5,7 @@ import Toast from "react-native-toast-message";
 import { useEffect } from "react";
 import { Platform } from "react-native";
 import { Helmet } from "react-helmet";
+import { setupPWAKeyboardHandling } from "@/app/utils/keyboard-handler";
 
 export default function RootLayout() {
   useEffect(() => {
@@ -23,6 +24,11 @@ export default function RootLayout() {
             });
         });
       }
+
+      // Setup PWA keyboard handling
+      const cleanup = setupPWAKeyboardHandling();
+
+      return cleanup;
     }
   }, []);
   return (
@@ -50,6 +56,8 @@ export default function RootLayout() {
           name="apple-mobile-web-app-status-bar-style"
           content="black-translucent"
         />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-touch-fullscreen" content="yes" />
         <link rel="manifest" href="manifest.json" />
       </Helmet>
       <LayoutContent />

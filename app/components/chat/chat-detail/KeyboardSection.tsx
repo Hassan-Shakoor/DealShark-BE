@@ -1,5 +1,12 @@
-import { FunctionComponent, useCallback, useMemo, useState } from "react";
-import { TextInput, TouchableOpacity, View } from "react-native";
+import {
+  FunctionComponent,
+  useCallback,
+  useMemo,
+  useState,
+  useRef,
+  useEffect,
+} from "react";
+import { TextInput, TouchableOpacity, View, Platform } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
 import { APIS } from "@/app/utils/routes";
@@ -10,12 +17,15 @@ import { HttpStatusCode } from "axios";
 import { Chat, Message, MessageRole } from "@/app/types/Chat";
 import { ChatAction } from "@/app/contexts/action";
 import { retryApiCall } from "@/app/utils/retry-mechanism";
+import { forceKeyboardOnInput } from "@/app/utils/keyboard-handler";
+import { useKeyboardHandler } from "@/app/hooks/useKeyboardHandler";
 
 export const KeyboardSection: FunctionComponent = () => {
   const param = useLocalSearchParams();
   const id: string = Array.isArray(param.id) ? param.id[0] : param.id;
   const [messageText, setMessageText] = useState<string>("");
   const { state, dispatch } = useChatContext();
+  const { inputRef, handleInputFocus, handleInputTouch } = useKeyboardHandler();
 
   const fetchIndividualChatList = useCallback(async () => {
     try {
@@ -97,11 +107,14 @@ export const KeyboardSection: FunctionComponent = () => {
       <View className={"mb-4 px-4"}>
         <View className="mb-4 flex-row items-center rounded-full border border-blue-secondary bg-white p-1 dark:bg-dark-senary">
           <TextInput
+            ref={inputRef}
             className="min-h-12 flex-1 px-3 py-4 font-inter text-base text-black dark:text-white"
             placeholder="Message"
             placeholderTextColor="#919191"
             value={messageText}
             onChangeText={setMessageText}
+            onFocus={handleInputFocus}
+            onTouchStart={handleInputTouch}
             multiline
             autoCorrect={false}
             autoCapitalize="sentences"
