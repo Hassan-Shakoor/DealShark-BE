@@ -23,12 +23,6 @@ export const SearchChat: FunctionComponent = () => {
         className="ml-2 flex-1 text-white"
         value={state.chatSearchQuery}
         onChangeText={handleSearchChange}
-        autoCorrect={false}
-        autoCapitalize="none"
-        returnKeyType="search"
-        style={{
-          userSelect: "text",
-        }}
       />
     </View>
   );

@@ -30,7 +30,6 @@ const LayoutContent = () => {
     <ThemeProvider>
       <StatusBar />
       <Stack>
-        <Stack.Screen name={"index"} options={{ headerShown: false }} />
         <Stack.Screen name={"(protected)"} options={{ headerShown: false }} />
         <Stack.Screen name={"auth-home"} options={{ headerShown: false }} />
         <Stack.Screen name={"sign-in"} options={{ headerShown: false }} />
