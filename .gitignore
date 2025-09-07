@@ -102,7 +102,6 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
 .venv
 .venv1
 env/
@@ -132,7 +131,6 @@ dmypy.json
 .pyre/
 
 # IDE
-.vscode/
 .idea/
 *.swp
 *.swo
@@ -151,3 +149,5 @@ Thumbs.db
 media/
 staticfiles/
 static/
+config.bat
+node_modules
