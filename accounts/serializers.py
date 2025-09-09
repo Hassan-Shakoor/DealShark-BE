@@ -1,0 +1,117 @@
+from rest_framework import serializers
+from django.contrib.auth import authenticate
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
+from .models import User, Business, OTPVerification
+import re
+
+
+class UserRegistrationSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, validators=[validate_password])
+    confirm_password = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = User
+        fields = ('email', 'username', 'phone_number', 'user_type', 'password', 'confirm_password')
+
+    def validate(self, attrs):
+        if attrs['password'] != attrs['confirm_password']:
+            raise serializers.ValidationError("Passwords don't match.")
+
+        phone_regex = re.compile(r'^\+?1?\d{9,15}$')
+        if not phone_regex.match(attrs['phone_number']):
+            raise serializers.ValidationError("Invalid phone number format.")
+
+        return attrs
+
+    def create(self, validated_data):
+        validated_data.pop('confirm_password')
+        user = User.objects.create_user(**validated_data)
+        return user
+
+
+class BusinessRegistrationSerializer(serializers.ModelSerializer):
+    user_data = UserRegistrationSerializer()
+
+    class Meta:
+        model = Business
+        fields = ('user_data', 'business_name', 'website', 'industry', 'description')
+
+    def create(self, validated_data):
+        user_data = validated_data.pop('user_data')
+        user_data['user_type'] = 'business'
+
+        user_serializer = UserRegistrationSerializer(data=user_data)
+        user_serializer.is_valid(raise_exception=True)
+        user = user_serializer.save()
+
+        business = Business.objects.create(user=user, **validated_data)
+        return business
+
+
+class OTPVerificationSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    otp_code = serializers.CharField(max_length=6, min_length=6)
+    otp_type = serializers.ChoiceField(choices=OTPVerification.OTP_TYPES)
+
+    def validate(self, attrs):
+        try:
+            user = User.objects.get(email=attrs['email'])
+        except User.DoesNotExist:
+            raise serializers.ValidationError("User with this email does not exist.")
+
+        try:
+            otp = OTPVerification.objects.get(
+                user=user,
+                otp_code=attrs['otp_code'],
+                otp_type=attrs['otp_type'],
+                is_used=False
+            )
+        except OTPVerification.DoesNotExist:
+            raise serializers.ValidationError("Invalid or expired OTP.")
+
+        if otp.is_expired():
+            raise serializers.ValidationError("OTP has expired.")
+
+        attrs['otp_instance'] = otp
+        attrs['user'] = user
+        return attrs
+
+
+class LoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField()
+
+    def validate(self, attrs):
+        email = attrs.get('email')
+        password = attrs.get('password')
+
+        if email and password:
+            user = authenticate(username=email, password=password)
+            if not user:
+                raise serializers.ValidationError("Invalid credentials.")
+
+            if not user.is_email_verified:
+                raise serializers.ValidationError("Please verify your email before logging in.")
+
+            attrs['user'] = user
+            return attrs
+        raise serializers.ValidationError("Email and password are required.")
+
+
+class BusinessSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Business
+        fields = ('business_name', 'website', 'industry', 'description', 'is_verified', 'created_at')
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    business_profile = BusinessSerializer(read_only=True)
+
+    class Meta:
+        model = User
+        fields = (
+            'id', 'email', 'username', 'phone_number', 'user_type',
+            'is_email_verified', 'is_phone_verified', 'created_at', 'business_profile'
+        )
+        read_only_fields = ('id', 'email', 'user_type', 'created_at')

@@ -1,0 +1,208 @@
+<!-- templates/emails/otp_email.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification - Deal Shark</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2563eb;
+            margin-bottom: 10px;
+        }
+
+        .otp-code {
+            background: #f8f9fa;
+            border: 2px dashed #2563eb;
+            padding: 20px;
+            text-align: center;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+
+        .otp-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2563eb;
+            letter-spacing: 8px;
+        }
+
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+        }
+
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            color: #856404;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🦈 Deal Shark</div>
+            <h2>{% if otp_type == 'email' %}Email Verification{% elif otp_type == 'phone' %}Phone Verification{% else
+                %}Password Reset{% endif %}</h2>
+        </div>
+
+        <p>Hello {% if user_name %}{{ user_name }}{% else %}there{% endif %},</p>
+
+        <p>
+            {% if otp_type == 'email' %}
+            Thank you for registering with Deal Shark! Please use the following OTP code to verify your email address:
+            {% elif otp_type == 'phone' %}
+            Please use the following OTP code to verify your phone number:
+            {% else %}
+            You requested a password reset. Please use the following OTP code to reset your password:
+            {% endif %}
+        </p>
+
+        <div class="otp-code">
+            <div style="margin-bottom: 10px;">Your OTP Code:</div>
+            <div class="otp-number">{{ otp_code }}</div>
+        </div>
+
+        <div class="warning">
+            ⚠️ <strong>Important:</strong> This OTP will expire in {{ expiry_minutes }} minutes. Do not share this code
+            with anyone.
+        </div>
+
+        <p>If you didn't request this verification, please ignore this email or contact our support team.</p>
+
+        <div class="footer">
+            <p>Best regards,<br>The Deal Shark Team</p>
+            <p><small>This is an automated email. Please do not reply to this message.</small></p>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<!-- templates/emails/referral_notification.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Referral Submitted - Deal Shark</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2563eb;
+            margin-bottom: 10px;
+        }
+
+        .success-box {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .deal-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🦈 Deal Shark</div>
+            <h2>Referral Successfully Submitted!</h2>
+        </div>
+
+        <div class="success-box">
+            ✅ <strong>Great news!</strong> Your referral has been submitted successfully.
+        </div>
+
+        <div class="deal-info">
+            <h3>📋 Referral Details:</h3>
+            <p><strong>Deal:</strong> {{ deal_title }}</p>
+            <p><strong>Referred Email:</strong> {{ referred_email }}</p>
+            <p><strong>Status:</strong> Pending Confirmation</p>
+        </div>
+
+        <p>We'll notify you once your referral is confirmed by the business. Keep an eye on your email for updates!</p>
+
+        <div class="footer">
+            <p>Happy referring!<br>The Deal Shark Team</p>
+            <p><small>This is an automated email. Please do not reply to this message.</small></p>
+        </div>
+    </div>
+</body>
+
+</html>
