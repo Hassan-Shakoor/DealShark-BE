@@ -3,8 +3,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.signals import user_logged_in
 from .models import User, Business
-from referals.models import Referral
-from referals.utils import send_referral_notification
+from referrals.models import Referral
+from referrals.utils import send_referral_notification
 
 logger = logging.getLogger(__name__)
 
