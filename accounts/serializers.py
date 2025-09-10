@@ -12,7 +12,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('email', 'username', 'phone_number', 'user_type', 'password', 'confirm_password')
+        fields = ('email', 'first_name', 'last_name', 'phone_number', 'user_type', 'password', 'confirm_password')
 
     def validate(self, attrs):
         if attrs['password'] != attrs['confirm_password']:
@@ -23,9 +23,28 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Invalid phone number format.")
 
         return attrs
+    
+    def validate_email(self, value):
+        user = User.objects.filter(email=value).first()
+        if user and user.is_email_verified:
+            raise serializers.ValidationError("This email is already registered.")
+        return value
 
     def create(self, validated_data):
         validated_data.pop('confirm_password')
+
+        email = validated_data.get("email")
+        if email:
+            base_username = email.split("@")[0]
+            username = base_username
+            counter = 1
+            # Ensure uniqueness
+            from .models import User
+            while User.objects.filter(username=username).exists():
+                username = f"{base_username}{counter}"
+                counter += 1
+            validated_data["username"] = username
+        
         user = User.objects.create_user(**validated_data)
         return user
 
