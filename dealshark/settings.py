@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-$51cwrytozc-2zc*7@7j8cg$)5uu0@%1=d-!kcmiuc$vrlcto1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '86fea9b049af.ngrok-free.app']
+ALLOWED_HOSTS = ['localhost', '131f9e7495ab.ngrok-free.app']
 
 
 # Application definition
@@ -93,7 +93,7 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": os.getenv("POSTGRES_DB", "dealshark"),
-        "USER": os.getenv("POSTGRES_USER", "root"),
+        "USER": os.getenv("POSTGRES_USER", "postgres"),
         "PASSWORD": os.getenv("POSTGRES_PASSWORD", "1234"),
         "HOST": os.getenv("POSTGRES_HOST", "127.0.0.1"),
         "PORT": os.getenv("POSTGRES_PORT", "5432"),
@@ -148,6 +148,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     ],
