@@ -17,7 +17,7 @@ class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True)
     phone_number = models.CharField(
-        max_length=15,
+        max_length=20,
         validators=[RegexValidator(regex=r'^\+?1?\d{9,15}$')],
         unique=True
     )
@@ -32,6 +32,10 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
+
+    @property
+    def is_business(self):
+        return self.user_type == "business"
 
 
 class OTPVerification(models.Model):
@@ -99,9 +103,19 @@ class OTPVerification(models.Model):
 class Business(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='business_profile')
     business_name = models.CharField(max_length=255)
-    website = models.URLField(blank=True, null=True)
-    industry = models.CharField(max_length=255)
+    business_email = models.EmailField(unique=True)
+    business_phone = models.CharField(max_length=20)
     description = models.TextField(blank=True)
+    website = models.CharField(max_length=255)
+    designation = models.CharField(max_length=255)
+    registration_no = models.CharField(max_length=255)
+    business_address = models.TextField()
+    business_city = models.CharField(max_length=255)
+    business_state = models.CharField(max_length=255)
+    business_country = models.CharField(max_length=255)
+    industry = models.CharField(max_length=255)
+    business_logo_url = models.URLField(blank=True, null=True)
+    business_cover_url = models.URLField(blank=True, null=True)
     is_verified = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

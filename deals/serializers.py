@@ -1,31 +1,62 @@
 from rest_framework import serializers
 from django.utils import timezone
+
+from accounts.models import Business
 from .models import Deal
 
 
-class DealSerializer(serializers.ModelSerializer):
-    business_name = serializers.CharField(source='business.business_name', read_only=True)
-    is_active_status = serializers.BooleanField(source='is_active', read_only=True)
 
+
+class BusinessMiniSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Business
+        fields = ["id", "business_name", "business_email", "business_phone", "website", "industry"]
+
+
+class DealSerializer(serializers.ModelSerializer):
     class Meta:
         model = Deal
-        fields = '__all__'
-        read_only_fields = ('id', 'business', 'created_at', 'updated_at')
+        fields = [
+            "id",
+            "business",
+            "deal_name",
+            "deal_description",
+            "reward_type",
+            "customer_incentive",
+            "no_reward_reason",
+            "is_active",
+            "created_at",
+            "updated_at",
+        ]
+        read_only_fields = ["id", "created_at", "updated_at"]
 
     def validate(self, attrs):
-        deal_type = attrs.get('deal_type')
+        request = self.context.get("request")
+        business = getattr(request.user, "business_profile", None)
 
-        if deal_type == 'commission' and not attrs.get('commission_amount'):
-            raise serializers.ValidationError("Commission amount is required for commission deals.")
+        if not business:
+            raise serializers.ValidationError({
+                "error": {
+                    "field": "business",
+                    "message": "Only businesses can create deals."
+                }
+            })
 
-        if deal_type == 'non_commission' and not attrs.get('referrer_reward'):
-            raise serializers.ValidationError("Referrer reward is required for non-commission deals.")
+        reward_type = attrs.get("reward_type")
+        incentive = attrs.get("customer_incentive")
 
-        if deal_type == 'conventional' and not attrs.get('conventional_offer'):
-            raise serializers.ValidationError("Conventional offer details are required.")
-
-        if attrs.get('end_date') <= attrs.get('start_date', timezone.now()):
-            raise serializers.ValidationError("End date must be after start date.")
+        if reward_type == "commission":
+            if Deal.objects.filter(
+                    business=business,
+                    reward_type="commission",
+                    customer_incentive=incentive
+            ).exists():
+                raise serializers.ValidationError({
+                    "error": {
+                        "field": "customer_incentive",
+                        "message": "You already have a deal with this commission amount."
+                    }
+                })
 
         return attrs
 

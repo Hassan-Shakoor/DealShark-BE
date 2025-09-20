@@ -2,6 +2,8 @@ from rest_framework import serializers
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+
+from deals.models import Deal
 from .models import User, Business, OTPVerification
 import re
 
@@ -49,24 +51,126 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return user
 
 
-class BusinessRegistrationSerializer(serializers.ModelSerializer):
-    user_data = UserRegistrationSerializer()
+class DealInlineSerializer(serializers.Serializer):
+    deal_name = serializers.CharField(max_length=255)
+    deal_description = serializers.CharField(required=False, allow_blank=True)
+    reward_type = serializers.ChoiceField(choices=["commission", "no_reward"])
+    customer_incentive = serializers.DecimalField(
+        max_digits=10, decimal_places=2, required=False
+    )
+    no_reward_reason = serializers.ChoiceField(
+        choices=["big_discount", "exclusive", "high_demand"],
+        required=False,
+        allow_blank=True,
+    )
+
+class DealResponseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Deal
+        fields = [
+            "id",
+            "deal_name",
+            "deal_description",
+            "reward_type",
+            "customer_incentive",
+            "no_reward_reason",
+            "created_at",
+            "updated_at",
+        ]
+
+
+class BusinessRegistrationSerializer(serializers.Serializer):
+    # User fields
+    email = serializers.EmailField()
+    phone_number = serializers.CharField(max_length=15)
+    password = serializers.CharField(write_only=True, min_length=8)
+
+    # Business fields
+    business_name = serializers.CharField(max_length=255)
+    business_email = serializers.EmailField()
+
+    business_phone = serializers.CharField(max_length=15)
+    description = serializers.CharField(required=False, allow_blank=True)
+    website = serializers.URLField(required=False, allow_blank=True)
+    designation = serializers.CharField(required=False, allow_blank=True)
+    industry = serializers.CharField(required=False, allow_blank=True)
+    registration_no = serializers.CharField(required=False, allow_blank=True)
+    business_address = serializers.CharField(required=False, allow_blank=True)
+    business_city = serializers.CharField(required=False, allow_blank=True)
+    business_state = serializers.CharField(required=False, allow_blank=True)
+    business_country = serializers.CharField(required=False, allow_blank=True)
+    # Firebase-uploaded URLs
+    business_logo = serializers.CharField(required=False, allow_blank=True)
+    business_cover_image = serializers.CharField(required=False, allow_blank=True)
+
+    deal = DealInlineSerializer(required=False)
+
+
+class UserProfileBasicSerializer(serializers.ModelSerializer):
+    """Basic version to avoid recursion when embedding inside BusinessResponse."""
+
+    class Meta:
+        model = User
+        fields = [
+            "id",
+            "email",
+            "phone_number",
+            "user_type",
+            "is_email_verified",
+            "is_phone_verified",
+        ]
+
+class BusinessResponseSerializer(serializers.ModelSerializer):
+    user = UserProfileBasicSerializer(read_only=True)
+    deals = DealResponseSerializer(many=True, read_only=True)
+    email = serializers.EmailField(source="user.email", read_only=True)
 
     class Meta:
         model = Business
-        fields = ('user_data', 'business_name', 'website', 'industry', 'description')
+        fields = [
+            "id",
+            "user",
+            "email",
+            "business_name",
+            "business_email",
+            "business_phone",
+            "description",
+            "website",
+            "designation",
+            "industry",
+            "registration_no",
+            "business_address",
+            "business_city",
+            "business_state",
+            "business_country",
+            "business_logo_url",
+            "business_cover_url",
+            "is_verified",
+            "created_at",
+            "updated_at",
+            "deals",
+        ]
 
-    def create(self, validated_data):
-        user_data = validated_data.pop('user_data')
-        user_data['user_type'] = 'business'
 
-        user_serializer = UserRegistrationSerializer(data=user_data)
-        user_serializer.is_valid(raise_exception=True)
-        user = user_serializer.save()
+class UserProfileSerializer(serializers.ModelSerializer):
+    business_profile = BusinessResponseSerializer(read_only=True)
 
-        business = Business.objects.create(user=user, **validated_data)
-        return business
-
+    class Meta:
+        model = User
+        fields = [
+            "id",
+            "username",
+            "email",
+            "first_name",
+            "last_name",
+            "phone_number",
+            "user_type",
+            "is_email_verified",
+            "is_phone_verified",
+            "created_at",
+            "updated_at",
+            "business_profile",
+        ]
 
 class OTPVerificationSerializer(serializers.Serializer):
     email = serializers.EmailField()
@@ -122,15 +226,3 @@ class BusinessSerializer(serializers.ModelSerializer):
     class Meta:
         model = Business
         fields = ('business_name', 'website', 'industry', 'description', 'is_verified', 'created_at')
-
-
-class UserProfileSerializer(serializers.ModelSerializer):
-    business_profile = BusinessSerializer(read_only=True)
-
-    class Meta:
-        model = User
-        fields = (
-            'id', 'email', 'username', 'phone_number', 'user_type', 'first_name', 'last_name',
-            'is_email_verified', 'is_phone_verified', 'created_at', 'business_profile'
-        )
-        read_only_fields = ('id', 'email', 'user_type', 'created_at')

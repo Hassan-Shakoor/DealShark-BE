@@ -1,7 +1,13 @@
-from django.urls import path
-from .views import DealListCreateView, DealDetailView
+from django.urls import path, include
 
+from rest_framework.routers import DefaultRouter
+
+from . import views
+from .views import DealViewSet
+
+router = DefaultRouter()
+router.register(r'', DealViewSet, basename='deals')
 urlpatterns = [
-    path('', DealListCreateView.as_view(), name='deal_list_create'),
-    path('<uuid:pk>/', DealDetailView.as_view(), name='deal_detail'),
+    path('', include(router.urls)),
+
 ]

@@ -1,33 +1,48 @@
-from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
 
 from deals.models import Deal
-from deals.serializers import DealSerializer, DealCreateSerializer
-from accounts.permissions import IsBusinessUser
+from deals.serializers import DealSerializer
 
 
-class DealListCreateView(generics.ListCreateAPIView):
-    queryset = Deal.objects.filter(status="active")
-    permission_classes = [IsAuthenticated]
+from rest_framework import viewsets
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
-    def get_serializer_class(self):
-        return DealCreateSerializer if self.request.method == "POST" else DealSerializer
-
-    def get_permissions(self):
-        if self.request.method == "POST":
-            return [IsAuthenticated(), IsBusinessUser()]
-        return [IsAuthenticated()]
-
-    def get_queryset(self):
-        if self.request.user.user_type == "business":
-            return Deal.objects.filter(business__user=self.request.user)
-        return Deal.objects.filter(status="active")
+from deals.services.deal_service import DealService
 
 
-class DealDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Deal.objects.all()
+class DealViewSet(viewsets.ModelViewSet):
     serializer_class = DealSerializer
-    permission_classes = [IsAuthenticated, IsBusinessUser]
+    permission_classes = [IsAuthenticated]
+    queryset = Deal.objects.all()
 
-    def get_queryset(self):
-        return Deal.objects.filter(business__user=self.request.user)
+
+    def create(self, request, *args, **kwargs):
+        business = getattr(request.user, "business_profile", None)
+        if not business:
+            return Response({"error": "Only businesses can create deals."}, status=403)
+
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            deal = DealService.create_deal(business, serializer.validated_data)
+            return Response(DealSerializer(deal).data, status=201)
+        return Response(serializer.errors, status=400)
+
+    @action(detail=False, methods=["get"], url_path="my")
+    def my_deals(self, request):
+        """Deals belonging to logged-in business"""
+        business = getattr(request.user, "business_profile", None)
+        if not business:
+            return Response({"error": "Only businesses can view their deals."}, status=403)
+
+        deals = Deal.objects.filter(business=business)
+        serializer = DealSerializer(deals, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=["get"], url_path="all")
+    def all_deals(self, request):
+        """All deals across all businesses (for referrers)"""
+        deals = Deal.objects.all()
+        serializer = DealSerializer(deals, many=True)
+        return Response(serializer.data)
+

@@ -26,12 +26,13 @@ SECRET_KEY = 'django-insecure-$51cwrytozc-2zc*7@7j8cg$)5uu0@%1=d-!kcmiuc$vrlcto1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '131f9e7495ab.ngrok-free.app']
+ALLOWED_HOSTS = ['localhost', '131f9e7495ab.ngrok-free.app', '127.0.0.1']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    "django_extensions",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -174,6 +175,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://localhost:8080",
     "http://127.0.0.1:8080",
+    "http://127.0.0.1:8000"
 ]
 
 CORS_ALLOW_CREDENTIALS = True

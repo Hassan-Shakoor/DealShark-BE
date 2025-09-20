@@ -10,6 +10,7 @@ import logging
 
 from drf_spectacular.utils import extend_schema, OpenApiResponse
 
+from config.firebase import upload_file_to_firebase
 from .models import User, Business, OTPVerification
 from .serializers import (
     UserRegistrationSerializer, BusinessRegistrationSerializer,

@@ -24,6 +24,9 @@ from django.http import JsonResponse
 
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
+from dealshark.views import FirebaseUploadView
+
+
 def api_root(request):
     return JsonResponse({
         'message': 'Welcome to DealShark API',
@@ -67,4 +70,5 @@ urlpatterns = [
     # path('swagger.json', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('upload/', FirebaseUploadView.as_view(), name='upload'),
 ]
