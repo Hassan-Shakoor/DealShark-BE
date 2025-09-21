@@ -84,6 +84,8 @@ class BusinessRegistrationSerializer(serializers.Serializer):
     email = serializers.EmailField()
     phone_number = serializers.CharField(max_length=15)
     password = serializers.CharField(write_only=True, min_length=8)
+    first_name = serializers.CharField(max_length=50, required=False, allow_blank=True)
+    last_name = serializers.CharField(max_length=50, required=False, allow_blank=True)
 
     # Business fields
     business_name = serializers.CharField(max_length=255)

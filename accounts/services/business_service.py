@@ -21,6 +21,8 @@ class BusinessService:
             phone_number=validated_data["phone_number"],
             password=validated_data["password"],
             user_type="business",
+            first_name=validated_data.get("first_name", ""),
+            last_name=validated_data.get("last_name", ""),
         )
 
         # Create business profile
