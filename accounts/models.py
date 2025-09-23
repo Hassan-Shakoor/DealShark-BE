@@ -117,6 +117,19 @@ class Business(models.Model):
     business_logo_url = models.URLField(blank=True, null=True)
     business_cover_url = models.URLField(blank=True, null=True)
     is_verified = models.BooleanField(default=False)
+
+    # New field for onboarding skip reason
+    onboarding_no_deal_reason = models.CharField(
+        max_length=50,
+        choices=[
+            ("big_discount", "The discount is big enough to share."),
+            ("exclusive", "It’s exclusive / limited."),
+            ("high_demand", "It’s high-demand (people share it naturally)."),
+        ],
+        blank=True,
+        null=True,
+    )
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

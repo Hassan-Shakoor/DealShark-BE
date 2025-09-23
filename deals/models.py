@@ -4,29 +4,25 @@ import uuid
 from accounts.models import Business
 
 
+from django.db import models
+from accounts.models import Business
+import uuid
+
+
 class Deal(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     REWARD_TYPES = (
-        ("commission", "Commission (Reward)"),
+        ("commission", "Commission"),
         ("no_reward", "No Reward"),
     )
 
-    NO_REWARD_REASONS = (
-        ("big_discount", "The discount is big enough to share."),
-        ("exclusive", "It’s exclusive / limited."),
-        ("high_demand", "It’s high-demand (people share it naturally)."),
-    )
-
-    business = models.ForeignKey("accounts.Business", on_delete=models.CASCADE, related_name="deals")
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    business = models.ForeignKey(Business, related_name="deals", on_delete=models.CASCADE)
     deal_name = models.CharField(max_length=255)
     deal_description = models.TextField(blank=True)
-
-    # Reward info
     reward_type = models.CharField(max_length=20, choices=REWARD_TYPES)
-    customer_incentive = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)  # USD commission
-    no_reward_reason = models.CharField(max_length=50, choices=NO_REWARD_REASONS, blank=True, null=True)
-
-    # Visibility + tracking
+    customer_incentive = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    no_reward_reason = models.CharField(max_length=50, blank=True, null=True)
+    is_featured = models.BooleanField(default=False)  # ✅ New
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

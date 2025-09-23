@@ -82,18 +82,17 @@ class DealResponseSerializer(serializers.ModelSerializer):
 class BusinessRegistrationSerializer(serializers.Serializer):
     # User fields
     email = serializers.EmailField()
-    phone_number = serializers.CharField(max_length=15)
+    phone_number = serializers.CharField(max_length=20)
     password = serializers.CharField(write_only=True, min_length=8)
-    first_name = serializers.CharField(max_length=50, required=False, allow_blank=True)
-    last_name = serializers.CharField(max_length=50, required=False, allow_blank=True)
+    first_name = serializers.CharField(required=False, allow_blank=True)
+    last_name = serializers.CharField(required=False, allow_blank=True)
 
     # Business fields
     business_name = serializers.CharField(max_length=255)
     business_email = serializers.EmailField()
-
-    business_phone = serializers.CharField(max_length=15)
+    business_phone = serializers.CharField(max_length=20)
+    website = serializers.URLField()
     description = serializers.CharField(required=False, allow_blank=True)
-    website = serializers.URLField(required=False, allow_blank=True)
     designation = serializers.CharField(required=False, allow_blank=True)
     industry = serializers.CharField(required=False, allow_blank=True)
     registration_no = serializers.CharField(required=False, allow_blank=True)
@@ -101,10 +100,19 @@ class BusinessRegistrationSerializer(serializers.Serializer):
     business_city = serializers.CharField(required=False, allow_blank=True)
     business_state = serializers.CharField(required=False, allow_blank=True)
     business_country = serializers.CharField(required=False, allow_blank=True)
-    # Firebase-uploaded URLs
-    business_logo = serializers.CharField(required=False, allow_blank=True)
-    business_cover_image = serializers.CharField(required=False, allow_blank=True)
 
+    # Firebase-uploaded URLs (match DB field names now)
+    business_logo_url = serializers.URLField(required=False, allow_blank=True)
+    business_cover_url = serializers.URLField(required=False, allow_blank=True)
+
+    # Onboarding flow
+    no_deal_reason = serializers.ChoiceField(
+        choices=["big_discount", "exclusive", "high_demand"],
+        required=False,
+        allow_blank=True,
+    )
+
+    # Deal info (optional)
     deal = DealInlineSerializer(required=False)
 
 
@@ -125,14 +133,12 @@ class UserProfileBasicSerializer(serializers.ModelSerializer):
 class BusinessResponseSerializer(serializers.ModelSerializer):
     user = UserProfileBasicSerializer(read_only=True)
     deals = DealResponseSerializer(many=True, read_only=True)
-    email = serializers.EmailField(source="user.email", read_only=True)
 
     class Meta:
         model = Business
         fields = [
             "id",
             "user",
-            "email",
             "business_name",
             "business_email",
             "business_phone",
@@ -147,6 +153,7 @@ class BusinessResponseSerializer(serializers.ModelSerializer):
             "business_country",
             "business_logo_url",
             "business_cover_url",
+            "onboarding_no_deal_reason",
             "is_verified",
             "created_at",
             "updated_at",
