@@ -1,12 +1,13 @@
 from rest_framework.decorators import action
 
+from accounts.models import Business
 from deals.models import Deal
 from deals.serializers import DealSerializer
 
 
 from rest_framework import viewsets
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from deals.services.deal_service import DealService
 
@@ -16,6 +17,11 @@ class DealViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Deal.objects.all()
 
+    def get_permissions(self):
+        """Override permissions per action"""
+        if self.action in ["all_deals", "retrieve", "by_business"]:  # public
+            return [AllowAny()]
+        return [IsAuthenticated()]
 
     def create(self, request, *args, **kwargs):
         business = getattr(request.user, "business_profile", None)
@@ -45,4 +51,24 @@ class DealViewSet(viewsets.ModelViewSet):
         deals = Deal.objects.all()
         serializer = DealSerializer(deals, many=True)
         return Response(serializer.data)
+
+    @action(detail=True, methods=["get"], url_path="by-business")
+    def by_business(self, request, pk=None):
+        """Public: Get all deals for a specific business by its ID"""
+        try:
+            business = Business.objects.get(id=pk)
+        except Business.DoesNotExist:
+            return Response({"error": "Business not found."}, status=404)
+
+        deals = Deal.objects.filter(business=business)
+        serializer = DealSerializer(deals, many=True)
+        return Response({
+            "business": {
+                "id": business.id,
+                "business_name": business.business_name,
+                "industry": business.industry,
+                "website": business.website,
+            },
+            "deals": serializer.data
+        })
 
