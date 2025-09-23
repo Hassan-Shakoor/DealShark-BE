@@ -10,10 +10,20 @@ from .models import Deal
 class BusinessMiniSerializer(serializers.ModelSerializer):
     class Meta:
         model = Business
-        fields = ["id", "business_name", "business_email", "business_phone", "website", "industry"]
+        fields = [
+            "id",
+            "business_name",
+            "business_email",
+            "business_phone",
+            "website",
+            "industry",
+            "business_logo_url",
+            "business_cover_url",
+        ]
 
 
 class DealSerializer(serializers.ModelSerializer):
+    business = BusinessMiniSerializer(read_only=True)
     class Meta:
         model = Deal
         fields = [
@@ -27,6 +37,7 @@ class DealSerializer(serializers.ModelSerializer):
             "is_active",
             "created_at",
             "updated_at",
+            "business"
         ]
         read_only_fields = ["id", "created_at", "updated_at"]
 

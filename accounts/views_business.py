@@ -1,9 +1,10 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from accounts.models import Business
 from accounts.serializers import LoginSerializer, UserProfileSerializer, BusinessRegistrationSerializer, \
     BusinessResponseSerializer
 from accounts.services.business_service import BusinessService
@@ -57,6 +58,30 @@ class BusinessAuthViewSet(viewsets.ViewSet):
                 status=400,
             )
         return Response({"error": errors}, status=400)
+
+    @action(detail=True, methods=["patch"], permission_classes=[IsAuthenticated])
+    def update_business(self, request, pk=None):
+        """Update business details like logo, cover, etc."""
+        try:
+            business = Business.objects.get(pk=pk)
+
+            # ensure user owns this business
+            if business.user != request.user:
+                return Response({"error": "Not authorized to update this business."}, status=403)
+
+            # partial update allowed
+            serializer = BusinessResponseSerializer(
+                business, data=request.data, partial=True
+            )
+            if serializer.is_valid():
+                serializer.save()
+                return Response(
+                    {"message": "Business updated successfully.", "business": serializer.data},
+                    status=200,
+                )
+            return Response(serializer.errors, status=400)
+        except Business.DoesNotExist:
+            return Response({"error": "Business not found."}, status=404)
 
 
 
