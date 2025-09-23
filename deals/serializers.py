@@ -24,52 +24,15 @@ class BusinessMiniSerializer(serializers.ModelSerializer):
 
 class DealSerializer(serializers.ModelSerializer):
     business = BusinessMiniSerializer(read_only=True)
+
     class Meta:
         model = Deal
         fields = [
-            "id",
-            "business",
-            "deal_name",
-            "deal_description",
-            "reward_type",
-            "customer_incentive",
-            "no_reward_reason",
-            "is_active",
-            "created_at",
-            "updated_at",
-            "business"
+            "id", "business", "deal_name", "deal_description",
+            "reward_type", "customer_incentive", "no_reward_reason",
+            "is_featured", "is_active", "created_at", "updated_at"
         ]
-        read_only_fields = ["id", "created_at", "updated_at"]
-
-    def validate(self, attrs):
-        request = self.context.get("request")
-        business = getattr(request.user, "business_profile", None)
-
-        if not business:
-            raise serializers.ValidationError({
-                "error": {
-                    "field": "business",
-                    "message": "Only businesses can create deals."
-                }
-            })
-
-        reward_type = attrs.get("reward_type")
-        incentive = attrs.get("customer_incentive")
-
-        if reward_type == "commission":
-            if Deal.objects.filter(
-                    business=business,
-                    reward_type="commission",
-                    customer_incentive=incentive
-            ).exists():
-                raise serializers.ValidationError({
-                    "error": {
-                        "field": "customer_incentive",
-                        "message": "You already have a deal with this commission amount."
-                    }
-                })
-
-        return attrs
+        read_only_fields = ["id", "created_at", "updated_at", "business", "is_featured"]
 
 
 class DealCreateSerializer(DealSerializer):
