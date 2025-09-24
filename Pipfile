@@ -16,6 +16,8 @@ pillow = "*"
 firebase-admin = "*"
 python-decouple = "*"
 django-extensions = "*"
+gunicorn = "*"
+uvicorn = "*"
 
 [dev-packages]
 pytest-django = ">=4.5.0"
