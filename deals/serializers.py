@@ -35,6 +35,9 @@ class DealSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ["id", "created_at", "updated_at", "business", "is_featured"]
 
+    def get_subscribers_count(self, obj):
+        return obj.business.subscriptions.count()
+
 
 class DealCreateSerializer(DealSerializer):
     def create(self, validated_data):

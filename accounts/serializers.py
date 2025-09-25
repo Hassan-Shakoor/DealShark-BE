@@ -133,11 +133,13 @@ class UserProfileBasicSerializer(serializers.ModelSerializer):
 class BusinessResponseSerializer(serializers.ModelSerializer):
     user = UserProfileBasicSerializer(read_only=True)
     deals = DealResponseSerializer(many=True, read_only=True)
+    subscribers_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Business
         fields = [
             "id",
+            "subscribers_count",
             "user",
             "business_name",
             "business_email",
@@ -159,6 +161,8 @@ class BusinessResponseSerializer(serializers.ModelSerializer):
             "updated_at",
             "deals",
         ]
+    def get_subscribers_count(self, obj):
+        return obj.subscriptions.count()
 
 
 class UserProfileSerializer(serializers.ModelSerializer):

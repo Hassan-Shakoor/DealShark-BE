@@ -1,12 +1,14 @@
-from rest_framework import generics, status
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework import generics, status, viewsets
+from rest_framework.decorators import api_view, permission_classes, action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.utils import timezone
 
+from accounts.models import Business, User
 from .models import Referral
-from .serializers import ReferralSerializer, ReferralCreateSerializer
+from .serializers import ReferralSerializer, ReferralCreateSerializer, ReferralSubscriptionSerializer
 from accounts.permissions import IsBusinessUser
+from .services.referral_service import ReferralService
 
 
 class ReferralListCreateView(generics.ListCreateAPIView):
@@ -51,3 +53,29 @@ def confirm_referral(request, referral_id):
         {"message": "Referral confirmed successfully.", "referral": ReferralSerializer(referral).data},
         status=200,
     )
+
+
+class ReferralSubscriptionViewSet(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated]
+
+    @action(detail=False, methods=["post"], url_name="subscribe")
+    def subscribe(self, request):
+        business_id = request.data.get("business_id")
+        referrer_id = request.data.get("referrer_id")
+
+        try:
+            business = Business.objects.get(id=business_id)
+            referrer = User.objects.get(id=referrer_id)
+        except (Business.DoesNotExist, User.DoesNotExist):
+            return Response({"error": "Invalid business or referrer ID"}, status=400)
+
+        subscription, created = ReferralService.subscribe_to_business(business, referrer)
+
+        serializer = ReferralSubscriptionSerializer(subscription)
+        return Response(
+            {
+                "message": "Subscription created" if created else "Already subscribed",
+                "subscription": serializer.data,
+            },
+            status=201 if created else 200,
+        )

@@ -3,7 +3,7 @@ import uuid
 import random
 import string
 from deals.models import Deal
-from accounts.models import User
+from accounts.models import User, Business
 
 
 class Referral(models.Model):
@@ -36,3 +36,31 @@ class Referral(models.Model):
 
     def __str__(self):
         return f"Referral by {self.referrer.username} for {self.deal.title}"
+
+
+class ReferralSubscription(models.Model):
+    business = models.ForeignKey(
+        Business, on_delete=models.CASCADE, related_name="subscriptions"
+    )
+    referrer = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="subscriptions"
+    )
+    referral_code = models.CharField(max_length=20, unique=True, blank=True)
+    referral_link = models.URLField(unique=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("business", "referrer")
+        ordering = ["-created_at"]
+
+    def save(self, *args, **kwargs):
+        if not self.referral_code:
+            self.referral_code = "".join(
+                random.choices(string.ascii_uppercase + string.digits, k=8)
+            )
+        if not self.referral_link:
+            self.referral_link = f"https://dealshark.com/ref/{self.referral_code}"
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.referrer.email} subscribed to {self.business.business_name}"

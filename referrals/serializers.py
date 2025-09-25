@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from .models import Referral
+
+from accounts.serializers import BusinessResponseSerializer
+from .models import Referral, ReferralSubscription
 
 
 class ReferralSerializer(serializers.ModelSerializer):
@@ -43,3 +45,22 @@ class ReferralCreateSerializer(serializers.ModelSerializer):
             validated_data['commission_earned'] = deal.commission_amount
 
         return Referral.objects.create(**validated_data)
+
+class ReferralSubscriptionSerializer(serializers.ModelSerializer):
+    business_name = serializers.CharField(source="business.business_name", read_only=True)
+    referrer_email = serializers.CharField(source="referrer.email", read_only=True)
+    business = BusinessResponseSerializer(read_only=True)
+
+    class Meta:
+        model = ReferralSubscription
+        fields = [
+            "id",
+            "business",
+            "business_name",
+            "referrer",
+            "referrer_email",
+            "referral_code",
+            "referral_link",
+            "created_at",
+        ]
+        read_only_fields = ["id", "referral_code", "referral_link", "created_at"]
