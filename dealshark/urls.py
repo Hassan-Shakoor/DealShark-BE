@@ -62,6 +62,7 @@ def hello_world(request):
 # )
 
 urlpatterns = [
+    path('admin/', admin.site.urls),
     path('auth/', include('accounts.urls')),
     path('deals/', include('deals.urls')),
     path('referrals/', include('referrals.urls')),
