@@ -63,12 +63,6 @@ class DealViewSet(viewsets.ModelViewSet):
         deals = Deal.objects.filter(business=business)
         serializer = DealSerializer(deals, many=True)
         return Response({
-            "business": {
-                "id": business.id,
-                "business_name": business.business_name,
-                "industry": business.industry,
-                "website": business.website,
-            },
             "deals": serializer.data
         })
 

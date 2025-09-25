@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.utils import timezone
 
 from accounts.models import Business
+from accounts.serializers import BusinessResponseSerializer
 from .models import Deal
 
 
@@ -23,7 +24,7 @@ class BusinessMiniSerializer(serializers.ModelSerializer):
 
 
 class DealSerializer(serializers.ModelSerializer):
-    business = BusinessMiniSerializer(read_only=True)
+    business = BusinessResponseSerializer(read_only=True)
 
     class Meta:
         model = Deal
