@@ -18,6 +18,8 @@ python-decouple = "*"
 django-extensions = "*"
 gunicorn = "*"
 uvicorn = "*"
+whitenoise = "*"
+
 
 [dev-packages]
 pytest-django = ">=4.5.0"
