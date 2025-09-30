@@ -84,4 +84,13 @@ class BusinessAuthViewSet(viewsets.ViewSet):
             return Response({"error": "Business not found."}, status=404)
 
 
+    @action(detail=True, methods=["get"], url_path="profile", permission_classes=[AllowAny])
+    def profile(self, request, pk=None):
+        """Public: Get business profile by ID"""
+        try:
+            business = Business.objects.get(pk=pk)
+        except Business.DoesNotExist:
+            return Response({"error": "Business not found."}, status=404)
 
+        serializer = BusinessResponseSerializer(business)
+        return Response(serializer.data, status=200)

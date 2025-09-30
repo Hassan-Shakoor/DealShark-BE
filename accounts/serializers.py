@@ -189,6 +189,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
             "business_profile",
+            "profile_picture"
         ]
 
 class OTPVerificationSerializer(serializers.Serializer):

@@ -1,5 +1,5 @@
-from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework import status, viewsets
+from rest_framework.decorators import api_view, permission_classes, action
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -323,3 +323,21 @@ def profile_view(request):
     """Get user profile"""
     serializer = UserProfileSerializer(request.user)
     return Response(serializer.data, status=200)
+
+
+class UserViewSet(viewsets.ViewSet):
+    permission_classes = [AllowAny]
+
+    @action(detail=True, methods=["get"], url_path="profile")
+    def profile(self, request, pk=None):
+        """Get profile of a user by ID"""
+        try:
+            user = User.objects.get(pk=pk)
+        except (User.DoesNotExist, ValueError):
+            return Response({"error": "User not found."}, status=404)
+
+        serializer = UserProfileSerializer(user)
+        return Response(serializer.data, status=200)
+
+
+

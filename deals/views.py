@@ -48,8 +48,13 @@ class DealViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["get"], url_path="all")
     def all_deals(self, request):
         """All deals across all businesses (for referrers)"""
+        user_id = request.query_params.get("user_id")
         deals = Deal.objects.all()
-        serializer = DealSerializer(deals, many=True)
+        serializer = DealSerializer(
+            deals,
+            many=True,
+            context={"request": request, "user_id": user_id}
+        )
         return Response(serializer.data)
 
     @action(detail=True, methods=["get"], url_path="by-business")
@@ -66,3 +71,26 @@ class DealViewSet(viewsets.ModelViewSet):
             "deals": serializer.data
         })
 
+
+
+class PosterTextViewSet(viewsets.ViewSet):
+    permission_classes = [AllowAny]
+
+    @action(detail=False, methods=["get"], url_path="options", permission_classes=[AllowAny])
+    def get_options(self, request):
+        commission_options = [
+            "Earn {incentive}% commission by sharing this deal!",
+            "Invite friends and get ${incentive} reward!",
+            "Refer and earn {incentive} on every sale."
+        ]
+
+        no_reward_options = [
+            "This discount is big enough to share!",
+            "Exclusive / Limited offer — don’t miss it!",
+            "High-demand deal — share with your friends!"
+        ]
+
+        return Response({
+            "commission_based": commission_options,
+            "no_reward_based": no_reward_options
+        })
