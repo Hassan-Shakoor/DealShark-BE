@@ -39,8 +39,8 @@ class Referral(models.Model):
 
 
 class ReferralSubscription(models.Model):
-    business = models.ForeignKey(
-        Business, on_delete=models.CASCADE, related_name="subscriptions"
+    deal = models.ForeignKey(
+        Deal, on_delete=models.CASCADE, related_name="subscriptions"
     )
     referrer = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="subscriptions"
@@ -50,7 +50,7 @@ class ReferralSubscription(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ("business", "referrer")
+        unique_together = ("deal", "referrer")
         ordering = ["-created_at"]
 
     def save(self, *args, **kwargs):
@@ -63,4 +63,4 @@ class ReferralSubscription(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.referrer.email} subscribed to {self.business.business_name}"
+        return f"{self.referrer.email} subscribed to deal {self.deal.deal_name}"

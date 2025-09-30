@@ -4,6 +4,8 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 
 from deals.models import Deal
+from deals.serializers import DealSerializer
+from referrals.models import ReferralSubscription
 from .models import User, Business, OTPVerification
 import re
 
@@ -133,13 +135,13 @@ class UserProfileBasicSerializer(serializers.ModelSerializer):
 class BusinessResponseSerializer(serializers.ModelSerializer):
     user = UserProfileBasicSerializer(read_only=True)
     deals = DealResponseSerializer(many=True, read_only=True)
-    subscribers_count = serializers.SerializerMethodField()
+    business_subscribers_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Business
         fields = [
             "id",
-            "subscribers_count",
+            "business_subscribers_count",
             "user",
             "business_name",
             "business_email",
@@ -161,8 +163,12 @@ class BusinessResponseSerializer(serializers.ModelSerializer):
             "updated_at",
             "deals",
         ]
-    def get_subscribers_count(self, obj):
-        return obj.subscriptions.count()
+    def get_business_subscribers_count(self, obj):
+        return ReferralSubscription.objects.filter(deal__business=obj).count()
+
+    def get_deals(self, obj):
+        deals = obj.deals.all()
+        return DealSerializer(deals, many=True).data
 
 
 class UserProfileSerializer(serializers.ModelSerializer):

@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from django.utils import timezone
 
 from accounts.models import Business, User
+from deals.models import Deal
 from .models import Referral
 from .serializers import ReferralSerializer, ReferralCreateSerializer, ReferralSubscriptionSerializer
 from accounts.permissions import IsBusinessUser
@@ -60,16 +61,16 @@ class ReferralSubscriptionViewSet(viewsets.ViewSet):
 
     @action(detail=False, methods=["post"], url_name="subscribe")
     def subscribe(self, request):
-        business_id = request.data.get("business_id")
+        deal_id = request.data.get("deal_id")
         referrer_id = request.data.get("referrer_id")
 
         try:
-            business = Business.objects.get(id=business_id)
+            deal = Deal.objects.get(id=deal_id)
             referrer = User.objects.get(id=referrer_id)
-        except (Business.DoesNotExist, User.DoesNotExist):
-            return Response({"error": "Invalid business or referrer ID"}, status=400)
+        except (Deal.DoesNotExist, User.DoesNotExist):
+            return Response({"error": "Invalid deal or referrer ID"}, status=400)
 
-        subscription, created = ReferralService.subscribe_to_business(business, referrer)
+        subscription, created = ReferralService.subscribe_to_deal(deal, referrer)
 
         serializer = ReferralSubscriptionSerializer(subscription)
         return Response(

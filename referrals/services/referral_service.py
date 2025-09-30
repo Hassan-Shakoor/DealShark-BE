@@ -6,14 +6,14 @@ from referrals.models import ReferralSubscription
 class ReferralService:
     @staticmethod
     @transaction.atomic
-    def subscribe_to_business(business, referrer):
+    def subscribe_to_deal(deal, referrer):
         # prevent duplicate subscription
-        existing = ReferralSubscription.objects.filter(business=business, referrer=referrer).first()
+        existing = ReferralSubscription.objects.filter(deal=deal, referrer=referrer).first()
         if existing:
-            return existing, False  # already exists
+            return existing, False  # already subscribed
 
         subscription = ReferralSubscription.objects.create(
-            business=business,
+            deal=deal,
             referrer=referrer,
         )
         return subscription, True

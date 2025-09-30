@@ -47,6 +47,7 @@ class ReferralCreateSerializer(serializers.ModelSerializer):
         return Referral.objects.create(**validated_data)
 
 class ReferralSubscriptionSerializer(serializers.ModelSerializer):
+    deal_name = serializers.CharField(source="deal.deal_name", read_only=True)
     business_name = serializers.CharField(source="business.business_name", read_only=True)
     referrer_email = serializers.CharField(source="referrer.email", read_only=True)
     business = BusinessResponseSerializer(read_only=True)
@@ -55,6 +56,7 @@ class ReferralSubscriptionSerializer(serializers.ModelSerializer):
         model = ReferralSubscription
         fields = [
             "id",
+            "deal_name",
             "business",
             "business_name",
             "referrer",

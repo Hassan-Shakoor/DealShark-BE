@@ -2,41 +2,53 @@ from rest_framework import serializers
 from django.utils import timezone
 
 from accounts.models import Business
-from accounts.serializers import BusinessResponseSerializer
+from referrals.models import ReferralSubscription
 from .models import Deal
 
 
 
 
 class BusinessMiniSerializer(serializers.ModelSerializer):
+    business_subscribers_count = serializers.SerializerMethodField()
     class Meta:
         model = Business
         fields = [
             "id",
+            "business_subscribers_count",
             "business_name",
             "business_email",
             "business_phone",
+            ""
             "website",
             "industry",
             "business_logo_url",
             "business_cover_url",
         ]
 
+    def get_business_subscribers_count(self, obj):
+        return ReferralSubscription.objects.filter(deal__business=obj).count()
+
 
 class DealSerializer(serializers.ModelSerializer):
-    business = BusinessResponseSerializer(read_only=True)
+    business = BusinessMiniSerializer(read_only=True)
+    #business = serializers.SerializerMethodField()
+    subscribers_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Deal
         fields = [
             "id", "business", "deal_name", "deal_description",
             "reward_type", "customer_incentive", "no_reward_reason",
-            "is_featured", "is_active", "created_at", "updated_at"
+            "is_featured", "is_active", "created_at", "updated_at",
+            "subscribers_count"
         ]
-        read_only_fields = ["id", "created_at", "updated_at", "business", "is_featured"]
+
+    # def get_business(self, obj):
+    #     from accounts.serializers import BusinessResponseSerializer
+    #     return BusinessResponseSerializer(obj.business).data
 
     def get_subscribers_count(self, obj):
-        return obj.business.subscriptions.count()
+        return obj.subscriptions.count()
 
 
 class DealCreateSerializer(DealSerializer):
