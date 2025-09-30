@@ -6,7 +6,7 @@ from django.utils import timezone
 
 from accounts.models import Business, User
 from deals.models import Deal
-from .models import Referral
+from .models import Referral, ReferralSubscription
 from .serializers import ReferralSerializer, ReferralCreateSerializer, ReferralSubscriptionSerializer
 from accounts.permissions import IsBusinessUser
 from .services.referral_service import ReferralService
@@ -80,3 +80,102 @@ class ReferralSubscriptionViewSet(viewsets.ViewSet):
             },
             status=201 if created else 200,
         )
+
+    @action(detail=False, methods=["post"], url_path="unsubscribe")
+    def unsubscribe(self, request):
+        """Unsubscribe from a specific deal"""
+        deal_id = request.data.get("deal_id")
+        referrer_id = request.data.get("referrer_id")
+
+        try:
+            deal = Deal.objects.get(id=deal_id)
+            referrer = User.objects.get(id=referrer_id)
+        except (Deal.DoesNotExist, User.DoesNotExist):
+            return Response({"error": "Invalid deal or referrer ID"}, status=400)
+
+        unsubscribed = ReferralService.unsubscribe_from_deal(deal, referrer)
+
+        if unsubscribed:
+            return Response({"message": "Unsubscribed successfully"}, status=200)
+        return Response({"message": "No active subscription found"}, status=404)
+
+    @action(detail=True, methods=["get"], url_path="subscribers")
+    def subscribers(self, request, pk=None):
+        """All subscribers for a specific business"""
+        try:
+            business = Business.objects.get(id=pk)
+        except Business.DoesNotExist:
+            return Response({"error": "Business not found."}, status=404)
+
+        subscriptions = ReferralSubscription.objects.filter(deal__business=business)
+
+        data = []
+        for sub in subscriptions:
+            data.append({
+                "subscription_id": str(sub.id),
+                "referrer": {
+                    "id": str(sub.referrer.id),
+                    "email": sub.referrer.email,
+                    "first_name": sub.referrer.first_name,
+                    "last_name": sub.referrer.last_name,
+                    "phone_number": sub.referrer.phone_number,
+                },
+                "deal": {
+                    "id": str(sub.deal.id),
+                    "deal_name": sub.deal.deal_name,
+                    "deal_description": sub.deal.deal_description,
+                    "reward_type": sub.deal.reward_type,
+                    "customer_incentive": sub.deal.customer_incentive,
+                    "no_reward_reason": sub.deal.no_reward_reason,
+                },
+                "commission_earned": None,  # placeholder
+                "business_revenue": None,  # placeholder
+                "created_at": sub.created_at,
+            })
+
+        return Response({
+            "business": {
+                "id": str(business.id),
+                "name": business.business_name,
+            },
+            "total_subscribers": len(subscriptions),
+            "subscribers": data,
+        }, status=200)
+
+
+    @action(detail=False, methods=["get"], url_path="my-subscriptions")
+    def my_subscriptions(self, request):
+        """All deals a referrer (current user) has subscribed to"""
+        subscriptions = ReferralSubscription.objects.filter(referrer=request.user)
+
+        data = []
+        for sub in subscriptions:
+            data.append({
+                "subscription_id": str(sub.id),
+                "deal": {
+                    "id": str(sub.deal.id),
+                    "deal_name": sub.deal.deal_name,
+                    "deal_description": sub.deal.deal_description,
+                    "reward_type": sub.deal.reward_type,
+                    "customer_incentive": sub.deal.customer_incentive,
+                    "no_reward_reason": sub.deal.no_reward_reason,
+                },
+                "business": {
+                    "id": str(sub.deal.business.id),
+                    "business_name": sub.deal.business.business_name,
+                    "industry": sub.deal.business.industry,
+                    "website": sub.deal.business.website,
+                },
+                "commission_earned": None,   # placeholder
+                "business_revenue": None,    # placeholder
+                "created_at": sub.created_at,
+            })
+
+        return Response({
+            "referrer": {
+                "id": str(request.user.id),
+                "email": request.user.email,
+            },
+            "total_subscriptions": len(subscriptions),
+            "subscriptions": data,
+        }, status=200)

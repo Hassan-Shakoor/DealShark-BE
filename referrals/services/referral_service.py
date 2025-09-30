@@ -17,3 +17,12 @@ class ReferralService:
             referrer=referrer,
         )
         return subscription, True
+
+    @staticmethod
+    @transaction.atomic
+    def unsubscribe_from_deal(deal, referrer):
+        subscription = ReferralSubscription.objects.filter(deal=deal, referrer=referrer).first()
+        if subscription:
+            subscription.delete()
+            return True
+        return False

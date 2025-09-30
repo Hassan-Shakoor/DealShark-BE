@@ -102,7 +102,7 @@ def register_user(request):
 
             email = serializer.validated_data.get("email")
 
-            # ✅ Case 2: User already exists (unverified)
+
             user = User.objects.filter(email=email).first()
             if user and not user.is_email_verified:
                 otp, created = OTPVerification.objects.get_or_create(
