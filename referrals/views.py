@@ -113,12 +113,15 @@ class ReferralSubscriptionViewSet(viewsets.ViewSet):
         for sub in subscriptions:
             data.append({
                 "subscription_id": str(sub.id),
+                "referral_code": sub.referral_code,
+                "referral_link": sub.referral_link,
                 "referrer": {
                     "id": str(sub.referrer.id),
                     "email": sub.referrer.email,
                     "first_name": sub.referrer.first_name,
                     "last_name": sub.referrer.last_name,
                     "phone_number": sub.referrer.phone_number,
+                    "profile_image_url": getattr(sub.referrer, "profile_image_url", None),
                 },
                 "deal": {
                     "id": str(sub.deal.id),
@@ -128,8 +131,8 @@ class ReferralSubscriptionViewSet(viewsets.ViewSet):
                     "customer_incentive": sub.deal.customer_incentive,
                     "no_reward_reason": sub.deal.no_reward_reason,
                 },
-                "commission_earned": None,  # placeholder
-                "business_revenue": None,  # placeholder
+                "commission_earned": None,  # placeholder (future Stripe integration)
+                "business_revenue": None,  # placeholder (future Stripe integration)
                 "created_at": sub.created_at,
             })
 
@@ -142,7 +145,6 @@ class ReferralSubscriptionViewSet(viewsets.ViewSet):
             "subscribers": data,
         }, status=200)
 
-
     @action(detail=False, methods=["get"], url_path="my-subscriptions")
     def my_subscriptions(self, request):
         """All deals a referrer (current user) has subscribed to"""
@@ -152,6 +154,8 @@ class ReferralSubscriptionViewSet(viewsets.ViewSet):
         for sub in subscriptions:
             data.append({
                 "subscription_id": str(sub.id),
+                "referral_code": sub.referral_code,
+                "referral_link": sub.referral_link,
                 "deal": {
                     "id": str(sub.deal.id),
                     "deal_name": sub.deal.deal_name,
@@ -166,8 +170,8 @@ class ReferralSubscriptionViewSet(viewsets.ViewSet):
                     "industry": sub.deal.business.industry,
                     "website": sub.deal.business.website,
                 },
-                "commission_earned": None,   # placeholder
-                "business_revenue": None,    # placeholder
+                "commission_earned": None,  # placeholder (future Stripe integration)
+                "business_revenue": None,  # placeholder (future Stripe integration)
                 "created_at": sub.created_at,
             })
 

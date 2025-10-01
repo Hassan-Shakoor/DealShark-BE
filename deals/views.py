@@ -34,6 +34,15 @@ class DealViewSet(viewsets.ModelViewSet):
             return Response(DealSerializer(deal).data, status=201)
         return Response(serializer.errors, status=400)
 
+    def retrieve(self, request, *args, **kwargs):
+        """Get a single deal by ID (public, with optional user_id)"""
+        user_id = request.query_params.get("user_id")
+        instance = self.get_object()
+        serializer = self.get_serializer(
+            instance, context={"request": request, "user_id": user_id}
+        )
+        return Response(serializer.data)
+
     @action(detail=False, methods=["get"], url_path="my")
     def my_deals(self, request):
         """Deals belonging to logged-in business"""

@@ -33,7 +33,7 @@ class DealSerializer(serializers.ModelSerializer):
     business = BusinessMiniSerializer(read_only=True)
     #business = serializers.SerializerMethodField()
     subscribers_count = serializers.SerializerMethodField()
-    is_subscribed = serializers.SerializerMethodField()
+    subscription_info = serializers.SerializerMethodField()
 
     class Meta:
         model = Deal
@@ -41,7 +41,7 @@ class DealSerializer(serializers.ModelSerializer):
             "id", "business", "deal_name", "deal_description",
             "reward_type", "customer_incentive", "no_reward_reason",
             "is_featured", "is_active", "created_at", "updated_at",
-            "subscribers_count", "is_subscribed"
+            "subscribers_count", "subscription_info"
         ]
 
     # def get_business(self, obj):
@@ -51,28 +51,42 @@ class DealSerializer(serializers.ModelSerializer):
     def get_subscribers_count(self, obj):
         return obj.subscriptions.count()
 
-    def get_is_subscribed(self, obj):
-        """Check if the user is subscribed to this deal"""
+    def get_subscription_info(self, obj):
+        """
+        Return subscription info for the current user:
+        {
+          "is_subscribed": True/False,
+          "referral_link": "https://dealshark.com/ref/XXXX",
+          "referral_code": "XXXX"
+        }
+        """
         request = self.context.get("request")
         user = None
 
-        # If serializer was given request, use logged-in user
+        # Logged-in user
         if request and request.user and request.user.is_authenticated:
             user = request.user
 
-        # Or if frontend explicitly passes user_id in serializer context
+        # Or frontend passes user_id explicitly
         user_id = self.context.get("user_id")
         if not user and user_id:
             from accounts.models import User
             try:
                 user = User.objects.get(id=user_id)
             except User.DoesNotExist:
-                return False
+                return {"is_subscribed": False}
 
         if not user:
-            return False  # anonymous case
+            return {"is_subscribed": False}  # anonymous
 
-        return obj.subscriptions.filter(referrer=user).exists()
+        subscription = obj.subscriptions.filter(referrer=user).first()
+        if subscription:
+            return {
+                "is_subscribed": True,
+                "referral_link": subscription.referral_link,
+                "referral_code": subscription.referral_code,
+            }
+        return {"is_subscribed": False}
 
 
 class DealCreateSerializer(DealSerializer):
