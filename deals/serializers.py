@@ -41,8 +41,9 @@ class DealSerializer(serializers.ModelSerializer):
             "id", "business", "deal_name", "deal_description",
             "reward_type", "customer_incentive", "no_reward_reason",
             "is_featured", "is_active", "created_at", "updated_at",
-            "subscribers_count", "subscription_info"
+            "subscribers_count", "subscription_info", "poster_text"
         ]
+        read_only_fields = ["id", "created_at", "updated_at", "business", "is_featured", "poster_text"]
 
     # def get_business(self, obj):
     #     from accounts.serializers import BusinessResponseSerializer

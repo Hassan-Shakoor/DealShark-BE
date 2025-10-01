@@ -21,8 +21,10 @@ class Deal(models.Model):
     deal_description = models.TextField(blank=True)
     reward_type = models.CharField(max_length=20, choices=REWARD_TYPES)
     customer_incentive = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    poster_text = models.TextField(blank=True, null=True)
+
     no_reward_reason = models.CharField(max_length=50, blank=True, null=True)
-    is_featured = models.BooleanField(default=False)  # ✅ New
+    is_featured = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
