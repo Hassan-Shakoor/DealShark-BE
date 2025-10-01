@@ -183,6 +183,17 @@ class ReferralSubscriptionViewSet(viewsets.ViewSet):
                     "business_name": sub.deal.business.business_name,
                     "industry": sub.deal.business.industry,
                     "website": sub.deal.business.website,
+                    "description": sub.deal.business.description,
+                    "logo_url": sub.deal.business.business_logo_url,
+                    "cover_url": sub.deal.business.business_cover_url,
+                    "is_verified": sub.deal.business.is_verified,
+                    "address": sub.deal.business.business_address,
+                    "city": sub.deal.business.business_city,
+                    "state": sub.deal.business.business_state,
+                    "country": sub.deal.business.business_country,
+                    "registration_no": sub.deal.business.registration_no,
+                    "phone_number": sub.deal.business.business_phone,
+                    "email": sub.deal.business.business_email,
                 },
                 "commission_earned": None,  # placeholder (future Stripe integration)
                 "business_revenue": None,  # placeholder (future Stripe integration)
