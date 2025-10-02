@@ -218,7 +218,7 @@ SECURE_HSTS_SECONDS = int(os.getenv("SECURE_HSTS_SECONDS", 31536000 if not DEBUG
 SECURE_HSTS_INCLUDE_SUBDOMAINS = os.getenv("SECURE_HSTS_INCLUDE_SUBDOMAINS", "True").lower() in ("true", "1", "yes")
 SECURE_HSTS_PRELOAD = os.getenv("SECURE_HSTS_PRELOAD", "True").lower() in ("true", "1", "yes")
 
-FILE_UPLOAD_MAX_MEMORY_SIZE = int(os.getenv("FILE_UPLOAD_MAX_MEMORY_SIZE", 5242880))  # 5MB
+FILE_UPLOAD_MAX_MEMxORY_SIZE = int(os.getenv("FILE_UPLOAD_MAX_MEMORY_SIZE", 5242880))  # 5MB
 DATA_UPLOAD_MAX_MEMORY_SIZE = int(os.getenv("DATA_UPLOAD_MAX_MEMORY_SIZE", 5242880))  # 5MB
 
 # Cache Configuration (Redis recommended for production)

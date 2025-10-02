@@ -58,7 +58,11 @@ class DealInlineSerializer(serializers.Serializer):
     deal_description = serializers.CharField(required=False, allow_blank=True)
     reward_type = serializers.ChoiceField(choices=["commission", "no_reward"])
     customer_incentive = serializers.DecimalField(
-        max_digits=10, decimal_places=2, required=False
+        max_digits=10,
+        decimal_places=2,
+        required=False,
+        allow_null=True,
+        min_value=0
     )
     no_reward_reason = serializers.ChoiceField(
         choices=["big_discount", "exclusive", "high_demand"],
