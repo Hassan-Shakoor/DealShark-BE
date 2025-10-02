@@ -123,9 +123,12 @@ class Business(models.Model):
     onboarding_no_deal_reason = models.CharField(
         max_length=50,
         choices=[
-            ("big_discount", "The discount is big enough to share."),
-            ("exclusive", "It’s exclusive / limited."),
-            ("high_demand", "It’s high-demand (people share it naturally)."),
+            ("already_discounted", "Our products/services are already heavily discounted"),
+            ("exclusive_offering", "We offer exclusive/limited services that don’t need deals"),
+            ("brand_strategy", "We want to maintain premium branding without discounts"),
+            ("organic_demand", "We already have high demand and don’t need promotions"),
+            ("testing_phase", "We’re still testing the product/service before launching deals"),
+            ("other", "Other reason"),
         ],
         blank=True,
         null=True,

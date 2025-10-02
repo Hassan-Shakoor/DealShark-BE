@@ -109,7 +109,14 @@ class BusinessRegistrationSerializer(serializers.Serializer):
 
     # Onboarding flow
     no_deal_reason = serializers.ChoiceField(
-        choices=["big_discount", "exclusive", "high_demand"],
+        choices=[
+            ("already_discounted", "Our products/services are already heavily discounted"),
+            ("exclusive_offering", "We offer exclusive/limited services that don’t need deals"),
+            ("brand_strategy", "We want to maintain premium branding without discounts"),
+            ("organic_demand", "We already have high demand and don’t need promotions"),
+            ("testing_phase", "We’re still testing the product/service before launching deals"),
+            ("other", "Other reason"),
+        ],
         required=False,
         allow_blank=True,
     )
