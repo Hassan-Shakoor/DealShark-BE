@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate
 from rest_framework import status, viewsets
 from rest_framework.decorators import api_view, permission_classes, action
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -10,12 +11,12 @@ import logging
 
 from drf_spectacular.utils import extend_schema, OpenApiResponse
 
-from config.firebase import upload_file_to_firebase
-from .models import User, Business, OTPVerification
+from .models import User, OTPVerification
 from .serializers import (
     UserRegistrationSerializer, BusinessRegistrationSerializer,
     OTPVerificationSerializer, LoginSerializer, UserProfileSerializer
 )
+from .services.user_service import UserService
 
 logger = logging.getLogger(__name__)
 
@@ -65,95 +66,14 @@ def send_otp_email(user, otp_code, otp_type):
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def register_user(request):
-    """Register a new customer user or resend OTP if already created but unverified."""
     try:
         with transaction.atomic():
-            serializer = UserRegistrationSerializer(data=request.data)
-
-            # ✅ Case 1: Invalid serializer data
-            if not serializer.is_valid():
-                errors = serializer.errors
-                email = request.data.get("email")
-
-                user = User.objects.filter(email=email).first()
-                if user and not user.is_email_verified:  # Allow OTP resend for unverified
-                    otp, created = OTPVerification.objects.get_or_create(
-                        user=user, otp_type="email"
-                    )
-                    if not created:
-                        otp.regenerate()
-                        otp.save()
-
-                    if send_otp_email(user, otp.otp_code, "email"):
-                        return Response(
-                            {
-                                "message": "User exists but not verified. OTP resent to email.",
-                                "user_id": str(user.id),
-                                "email": user.email,
-                            },
-                            status=status.HTTP_200_OK,
-                        )
-                    return Response(
-                        {"error": "OTP resend failed. Try again later."},
-                        status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    )
-
-                return Response({"errors": errors}, status=status.HTTP_400_BAD_REQUEST)
-
-            email = serializer.validated_data.get("email")
-
-
-            user = User.objects.filter(email=email).first()
-            if user and not user.is_email_verified:
-                otp, created = OTPVerification.objects.get_or_create(
-                    user=user, otp_type="email"
-                )
-                if not created:
-                    otp.regenerate()
-                    otp.save()
-
-                if send_otp_email(user, otp.otp_code, "email"):
-                    return Response(
-                        {
-                            "message": "User already exists but not verified. OTP resent to email.",
-                            "user_id": str(user.id),
-                            "email": user.email,
-                        },
-                        status=status.HTTP_200_OK,
-                    )
-                return Response(
-                    {
-                        "error": "User exists but OTP email could not be sent. Try again later."
-                    },
-                    status=status.HTTP_409_CONFLICT,
-                )
-
-            # ✅ Case 3: New user → create & send OTP
-            user = serializer.save()
-            otp = OTPVerification.objects.create(user=user, otp_type="email")
-
-            if send_otp_email(user, otp.otp_code, "email"):
-                return Response(
-                    {
-                        "message": "User registered successfully. Please check your email for OTP.",
-                        "user_id": str(user.id),
-                        "email": user.email,
-                    },
-                    status=status.HTTP_201_CREATED,
-                )
-            return Response(
-                {
-                    "error": "User registered but OTP email could not be sent. Try again later."
-                },
-                status=status.HTTP_409_CONFLICT,
-            )
-
+            response, status_code = UserService.register_user(request.data)
+            return Response(response, status=status_code)
     except Exception as e:
         logger.error(f"Unexpected registration error: {str(e)}", exc_info=True)
-        return Response(
-            {"error": "Unexpected server error. Please try again later."},
-            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-        )
+        return Response({"error": "Unexpected server error. Please try again later."}, 500)
+
 
 @extend_schema(
     request=BusinessRegistrationSerializer,
@@ -296,20 +216,36 @@ def resend_otp(request):
 def login_view(request):
     """User login"""
     serializer = LoginSerializer(data=request.data)
+    serializer.is_valid(raise_exception=False)
 
-    if serializer.is_valid():
-        user = serializer.validated_data["user"]
-        tokens = get_tokens_for_user(user)
-        return Response(
-            {
-                "message": "Login successful.",
-                "tokens": tokens,
-                "user": UserProfileSerializer(user).data,
-            },
-            status=200,
-        )
-    
-    return Response(serializer.errors, status=400)
+    # Validate input fields
+    if not serializer.is_valid():
+        field, msgs = next(iter(serializer.errors.items()))
+        error_message = msgs[0] if isinstance(msgs, list) else str(msgs)
+        return Response({"message": error_message}, status=400)
+
+    email = serializer.validated_data.get("email")
+    password = serializer.validated_data.get("password")
+
+    # Authentication
+    user = authenticate(username=email, password=password)
+    if not user:
+        return Response({"message": "Invalid credentials."}, status=400)
+
+    # Email verification check
+    if not user.is_email_verified:
+        return Response({"message": "Please verify your email before logging in."}, status=403)
+
+    # Success
+    tokens = get_tokens_for_user(user)
+    return Response(
+        {
+            "message": "Login successful.",
+            "tokens": tokens,
+            "user": UserProfileSerializer(user).data,
+        },
+        status=200,
+    )
 
 
 @extend_schema(

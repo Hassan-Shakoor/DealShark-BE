@@ -11,46 +11,32 @@ import re
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, validators=[validate_password])
+    password = serializers.CharField(write_only=True)
     confirm_password = serializers.CharField(write_only=True)
 
     class Meta:
         model = User
-        fields = ('email', 'first_name', 'last_name', 'phone_number', 'user_type', 'password', 'confirm_password')
-
-    def validate(self, attrs):
-        if attrs['password'] != attrs['confirm_password']:
-            raise serializers.ValidationError("Passwords don't match.")
-
-        phone_regex = re.compile(r'^\+?1?\d{9,15}$')
-        if not phone_regex.match(attrs['phone_number']):
-            raise serializers.ValidationError("Invalid phone number format.")
-
-        return attrs
-    
-    def validate_email(self, value):
-        user = User.objects.filter(email=value).first()
-        if user and user.is_email_verified:
-            raise serializers.ValidationError("This email is already registered.")
-        return value
+        fields = (
+            'email', 'first_name', 'last_name', 'phone_number',
+            'user_type', 'password', 'confirm_password'
+        )
 
     def create(self, validated_data):
-        validated_data.pop('confirm_password')
-
+        validated_data.pop('confirm_password', None)
         email = validated_data.get("email")
+
         if email:
             base_username = email.split("@")[0]
             username = base_username
             counter = 1
-            # Ensure uniqueness
             from .models import User
             while User.objects.filter(username=username).exists():
                 username = f"{base_username}{counter}"
                 counter += 1
             validated_data["username"] = username
-        
-        user = User.objects.create_user(**validated_data)
-        return user
+
+        return User.objects.create_user(**validated_data)
+
 
 
 class DealInlineSerializer(serializers.Serializer):
@@ -235,22 +221,6 @@ class OTPVerificationSerializer(serializers.Serializer):
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField()
-
-    def validate(self, attrs):
-        email = attrs.get('email')
-        password = attrs.get('password')
-
-        if email and password:
-            user = authenticate(username=email, password=password)
-            if not user:
-                raise serializers.ValidationError("Invalid credentials.")
-
-            if not user.is_email_verified:
-                raise serializers.ValidationError("Please verify your email before logging in.")
-
-            attrs['user'] = user
-            return attrs
-        raise serializers.ValidationError("Email and password are required.")
 
 
 class BusinessSerializer(serializers.ModelSerializer):
