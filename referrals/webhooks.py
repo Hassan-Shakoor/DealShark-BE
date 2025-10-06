@@ -55,14 +55,36 @@ def stripe_webhook(request):
         referrer_cut = int(amount * commission_rate)
         business_cut = amount - referrer_cut
 
+        balance = stripe.Balance.retrieve()
+        available = balance["available"][0]["amount"]  # in cents
+        # if available < amount:
+        #     print(f"[STRIPE] Insufficient funds: need {amount}, available {available}")
+        #     return HttpResponse(status=400)
+
+        # if settings.STRIPE_SECRET_KEY.startswith("sk_test"):
+        #     for acct_id in [
+        #         sub.deal.business.stripe_account_id,
+        #         sub.referrer.stripe_account_id,
+        #     ]:
+        #         if acct_id:
+        #             try:
+        #                 # Create a fake top-up using the 0077 card
+        #                 stripe.Charge.create(
+        #                     amount=100000,  # $100 in test funds
+        #                     currency="usd",
+        #                     source="tok_bypassPending",  # special test token
+        #                     transfer_data={"destination": acct_id},
+        #                 )
+        #             except Exception as e:
+        #                 print(f"[TEST MODE] Top-up failed for {acct_id}: {e}")
         # Send to business
-        if sub.deal.business.stripe_account_id:
-            stripe.Transfer.create(
-                amount=business_cut,
-                currency="usd",
-                destination=sub.deal.business.stripe_account_id,
-                transfer_group=referral_code,
-            )
+        # if sub.deal.business.stripe_account_id:
+        #     stripe.Transfer.create(
+        #         amount=business_cut,
+        #         currency="usd",
+        #         destination=sub.deal.business.stripe_account_id,
+        #         transfer_group=referral_code,
+        #     )
 
         # Send to referrer
         if sub.referrer.stripe_account_id:

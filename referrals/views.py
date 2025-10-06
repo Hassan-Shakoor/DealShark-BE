@@ -81,10 +81,13 @@ class ReferralSubscriptionViewSet(viewsets.ViewSet):
             return "Only customer users can subscribe to deals."
 
         if not referrer.stripe_account_id:
+
             return "Stripe account must be connected before subscribing."
 
         if not getattr(referrer, "is_onboarding_completed", False):
-            return "Stripe onboarding must be completed before subscribing."
+            account = stripe.Account.retrieve(referrer.stripe_account_id)
+            if account.get("details_submitted") is False:
+                return "Stripe onboarding must be completed before subscribing."
 
         return None
 
@@ -277,7 +280,7 @@ class ReferralSubscriptionViewSet(viewsets.ViewSet):
 
     @action(detail=False, methods=["post"], url_path="create-payment", permission_classes=[AllowAny])
     def create_payment(self, request):
-        """Create Stripe PaymentIntent for referral deal"""
+        """Create Stripe Checkout Session for referral deal"""
         code = request.data.get("referral_code")
         amount = request.data.get("amount")
 
@@ -293,36 +296,45 @@ class ReferralSubscriptionViewSet(viewsets.ViewSet):
 
         try:
             amount_cents = int(float(amount) * 100)
-
-            # get commission % from deal
             commission_rate = float(sub.deal.customer_incentive or 0) / 100
             referrer_amount_cents = int(amount_cents * commission_rate)
-            business_amount_cents = amount_cents - referrer_amount_cents
 
-            # Create PaymentIntent with transfer_group
-            intent = stripe.PaymentIntent.create(
-                amount=amount_cents,
-                currency="usd",
-                # confirm=True,
-                payment_method = "pm_card_visa",
+            # Create Checkout Session
+            session = stripe.checkout.Session.create(
                 payment_method_types=["card"],
-                transfer_group=f"deal_{sub.deal.id}_{sub.referral_code}",
-                metadata={
-                    "referral_code": sub.referral_code,
-                    "deal_id": str(sub.deal.id),
-                    "referrer_id": str(sub.referrer.id),
-                    "business_id": str(sub.deal.business.id),
-                }
+                mode="payment",
+                line_items=[{
+                    "price_data": {
+                        "currency": "usd",
+                        "unit_amount": amount_cents,
+                        "product_data": {
+                            "name": sub.deal.deal_name,
+                            "description": sub.deal.deal_description,
+                        },
+                    },
+                    "quantity": 1,
+                }],
+                payment_intent_data={
+                    "application_fee_amount": referrer_amount_cents,
+                    "transfer_data": {
+                        "destination": sub.deal.business.stripe_account_id,
+                    },
+                    "metadata": {
+                        "referral_code": sub.referral_code,
+                        "deal_id": str(sub.deal.id),
+                        "referrer_id": str(sub.referrer.id),
+                        "business_id": str(sub.deal.business.id),
+                    },
+                },
+                success_url=f"{settings.FRONTEND_URL}/payment/success?session_id={{CHECKOUT_SESSION_ID}}",
+                cancel_url=f"{settings.FRONTEND_URL}/payment/cancel",
             )
 
             return Response({
-                "client_secret": intent.client_secret,
+                "checkout_url": session.url,
+                "session_id": session.id,
                 "amount": amount,
                 "currency": "usd",
-                "commission_rate": commission_rate,
-                "referrer_amount_cents": referrer_amount_cents,
-                "business_amount_cents": business_amount_cents,
-                "transfer_group": intent.transfer_group,
             }, status=200)
 
         except CardError as e:
@@ -333,6 +345,64 @@ class ReferralSubscriptionViewSet(viewsets.ViewSet):
             return Response({"error": "Stripe error", "details": str(e)}, status=400)
         except Exception as e:
             return Response({"error": "Unexpected error", "details": str(e)}, status=500)
+    # @action(detail=False, methods=["post"], url_path="create-payment", permission_classes=[AllowAny])
+    # def create_payment(self, request):
+    #     """Create Stripe PaymentIntent for referral deal"""
+    #     code = request.data.get("referral_code")
+    #     amount = request.data.get("amount")
+    #
+    #     if not code or not amount:
+    #         return Response({"error": "referral_code and amount are required"}, status=400)
+    #
+    #     try:
+    #         sub = ReferralSubscription.objects.select_related(
+    #             "deal", "referrer", "deal__business"
+    #         ).get(referral_code=code)
+    #     except ReferralSubscription.DoesNotExist:
+    #         return Response({"error": "Invalid referral code"}, status=404)
+    #
+    #     try:
+    #         amount_cents = int(float(amount) * 100)
+    #
+    #         # get commission % from deal
+    #         commission_rate = float(sub.deal.customer_incentive or 0) / 100
+    #         referrer_amount_cents = int(amount_cents * commission_rate)
+    #         business_amount_cents = amount_cents - referrer_amount_cents
+    #
+    #         # Create PaymentIntent with transfer_group
+    #         intent = stripe.PaymentIntent.create(
+    #             amount=amount_cents,
+    #             currency="usd",
+    #             # confirm=True,
+    #             payment_method = "pm_card_visa",
+    #             payment_method_types=["card"],
+    #             transfer_group=f"deal_{sub.deal.id}_{sub.referral_code}",
+    #             metadata={
+    #                 "referral_code": sub.referral_code,
+    #                 "deal_id": str(sub.deal.id),
+    #                 "referrer_id": str(sub.referrer.id),
+    #                 "business_id": str(sub.deal.business.id),
+    #             }
+    #         )
+    #
+    #         return Response({
+    #             "client_secret": intent.client_secret,
+    #             "amount": amount,
+    #             "currency": "usd",
+    #             "commission_rate": commission_rate,
+    #             "referrer_amount_cents": referrer_amount_cents,
+    #             "business_amount_cents": business_amount_cents,
+    #             "transfer_group": intent.transfer_group,
+    #         }, status=200)
+    #
+    #     except CardError as e:
+    #         return Response({"error": "Card declined", "details": str(e)}, status=402)
+    #     except InvalidRequestError as e:
+    #         return Response({"error": "Invalid request to Stripe", "details": str(e)}, status=400)
+    #     except StripeError as e:
+    #         return Response({"error": "Stripe error", "details": str(e)}, status=400)
+    #     except Exception as e:
+    #         return Response({"error": "Unexpected error", "details": str(e)}, status=500)
 
 
 class StripeConnectViewSet(viewsets.ViewSet):
