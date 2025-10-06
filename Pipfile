@@ -19,7 +19,7 @@ django-extensions = "*"
 gunicorn = "*"
 uvicorn = "*"
 whitenoise = "*"
-
+stripe = "*"
 
 [dev-packages]
 pytest-django = ">=4.5.0"

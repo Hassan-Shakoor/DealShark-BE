@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -38,26 +39,34 @@ class BusinessAuthViewSet(viewsets.ViewSet):
     def login(self, request):
         serializer = LoginSerializer(data=request.data)
 
-        if serializer.is_valid():
-            user = serializer.validated_data["user"]
-            tokens = get_tokens_for_user(user)
-            return Response(
-                {
-                    "message": "Login successful.",
-                    "tokens": tokens,
-                    "user": UserProfileSerializer(user).data,
-                },
-                status=200,
-            )
+        if not serializer.is_valid():
+            return Response({"message": "Email and password are required."}, status=400)
 
-        # Custom error formatting
-        errors = serializer.errors
-        if "non_field_errors" in errors:
-            return Response(
-                {"error": errors["non_field_errors"][0]},
-                status=400,
-            )
-        return Response({"error": errors}, status=400)
+        email = serializer.validated_data.get("email")
+        password = serializer.validated_data.get("password")
+
+        # Authenticate manually
+        user = authenticate(username=email, password=password)
+
+        if not user:
+            return Response({"message": "Invalid credentials."}, status=400)
+
+        if not user.is_email_verified:
+            return Response({"message": "Please verify your email before logging in."}, status=400)
+
+        if user.user_type != "business":  # restrict to business login
+            return Response({"message": "This login is only for business accounts."}, status=403)
+
+        tokens = self.get_tokens_for_user(user)
+
+        return Response(
+            {
+                "message": "Login successful.",
+                "tokens": tokens,
+                "user": UserProfileSerializer(user).data,
+            },
+            status=200,
+        )
 
     @action(detail=True, methods=["patch"], permission_classes=[IsAuthenticated])
     def update_business(self, request, pk=None):

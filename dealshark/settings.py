@@ -28,7 +28,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-
+# settings.py
+FRONTEND_URL = "https://massive-tadpole-many.ngrok-free.app"#http://localhost:3000"
+STRIPE_SECRET_KEY = "sk_test_51R2Hi5RosYi9WwSJLhTIVjsrOVoXy7bQmVk4J9jcuaLkE4pxDuBmCEiEl5sg9mqvO7pFjP7yTjAQUb1IzgfZbAGu00WicCYLzg"
+STRIPE_PUBLISHABLE_KEY = "pk_test_51R2Hi5RosYi9WwSJdCRhG0IjpIJWtlwxhZNp81PbqOoCQISHV2uaYEqhTKbxKPRW1pCYNLhGdI80dtJZbp32umd700YwBalgsG"
 # Application definition
 
 INSTALLED_APPS = [

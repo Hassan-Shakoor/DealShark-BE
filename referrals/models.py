@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 import uuid
 import random
@@ -59,7 +60,8 @@ class ReferralSubscription(models.Model):
                 random.choices(string.ascii_uppercase + string.digits, k=8)
             )
         if not self.referral_link:
-            self.referral_link = f"https://dealshark.com/ref/{self.referral_code}"
+            base_url = getattr(settings, "FRONTEND_URL", "http://localhost:3000")
+            self.referral_link = f"{base_url}/ref/{self.referral_code}"
         super().save(*args, **kwargs)
 
     def __str__(self):

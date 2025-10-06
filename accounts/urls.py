@@ -8,6 +8,7 @@ from . views_business import BusinessAuthViewSet
 router = DefaultRouter()
 router.register(r'business', BusinessAuthViewSet, basename='business-auth')
 router.register(r'user', views.UserViewSet, basename='user')
+
 urlpatterns = [
     path('register/user/', views.register_user, name='register_user'),
     # path('register/business/', views.register_business, name='register_business'),
