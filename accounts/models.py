@@ -16,6 +16,7 @@ class User(AbstractUser):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     stripe_account_id = models.CharField(max_length=255, blank=True, null=True)
+    is_onboarding_completed = models.BooleanField(default=False)
     email = models.EmailField(unique=True)
     phone_number = models.CharField(
         max_length=20,
@@ -105,6 +106,7 @@ class OTPVerification(models.Model):
 class Business(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='business_profile')
     stripe_account_id = models.CharField(max_length=255, blank=True, null=True)
+    is_onboarding_completed = models.BooleanField(default=False)
     business_name = models.CharField(max_length=255)
     business_email = models.EmailField(unique=True)
     business_phone = models.CharField(max_length=20)

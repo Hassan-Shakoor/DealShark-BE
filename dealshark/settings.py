@@ -36,6 +36,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 FRONTEND_URL = env("FRONTEND_URL", default="http://localhost:3000")
 STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY")
 STRIPE_PUBLISHABLE_KEY = env("STRIPE_PUBLISHABLE_KEY")
+WEBHOOK_SECRET = env("WEBHOOK_SECRET")
 
 INSTALLED_APPS = [
     "django_extensions",

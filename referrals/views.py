@@ -66,30 +66,61 @@ def confirm_referral(request, referral_id):
 class ReferralSubscriptionViewSet(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
 
-    @action(detail=False, methods=["post"], url_name="subscribe")
-    def subscribe(self, request):
-        deal_id = request.data.get("deal_id")
-        referrer_id = request.data.get("referrer_id")
-
+    def _get_deal_and_referrer(self, deal_id, referrer_id):
+        """Fetch deal and referrer user, or raise error."""
         try:
             deal = Deal.objects.get(id=deal_id)
             referrer = User.objects.get(id=referrer_id)
+            return deal, referrer
         except (Deal.DoesNotExist, User.DoesNotExist):
-            return Response({"error": "Invalid deal or referrer ID"}, status=400)
+            return None, None
 
+    def _validate_referrer(self, referrer):
+        """Ensure referrer is a valid customer with connected & completed Stripe onboarding."""
         if referrer.user_type != "customer":
+            return "Only customer users can subscribe to deals."
+
+        if not referrer.stripe_account_id:
+            return "Stripe account must be connected before subscribing."
+
+        if not getattr(referrer, "is_onboarding_completed", False):
+            return "Stripe onboarding must be completed before subscribing."
+
+        return None
+
+    @action(detail=False, methods=["post"], url_name="subscribe")
+    def subscribe(self, request):
+        """
+        Subscribe a customer (referrer) to a deal.
+        """
+        deal_id = request.data.get("deal_id")
+        referrer_id = request.data.get("referrer_id")
+
+        if not deal_id or not referrer_id:
             return Response(
-                {"error": "Only customer users can subscribe to deals."},
-                status=403
+                {"error": "deal_id and referrer_id are required."},
+                status=400,
             )
 
+        deal, referrer = self._get_deal_and_referrer(deal_id, referrer_id)
+        if not deal or not referrer:
+            return Response(
+                {"error": "Invalid deal or referrer ID."},
+                status=400,
+            )
+
+        # Validate referrer
+        error_message = self._validate_referrer(referrer)
+        if error_message:
+            return Response({"error": error_message}, status=403)
+
+        # Create or reuse subscription
         subscription, created = ReferralService.subscribe_to_deal(deal, referrer)
 
-        serializer = ReferralSubscriptionSerializer(subscription)
         return Response(
             {
                 "message": "Subscription created" if created else "Already subscribed",
-                "subscription": serializer.data,
+                "subscription": ReferralSubscriptionSerializer(subscription).data,
             },
             status=201 if created else 200,
         )
@@ -222,7 +253,7 @@ class ReferralSubscriptionViewSet(viewsets.ViewSet):
             "subscriptions": data,
         }, status=200)
 
-    @action(detail=False, methods=["get"], url_path="verify")
+    @action(detail=False, methods=["get"], url_path="verify", permission_classes=[AllowAny])
     def verify_code(self, request):
         """Verify referral code and return related business, deal, referrer"""
         code = request.query_params.get("code")
@@ -383,6 +414,59 @@ class StripeConnectViewSet(viewsets.ViewSet):
             "message": "Stripe account linked successfully",
             "account_id": account_id
         }, status=200)
+
+    @action(detail=False, methods=["get"], url_path="status")
+    def check_status(self, request):
+        """Check onboarding status for a user"""
+        user = request.user
+
+        if user.is_business:
+            business = getattr(user, "business_profile", None)
+            if not business or not business.stripe_account_id:
+                return Response({"error": "No Stripe account linked to this business"}, status=400)
+            account_id = business.stripe_account_id
+            already_completed = getattr(business, "is_onboarding_completed", False)
+        else:
+            if not user.stripe_account_id:
+                return Response({"error": "No Stripe account linked to this user"}, status=400)
+            account_id = user.stripe_account_id
+            already_completed = getattr(user, "is_onboarding_completed", False)
+
+        if already_completed:
+            return Response({
+                "message": "Onboarding complete (cached in DB)",
+                "account_id": account_id,
+                "payouts_enabled": True,
+                "charges_enabled": True,
+                "details_submitted": True,
+            }, status=200)
+
+        try:
+            account = stripe.Account.retrieve(account_id)
+        except Exception as e:
+            return Response({"error": f"Stripe error: {str(e)}"}, status=400)
+
+        details_submitted = account.get("details_submitted", False)
+        charges_enabled = account.get("charges_enabled", False)
+        payouts_enabled = account.get("payouts_enabled", False)
+
+        if details_submitted and charges_enabled and payouts_enabled:
+            if user.is_business:
+                business.is_onboarding_completed = True
+                business.save(update_fields=["is_onboarding_completed"])
+            else:
+                user.is_onboarding_completed = True
+                user.save(update_fields=["is_onboarding_completed"])
+
+        return Response({
+            "message": "Onboarding complete" if details_submitted else "Onboarding incomplete",
+            "account_id": account_id,
+            "payouts_enabled": payouts_enabled,
+            "charges_enabled": charges_enabled,
+            "details_submitted": details_submitted,
+        }, status=200)
+
+
 
 # referrals/views.py (or stripe_connect/views.py)
 import stripe

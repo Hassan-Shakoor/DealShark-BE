@@ -28,11 +28,26 @@ class DealViewSet(viewsets.ModelViewSet):
         if not business:
             return Response({"error": "Only businesses can create deals."}, status=403)
 
+        error_message = self._validate_business_stripe(business)
+        if error_message:
+            return Response({"error": error_message}, status=403)
+
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             deal = DealService.create_deal(business, serializer.validated_data)
             return Response(DealSerializer(deal).data, status=201)
         return Response(serializer.errors, status=400)
+
+
+    def _validate_business_stripe(self, business):
+        """Check if business has Stripe connected & onboarding completed."""
+        if not business.stripe_account_id:
+            return "Business must connect a Stripe account before creating deals."
+
+        if not getattr(business, "is_onboarding_completed", False):
+            return "Business must complete Stripe onboarding before creating deals."
+
+        return None
 
     def retrieve(self, request, *args, **kwargs):
         """Get a single deal by ID (public, with optional user_id)"""
