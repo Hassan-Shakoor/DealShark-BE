@@ -272,7 +272,7 @@ class ReferralSubscriptionViewSet(viewsets.ViewSet):
             intent = stripe.PaymentIntent.create(
                 amount=amount_cents,
                 currency="usd",
-                confirm=True,
+                # confirm=True,
                 payment_method = "pm_card_visa",
                 payment_method_types=["card"],
                 transfer_group=f"deal_{sub.deal.id}_{sub.referral_code}",

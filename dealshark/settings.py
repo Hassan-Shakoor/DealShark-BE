@@ -27,12 +27,15 @@ SECRET_KEY = 'django-insecure-$51cwrytozc-2zc*7@7j8cg$)5uu0@%1=d-!kcmiuc$vrlcto1
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
+import environ
+import os
 # settings.py
-FRONTEND_URL = "https://massive-tadpole-many.ngrok-free.app"#http://localhost:3000"
-STRIPE_SECRET_KEY = "sk_test_51R2Hi5RosYi9WwSJLhTIVjsrOVoXy7bQmVk4J9jcuaLkE4pxDuBmCEiEl5sg9mqvO7pFjP7yTjAQUb1IzgfZbAGu00WicCYLzg"
-STRIPE_PUBLISHABLE_KEY = "pk_test_51R2Hi5RosYi9WwSJdCRhG0IjpIJWtlwxhZNp81PbqOoCQISHV2uaYEqhTKbxKPRW1pCYNLhGdI80dtJZbp32umd700YwBalgsG"
-# Application definition
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
+
+FRONTEND_URL = env("FRONTEND_URL", default="http://localhost:3000")
+STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY")
+STRIPE_PUBLISHABLE_KEY = env("STRIPE_PUBLISHABLE_KEY")
 
 INSTALLED_APPS = [
     "django_extensions",
