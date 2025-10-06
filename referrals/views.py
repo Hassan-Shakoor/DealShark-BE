@@ -326,8 +326,9 @@ class ReferralSubscriptionViewSet(viewsets.ViewSet):
                         "business_id": str(sub.deal.business.id),
                     },
                 },
+
                 success_url=f"{settings.FRONTEND_URL}/payment/success?session_id={{CHECKOUT_SESSION_ID}}",
-                cancel_url=f"{settings.FRONTEND_URL}/payment/cancel",
+                cancel_url=f"{settings.FRONTEND_URL}/payment/failure",
             )
 
             return Response({
