@@ -115,7 +115,7 @@ class ReferralSubscriptionViewSet(viewsets.ViewSet):
         # Validate referrer
         error_message = self._validate_referrer(referrer)
         if error_message:
-            return Response({"error": error_message}, status=403)
+            return Response({"message": error_message}, status=403)
 
         # Create or reuse subscription
         subscription, created = ReferralService.subscribe_to_deal(deal, referrer)
