@@ -75,6 +75,7 @@ class ReferralSubscriptionViewSet(viewsets.ViewSet):
         except (Deal.DoesNotExist, User.DoesNotExist):
             return None, None
 
+
     def _validate_referrer(self, referrer):
         """Ensure referrer is a valid customer with connected & completed Stripe onboarding."""
         if referrer.user_type != "customer":

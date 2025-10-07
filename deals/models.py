@@ -25,7 +25,7 @@ class Deal(models.Model):
 
     no_reward_reason = models.CharField(max_length=50, blank=True, null=True)
     is_featured = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
