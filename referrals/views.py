@@ -462,7 +462,7 @@ class StripeConnectViewSet(viewsets.ViewSet):
         link = stripe.AccountLink.create(
             account=account_id,
             refresh_url=f"{settings.FRONTEND_URL}/onboarding/refresh",
-            return_url=f"{settings.FRONTEND_URL}/stripe/onboarding/redirect/",
+            return_url=f"{settings.FRONTEND_URL}payment-account/success/",
             type="account_onboarding",
         )
 
