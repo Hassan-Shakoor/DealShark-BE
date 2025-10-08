@@ -51,6 +51,9 @@ def send_otp_email(user, otp_code, otp_type):
         return False
 
 
+# ---------------------------
+# REGISTER CUSTOMER USER
+# ---------------------------
 @extend_schema(
     request=UserRegistrationSerializer,
     responses={
@@ -75,6 +78,9 @@ def register_user(request):
         return Response({"error": "Unexpected server error. Please try again later."}, 500)
 
 
+# ---------------------------
+# REGISTER BUSINESS USER
+# ---------------------------
 @extend_schema(
     request=BusinessRegistrationSerializer,
     responses={
@@ -121,6 +127,9 @@ def register_business(request):
         )
 
 
+# ---------------------------
+# VERIFY OTP
+# ---------------------------
 @extend_schema(
     request=OTPVerificationSerializer,
     responses={
@@ -166,6 +175,9 @@ def verify_otp(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+# ---------------------------
+# RESEND OTP
+# ---------------------------
 @extend_schema(
     request=None,
     responses={
@@ -192,9 +204,7 @@ def resend_otp(request):
     except User.DoesNotExist:
         return Response({"error": "User not found."}, status=404)
 
-    OTPVerification.objects.filter(user=user, otp_type=otp_type, is_used=False).update(
-        is_used=True
-    )
+    OTPVerification.objects.filter(user=user, otp_type=otp_type, is_used=False).update(is_used=True)
     otp = OTPVerification.objects.create(user=user, otp_type=otp_type)
 
     if send_otp_email(user, otp.otp_code, otp_type):
@@ -202,12 +212,13 @@ def resend_otp(request):
     return Response({"error": "Failed to send OTP."}, status=500)
 
 
+# ---------------------------
+# LOGIN USER
+# ---------------------------
 @extend_schema(
     request=LoginSerializer,
-    responses={
-        200: OpenApiResponse(response=UserProfileSerializer, description="Login successful."),
-        400: OpenApiResponse(description="Invalid credentials."),
-    },
+    responses={200: OpenApiResponse(response=UserProfileSerializer, description="Login successful."),
+               400: OpenApiResponse(description="Invalid credentials.")},
     tags=["Authentication"],
     summary="Login User",
 )
@@ -218,7 +229,6 @@ def login_view(request):
     serializer = LoginSerializer(data=request.data)
     serializer.is_valid(raise_exception=False)
 
-    # Validate input fields
     if not serializer.is_valid():
         field, msgs = next(iter(serializer.errors.items()))
         error_message = msgs[0] if isinstance(msgs, list) else str(msgs)
@@ -227,27 +237,23 @@ def login_view(request):
     email = serializer.validated_data.get("email")
     password = serializer.validated_data.get("password")
 
-    # Authentication
     user = authenticate(username=email, password=password)
     if not user:
         return Response({"message": "Invalid credentials."}, status=400)
 
-    # Email verification check
     if not user.is_email_verified:
         return Response({"message": "Please verify your email before logging in."}, status=403)
 
-    # Success
     tokens = get_tokens_for_user(user)
     return Response(
-        {
-            "message": "Login successful.",
-            "tokens": tokens,
-            "user": UserProfileSerializer(user).data,
-        },
+        {"message": "Login successful.", "tokens": tokens, "user": UserProfileSerializer(user).data},
         status=200,
     )
 
 
+# ---------------------------
+# GET USER PROFILE
+# ---------------------------
 @extend_schema(
     responses=UserProfileSerializer,
     tags=["User"],
@@ -261,6 +267,37 @@ def profile_view(request):
     return Response(serializer.data, status=200)
 
 
+# ---------------------------
+# UPDATE USER PROFILE (PATCH)
+# ---------------------------
+@extend_schema(
+    request=UserProfileSerializer,
+    responses={
+        200: OpenApiResponse(response=UserProfileSerializer, description="Profile updated successfully."),
+        400: OpenApiResponse(description="Invalid data."),
+        401: OpenApiResponse(description="Unauthorized."),
+    },
+    tags=["User"],
+    summary="Update User Profile",
+)
+@api_view(["PATCH"])
+@permission_classes([IsAuthenticated])
+def update_profile(request):
+    """Update user profile (partial update supported)"""
+    user = request.user
+    serializer = UserProfileSerializer(user, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(
+            {"message": "Profile updated successfully.", "user": serializer.data},
+            status=status.HTTP_200_OK,
+        )
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# ---------------------------
+# USER VIEWSET (OPTIONAL)
+# ---------------------------
 class UserViewSet(viewsets.ViewSet):
     permission_classes = [AllowAny]
 
@@ -274,6 +311,3 @@ class UserViewSet(viewsets.ViewSet):
 
         serializer = UserProfileSerializer(user)
         return Response(serializer.data, status=200)
-
-
-

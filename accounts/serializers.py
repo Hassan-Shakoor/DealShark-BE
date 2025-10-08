@@ -37,6 +37,34 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
         return User.objects.create_user(**validated_data)
 
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            "id",
+            "first_name",
+            "last_name",
+            "email",
+            "phone_number",
+            "profile_picture",
+            "user_type",
+            "is_email_verified",
+            "is_phone_verified",
+            "created_at",
+            "updated_at",
+        ]
+        read_only_fields = ["id", "email", "created_at", "updated_at"]
+
+    def update(self, instance, validated_data):
+        # handle profile picture if provided
+        profile_picture = validated_data.pop("profile_picture", None)
+        if profile_picture:
+            instance.profile_picture = profile_picture
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        return instance
 
 
 class DealInlineSerializer(serializers.Serializer):

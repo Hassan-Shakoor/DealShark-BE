@@ -16,6 +16,7 @@ urlpatterns = [
     path('resend-otp/', views.resend_otp, name='resend_otp'),
     path('login/', views.login_view, name='login'),
     path('profile/', views.profile_view, name='profile'),
+    path("profile/update/", views.update_profile, name="profile-update"),
 
     path('', include(router.urls)),
 ]
