@@ -316,10 +316,6 @@ class ReferralSubscriptionViewSet(viewsets.ViewSet):
                     "quantity": 1,
                 }],
                 payment_intent_data={
-                    "application_fee_amount": referrer_amount_cents,
-                    "transfer_data": {
-                        "destination": sub.deal.business.stripe_account_id,
-                    },
                     "metadata": {
                         "referral_code": sub.referral_code,
                         "deal_id": str(sub.deal.id),
@@ -327,7 +323,6 @@ class ReferralSubscriptionViewSet(viewsets.ViewSet):
                         "business_id": str(sub.deal.business.id),
                     },
                 },
-
                 success_url=f"{settings.FRONTEND_URL}/payment/success?session_id={{CHECKOUT_SESSION_ID}}",
                 cancel_url=f"{settings.FRONTEND_URL}/payment/failure",
             )

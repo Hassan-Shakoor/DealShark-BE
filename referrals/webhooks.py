@@ -78,16 +78,16 @@ def stripe_webhook(request):
         #             except Exception as e:
         #                 print(f"[TEST MODE] Top-up failed for {acct_id}: {e}")
         # Send to business
-        # if sub.deal.business.stripe_account_id:
-        #     stripe.Transfer.create(
-        #         amount=business_cut,
-        #         currency="usd",
-        #         destination=sub.deal.business.stripe_account_id,
-        #         transfer_group=referral_code,
-        #     )
+        if sub.deal.business.stripe_account_id:
+            stripe.Transfer.create(
+                amount=business_cut,
+                currency="usd",
+                destination=sub.deal.business.stripe_account_id,
+                transfer_group=referral_code,
+            )
 
-        # Send to referrer
-        if sub.referrer.stripe_account_id:
+            # Pay referrer
+        if sub.referrer.stripe_account_id and referrer_cut > 0:
             stripe.Transfer.create(
                 amount=referrer_cut,
                 currency="usd",

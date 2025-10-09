@@ -44,7 +44,7 @@ class UserService:
         # Create new user
         serializer = UserRegistrationSerializer(data=data)
         if not serializer.is_valid():
-            return {"error": "Invalid data provided."}, 400
+            return {"error": "Invalid data provided.", "details": serializer.errors}, 400
 
         user = serializer.save()
         otp = OTPVerification.objects.create(user=user, otp_type="email")
