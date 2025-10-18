@@ -1,3 +1,4 @@
+from django.db.models import Q
 from rest_framework.decorators import action
 
 from accounts.models import Business
@@ -73,7 +74,22 @@ class DealViewSet(viewsets.ModelViewSet):
     def all_deals(self, request):
         """All deals across all businesses (for referrers)"""
         user_id = request.query_params.get("user_id")
+        search_query = request.query_params.get("search").strip() if request.query_params.get("search") else None
+        reward_type = request.query_params.get("filter", "").strip().lower()
+        industry = request.query_params.get("industry", "").strip()
+
         deals = Deal.objects.all()
+        if search_query:
+            deals = deals.filter(
+                Q(deal_name__icontains=search_query) |
+                Q(deal_description__icontains=search_query) |
+                Q(business__business_name__icontains=search_query)
+            )
+        if reward_type in ["commission", "no_reward"]:
+            deals = deals.filter(reward_type=reward_type)
+
+        if industry:
+            deals = deals.filter(business__industry__icontains=industry)
         serializer = DealSerializer(
             deals,
             many=True,
