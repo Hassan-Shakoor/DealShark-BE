@@ -134,3 +134,24 @@ class PosterTextViewSet(viewsets.ViewSet):
             "commission_based": commission_options,
             "no_reward_based": no_reward_options
         })
+
+
+class IndustryViewSet(viewsets.ViewSet):
+    permission_classes = [AllowAny]
+
+    @action(detail=False, methods=["get"], url_path="all")
+    def list_industries(self, request):
+        """
+        Public: Return all unique industries from registered businesses.
+        Example: GET /industries/all
+        """
+        industries = (
+            Business.objects
+            .exclude(industry__isnull=True)
+            .exclude(industry__exact="")
+            .values_list("industry", flat=True)
+            .distinct()
+            .order_by("industry")
+        )
+
+        return Response({"industries": list(industries)}, status=200)
