@@ -139,7 +139,7 @@ class PosterTextViewSet(viewsets.ViewSet):
 class IndustryViewSet(viewsets.ViewSet):
     permission_classes = [AllowAny]
 
-    @action(detail=False, methods=["get"], url_path="all")
+    @action(detail=False, methods=["get"], url_path="all", permission_classes=[AllowAny])
     def list_industries(self, request):
         """
         Public: Return all unique industries from registered businesses.
