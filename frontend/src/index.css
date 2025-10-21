@@ -1,0 +1,475 @@
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/700.css';
+@import "tailwindcss";
+
+/* Custom CSS Variables */
+/* :root {
+  --dealshark-blue: #075AD3;
+  --dealshark-yellow: #FFCE03;
+  --dealshark-blue-dark: #0647B8;
+  --dealshark-yellow-dark: #E6B800;
+} */
+@theme {
+    --color-dealshark-blue: #075AD3;
+    --color-dealshark-yellow: #FFCE03;
+    --color-dealshark-blue-light: #3B82F6;
+    --color-dealshark-yellow-light: #FEF3C7;
+    --color-dealshark-blue-dark: #1E40AF;
+    --color-dealshark-yellow-dark: #D97706;
+}
+
+/* Base Styles */
+* {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+button {
+    cursor: pointer;
+}
+
+/* Custom Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInFromTop {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200px 0;
+    }
+
+    100% {
+        background-position: calc(200px + 100%) 0;
+    }
+}
+
+/* Animation Classes */
+.animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.animate-fade-in-left {
+    animation: fadeInLeft 0.6s ease-out;
+}
+
+.animate-fade-in-right {
+    animation: fadeInRight 0.6s ease-out;
+}
+
+.animate-slide-in-top {
+    animation: slideInFromTop 0.5s ease-out;
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
+
+.animate-scale-in {
+    animation: scaleIn 0.3s ease-out;
+}
+
+.animate-pulse-gentle {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.animate-float {
+    animation: float 3s ease-in-out infinite;
+}
+
+.animate-shimmer {
+    animation: shimmer 2s linear infinite;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+}
+
+/* Custom Input Styles */
+.custom-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    /* py-3 px-4 */
+    border: 2px solid #e5e7eb;
+    /* border-gray-200 */
+    border-radius: 0.75rem;
+    /* rounded-xl */
+    background-color: #fff;
+    /* bg-white */
+    color: #111827;
+    /* text-gray-900 */
+    font-family: 'Inter', sans-serif;
+    transition: all 0.3s ease-out;
+}
+
+.custom-input::placeholder {
+    color: #6b7280;
+    /* placeholder-gray-500 */
+}
+
+.custom-input:hover {
+    border-color: #d1d5db;
+    /* border-gray-300 */
+}
+
+.custom-input:focus {
+    border-color: #075AD3;
+    /* dealshark-blue */
+    box-shadow: 0 0 0 4px #dbeafe;
+    /* focus:ring-4 focus:ring-blue-100 */
+    outline: none;
+    transform: translateY(-1px);
+}
+
+/* Custom Button Styles */
+.btn-primary {
+    background-color: #075AD3;
+    color: #fff;
+    padding: 0.75rem 2rem;
+    /* py-3 px-8 */
+    border-radius: 0.75rem;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.3s ease-out;
+}
+
+.btn-primary:hover {
+    background-color: #1d4ed8;
+    /* blue-700 */
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(7, 90, 211, 0.3);
+}
+
+.btn-secondary {
+    background-color: #FFCE03;
+    color: #111827;
+    padding: 0.75rem 2rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.3s ease-out;
+}
+
+.btn-secondary:hover {
+    background-color: #facc15;
+    /* yellow-400 */
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(255, 206, 3, 0.3);
+}
+
+/* Custom Card Styles */
+.auth-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 1rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    backdrop-filter: blur(10px);
+    transition: all 0.5s ease-out;
+}
+
+.auth-card:hover {
+    transform: translateY(-5px);
+}
+
+@media screen and (max-width: 768px) {
+    .auth-card {
+        padding: 2rem 1.5rem;
+    }
+}
+
+/* Glass Effect */
+.glass-effect {
+    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Gradient Backgrounds */
+.bg-gradient-dealshark {
+    background: linear-gradient(135deg, #075AD3 0%, #1E40AF 100%);
+}
+
+.bg-gradient-yellow {
+    background: linear-gradient(135deg, #FFCE03 0%, #D97706 100%);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #075AD3;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #1E40AF;
+}
+
+/* Focus Ring */
+.focus-ring:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px #dbeafe;
+}
+
+/* Loading shimmer */
+.loading-shimmer {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s linear infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200px 0;
+    }
+
+    100% {
+        background-position: 200px 0;
+    }
+}
+
+/* Responsive Typography */
+.text-responsive-xl {
+    font-size: 1.5rem;
+}
+
+@media (min-width: 768px) {
+    .text-responsive-xl {
+        font-size: 1.875rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .text-responsive-xl {
+        font-size: 2.25rem;
+    }
+}
+
+.text-responsive-lg {
+    font-size: 1.125rem;
+}
+
+@media (min-width: 768px) {
+    .text-responsive-lg {
+        font-size: 1.25rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .text-responsive-lg {
+        font-size: 1.5rem;
+    }
+}
+
+.text-responsive-base {
+    font-size: 0.875rem;
+}
+
+@media (min-width: 768px) {
+    .text-responsive-base {
+        font-size: 1rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .text-responsive-base {
+        font-size: 1rem;
+    }
+}
+
+/* Hover Effects */
+.hover-lift {
+    transition: all 0.3s ease-out;
+}
+
+.hover-lift:hover {
+    transform: translateY(-3px);
+}
+
+.hover-scale {
+    transition: all 0.3s ease-out;
+}
+
+.hover-scale:hover {
+    transform: scale(1.05);
+}
+
+/* Shadows */
+.shadow-dealshark {
+    box-shadow: 0 10px 30px rgba(7, 90, 211, 0.2);
+}
+
+.shadow-yellow {
+    box-shadow: 0 10px 30px rgba(255, 206, 3, 0.2);
+}
+
+/* Animation Delays */
+.delay-100 {
+    animation-delay: 0.1s;
+}
+
+.delay-200 {
+    animation-delay: 0.2s;
+}
+
+.delay-300 {
+    animation-delay: 0.3s;
+}
+
+.delay-400 {
+    animation-delay: 0.4s;
+}
+
+ .delay-500 {
+     animation-delay: 0.5s;
+ }
+
+/* Form Labels */
+.form-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Hide scrollbar for horizontal scroll */
+.scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari and Opera */
+}
+
+/* Partners Section Animations - Infinite Seamless Loop */
+@keyframes scroll-right {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+@keyframes scroll-left {
+    0% {
+        transform: translateX(-50%);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+.animate-scroll-right {
+    animation: scroll-right 40s linear infinite;
+    will-change: transform;
+}
+
+.animate-scroll-left {
+    animation: scroll-left 40s linear infinite;
+    will-change: transform;
+}
