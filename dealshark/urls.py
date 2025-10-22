@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.static import serve
 from rest_framework import permissions
 from django.http import JsonResponse
 from django.views.generic import TemplateView
@@ -77,10 +78,24 @@ urlpatterns = [
     path("stripe/onboarding/redirect/", stripe_onboarding_redirect, name="stripe-onboarding-redirect"),
 ]
 
-# Serve static files in production
-if not settings.DEBUG:
+# Serve static files in development only
+# In production, WhiteNoise handles static files automatically
+if settings.DEBUG:
+    urlpatterns += [
+        re_path(
+            r"^assets/(?P<path>.*)$",
+            serve,
+            {"document_root": settings.STATICFILES_DIRS[0]},
+        ),
+        re_path(
+            r"^(?P<path>vite\.svg)$",
+            serve,
+            {"document_root": settings.TEMPLATES[0]["DIRS"][0]},
+        ),
+    ]
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
+# Catch-all for React app (MUST be last!)
 urlpatterns += [
-    re_path(r'^.*$', TemplateView.as_view(template_name="index.html")),
+    re_path(r"^.*$", TemplateView.as_view(template_name="index.html"), name="react"),
 ]
