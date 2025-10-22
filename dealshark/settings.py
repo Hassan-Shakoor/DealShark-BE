@@ -73,6 +73,7 @@ FRONTEND_DIR = BASE_DIR / 'frontend'
 FRONTEND_DIST_DIR = FRONTEND_DIR / 'dist'
 
 STATICFILES_DIRS = [
+    FRONTEND_DIST_DIR / 'assets',
     FRONTEND_DIST_DIR,
 ]
 
@@ -257,4 +258,14 @@ CELERY_TIMEZONE = TIME_ZONE
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+# WhiteNoise configuration for production static files
+WHITENOISE_ROOT = FRONTEND_DIST_DIR
+WHITENOISE_INDEX_FILE = True
+
+# Additional static files configuration for production
+if not DEBUG:
+    # Ensure WhiteNoise can find all static files
+    WHITENOISE_USE_FINDERS = True
+    WHITENOISE_AUTOREFRESH = True
 
