@@ -68,10 +68,18 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'dealshark.urls'
 
+# Frontend paths
+FRONTEND_DIR = BASE_DIR / 'frontend'
+FRONTEND_DIST_DIR = FRONTEND_DIR / 'dist'
+
+STATICFILES_DIRS = [
+    FRONTEND_DIST_DIR,
+]
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [FRONTEND_DIST_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
