@@ -16,11 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 from rest_framework import permissions
 from django.http import JsonResponse
-
-# from drf_yasg.views import get_schema_view
-# from drf_yasg import openapi
+from django.views.generic import TemplateView
+from django.urls import re_path
 
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
@@ -73,5 +74,13 @@ urlpatterns = [
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('upload/', FirebaseUploadView.as_view(), name='upload'),
-   path("stripe/onboarding/redirect/", stripe_onboarding_redirect, name="stripe-onboarding-redirect"),
+    path("stripe/onboarding/redirect/", stripe_onboarding_redirect, name="stripe-onboarding-redirect"),
+]
+
+# Serve static files in production
+if not settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+urlpatterns += [
+    re_path(r'^.*$', TemplateView.as_view(template_name="index.html")),
 ]
